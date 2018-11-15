@@ -86,12 +86,11 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 			mTestParam1, mTestParam2, mTestParam3, mTestParam4, mTestParam5,
 
 			// METERS
-			meterInputPeak1, meterInputPeak2,
-			mCompRmsGr, mCompPeakGr,
-			meterOutputPeak1, meterOutputPeak2,
+			mInputPeakMeterValue1, mInputPeakMeterValue2, mInputPeakMeterPreviousValue1, mInputPeakMeterPreviousValue2, mInputPeakMeterTimeConst1, mInputPeakMeterTimeConst2,
+			mOutputPeakMeterValue1, mOutputPeakMeterValue2, mOutputPeakMeterPreviousValue1, mOutputPeakMeterPreviousValue2, mOutputPeakMeterTimeConst1, mOutputPeakMeterTimeConst2,
+			mRmsGrMeterValue, mPeakGrMeterValue,
 
-			meterInputPrev1, meterInputPrev2, meterOutputPrev1, meterOutputPrev2,
-			xMeterInput1, xMeterInput2, xMeterOutput1, xMeterOutput2;
+			mOutputVuMeterValue1, mOutputVuMeterValue2, mOutputVuMeterSos1, mOutputVuMeterSos2;
 
 		// FUNCT
 		//SetShapeCentered(char csetshapeparam, double cCenteredValue, double cControlPosition),
@@ -108,8 +107,8 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 		int mEqHpOrder,
 
 			// METERS
-			meterInput1, meterInput2, meterOutput1, meterOutput2,
-			meterGrRms, meterGrPeak, meterFreqResp;
+			cInputPeakMeter1, cInputPeakMeter2, cOuputPeakMeter1, cOutputPeakMeter2,
+			cRmsGrMeter, cPeakGrMeter, cFreqRespGraph, cOutputVuMeter1, cOutputVuMeter2;
 
 
 		// CIRCULAR BUFFER
@@ -126,7 +125,8 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 			InitCompRms(),
 			InitDeesser(),
 			InitLimiter(),
-			InitSafePan();
+			InitSafePan(),
+			InitMeter();
 		//CalculateFreqResp(),
 
 	// FILTERS
@@ -151,6 +151,9 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 		SRPlugins::SRDynamics::SRCompressorRMS fCompressorRms;
 		SRPlugins::SRDynamics::SRLimiter fLimiter;
 		SRPlugins::SRDynamics::SRCompressor fDeesser;
+
+		SRPlugins::SRDynamics::EnvelopeDetector fOutputVuMeterEnvelopeDetector1, fOutputVuMeterEnvelopeDetector2;
+		SRPlugins::SRDynamics::AttRelEnvelope fOutputVuMeterEnvelope1, fOutputVuMeterEnvelope2;
 
 		// TESTVARS
 		double sumIn;

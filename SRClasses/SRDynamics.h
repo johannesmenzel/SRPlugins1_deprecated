@@ -46,22 +46,22 @@ namespace SRPlugins {
 
 			// time constant
 			virtual void   setTc(double ms);
-			virtual double getTc(void) const { return ms_; }
+			virtual double getTc(void) const { return mTimeConstantMs; }
 
 			// sample rate
 			virtual void   setSampleRate(double sampleRate);
-			virtual double getSampleRate(void) const { return sampleRate_; }
+			virtual double getSampleRate(void) const { return mSampleRate; }
 
 			// runtime function
 			INLINE void run(double in, double &state) {
-				state = in + coef_ * (state - in);
+				state = in + mRuntimeCoeff * (state - in);
 			}
 
 		protected:
 
-			double sampleRate_;		// sample rate
-			double ms_;				// time constant in ms
-			double coef_;			// runtime coefficient
+			double mSampleRate;		// sample rate
+			double mTimeConstantMs;				// time constant in ms
+			double mRuntimeCoeff;			// runtime coefficient
 			virtual void setCoef(void);	// coef calculation
 
 		};
@@ -79,23 +79,23 @@ namespace SRPlugins {
 		{
 		public:
 			AttRelEnvelope(
-				double att_ms = 10.0
-				, double rel_ms = 100.0
+				double mAttackMs = 10.0
+				, double mReleaseMs = 100.0
 				, double sampleRate = 44100.0
 			);
 			virtual ~AttRelEnvelope() {}
 
 			// attack time constant
 			virtual void   setAttack(double ms);
-			virtual double getAttack(void) const { return att_.getTc(); }
+			virtual double getAttack(void) const { return mEnvelopeDetectorAttack.getTc(); }
 
 			// release time constant
 			virtual void   setRelease(double ms);
-			virtual double getRelease(void) const { return rel_.getTc(); }
+			virtual double getRelease(void) const { return mEnvelopeDetectorRelease.getTc(); }
 
 			// sample rate dependencies
 			virtual void   setSampleRate(double sampleRate);
-			virtual double getSampleRate(void) const { return att_.getSampleRate(); }
+			virtual double getSampleRate(void) const { return mEnvelopeDetectorAttack.getSampleRate(); }
 
 			// runtime function
 			INLINE void run(double in, double &state) {
@@ -107,15 +107,15 @@ namespace SRPlugins {
 				*/
 
 				if (in > state)
-					att_.run(in, state);	// attack
+					mEnvelopeDetectorAttack.run(in, state);	// attack
 				else
-					rel_.run(in, state);	// release
+					mEnvelopeDetectorRelease.run(in, state);	// release
 			}
 
 		private:
 
-			EnvelopeDetector att_;
-			EnvelopeDetector rel_;
+			EnvelopeDetector mEnvelopeDetectorAttack;
+			EnvelopeDetector mEnvelopeDetectorRelease;
 
 		};
 		//-------------------------------------------------------------
@@ -143,10 +143,10 @@ namespace SRPlugins {
 			virtual void setSidechainFilter(double sidechainFC);
 			virtual void setSidechainFilterFreq(double sidechainFc);
 
-			virtual double getThresh(void) const { return threshdB_; }
-			virtual double getRatio(void) const { return ratio_; }
-			virtual double getGrLin(void) { return grLin; } // Returns GR Amp
-			virtual double getGrDb(void) { return grDb; } // Returns GR dB
+			virtual double getThresh(void) const { return mThreshDb; }
+			virtual double getRatio(void) const { return mRatio; }
+			virtual double getGrLin(void) { return mGrLin; } // Returns GR Amp
+			virtual double getGrDb(void) { return mGrDb; } // Returns GR dB
 
 														  // runtime
 			virtual void initRuntime(void);			// call before runtime (in resume())
@@ -156,13 +156,13 @@ namespace SRPlugins {
 		private:
 
 			// transfer function
-			double threshdB_;		// threshold (dB)
-			double ratio_;			// ratio (compression: < 1 ; expansion: > 1)
-			double grLin;
-			double grDb;
+			double mThreshDb;		// threshold (dB)
+			double mRatio;			// ratio (compression: < 1 ; expansion: > 1)
+			double mGrLin;
+			double mGrDb;
 			double mSidechainFc;
-			double kneeDb_;
-			double maxGr;
+			double mKneeWidthDb;
+			double mMaxGr;
 
 			// runtime variables
 			double currentOvershootDb;			// over-threshold envelope (dB)
@@ -191,7 +191,7 @@ namespace SRPlugins {
 
 			// RMS window
 			virtual void setWindow(double ms);
-			virtual double getWindow(void) const { return ave_.getTc(); }
+			virtual double getWindow(void) const { return mEnvelopeDetectorAverager.getTc(); }
 
 			// runtime process
 			virtual void initRuntime(void);			// call before runtime (in resume())
@@ -199,8 +199,8 @@ namespace SRPlugins {
 
 		private:
 
-			EnvelopeDetector ave_;	// averager
-			double aveOfSqrs_;		// average of squares
+			EnvelopeDetector mEnvelopeDetectorAverager;	// averager
+			double mAverageOfSquares;		// average of squares
 
 		};
 		//-------------------------------------------------------------
@@ -218,25 +218,25 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		inline void SRCompressor::process(double &in1, double &in2)
 		{
+			double rectifiedInput1 = in1;
+			double rectifiedInput2 = in2;
 			// create sidechain
-			double rect1 = in1;
-			double rect2 = in2;
 			if (mSidechainFc > 16. / getSampleRate()) {
-				rect1 = fSidechainFilter1.process(rect1);
-				rect2 = fSidechainFilter2.process(rect2);
+				rectifiedInput1 = fSidechainFilter1.process(rectifiedInput1);
+				rectifiedInput2 = fSidechainFilter2.process(rectifiedInput2);
 			}
 
-			rect1 = fabs(rect1);	// rectify input
-			rect2 = fabs(rect2);
+			rectifiedInput1 = fabs(rectifiedInput1);	// rectify input
+			rectifiedInput2 = fabs(rectifiedInput2);
 
 
 			/* if desired, one could use another EnvelopeDetector to smooth
 			* the rectified signal.
 			*/
 
-			double link = std::max(rect1, rect2);	// link channels with greater of 2
+			double rectifiedInputMaxed = std::max(rectifiedInput1, rectifiedInput2);	// link channels with greater of 2
 
-			process(in1, in2, link);	// rest of process
+			process(in1, in2, rectifiedInputMaxed);	// rest of process
 		}
 
 		// Inline RMS Compressor Sidechain
@@ -245,13 +245,13 @@ namespace SRPlugins {
 		{
 			// create sidechain
 
-			double inSq1 = in1 * in1;	// square input
-			double inSq2 = in2 * in2;
+			double squaredInput1 = in1 * in1;	// square input
+			double squaredInput2 = in2 * in2;
 
-			double sum = inSq1 + inSq2;			// power summing
-			sum += DC_OFFSET;					// DC offset, to prevent denormal
-			ave_.run(sum, aveOfSqrs_);		// average of squares
-			double rms = sqrt(aveOfSqrs_);	// rms (sort of ...)
+			double summedSquaredInput = squaredInput1 + squaredInput2;			// power summing
+			summedSquaredInput += DC_OFFSET;					// DC offset, to prevent denormal
+			mEnvelopeDetectorAverager.run(summedSquaredInput, mAverageOfSquares);		// average of squares
+			double sidechainRms = sqrt(mAverageOfSquares);	// sidechainRms (sort of ...)
 
 											/* REGARDING THE RMS AVERAGER: Ok, so this isn't a REAL RMS
 											* calculation. A true RMS is an FIR moving average. This
@@ -260,21 +260,21 @@ namespace SRPlugins {
 											* giving comparable results.
 											*/
 
-			SRCompressor::process(in1, in2, rms);	// rest of process
+			SRCompressor::process(in1, in2, sidechainRms);	// rest of process
 		}
 
 		// Inline Compressors Process
 		//-------------------------------------------------------------
-		inline void SRCompressor::process(double &in1, double &in2, double keyLinked)
+		inline void SRCompressor::process(double &in1, double &in2, double sidechain)
 		{
-			keyLinked = fabs(keyLinked);		// rectify (just in case)
+			sidechain = fabs(sidechain);		// rectify (just in case)
 
 												// convert key to dB
-			keyLinked += DC_OFFSET;				// add DC offset to avoid log( 0 )
-			double keydB = SRPlugins::SRHelpers::AmpToDB(keyLinked);	// convert linear -> dB
+			sidechain += DC_OFFSET;				// add DC offset to avoid log( 0 )
+			double sidechainDb = SRPlugins::SRHelpers::AmpToDB(sidechain);	// convert linear -> dB
 
 												// threshold
-			double sampleOvershootDb = keydB - threshdB_;	// delta over threshold
+			double sampleOvershootDb = sidechainDb - mThreshDb;	// delta over threshold
 															//if (overdB < 0.0)
 															//	overdB = 0.0;
 
@@ -296,26 +296,26 @@ namespace SRPlugins {
 
 			double grRaw;
 
-			if (sampleOvershootDb > kneeDb_ * 0.5) {
-				grRaw = (ratio_ - 1.) * (sampleOvershootDb);											// For linear gain reduction above knee range
+			if (sampleOvershootDb > mKneeWidthDb * 0.5) {
+				grRaw = (mRatio - 1.) * (sampleOvershootDb);											// For linear gain reduction above knee range
 			}
-			else if (fabs(sampleOvershootDb) <= kneeDb_ * 0.5) {
-				grRaw = ((ratio_ - 1.) * pow(sampleOvershootDb + kneeDb_ * 0.5, 2.)) / (2. * kneeDb_); // For smoothed gain reduction within knee range
+			else if (fabs(sampleOvershootDb) <= mKneeWidthDb * 0.5) {
+				grRaw = ((mRatio - 1.) * pow(sampleOvershootDb + mKneeWidthDb * 0.5, 2.)) / (2. * mKneeWidthDb); // For smoothed gain reduction within knee range
 			}
 			else {
 				grRaw = 0.;																			// For no gain reduction below knee range
 			}
 
-			//double grlimit = maxGr / grRaw;
+			//double grlimit = mMaxGr / grRaw;
 
-			double grlimit = grRaw / (maxGr*0.5);
+			double grlimit = grRaw / (mMaxGr * 0.5);
 			double grlimitsqrt = pow(grlimit, 0.8);
 
-			grRaw = (1 - grlimitsqrt < 0.) ? grRaw + ((1 - grlimitsqrt) * (grRaw - (maxGr*0.5))) / grlimit : grRaw;
+			grRaw = (1 - grlimitsqrt < 0.) ? grRaw + ((1 - grlimitsqrt) * (grRaw - (mMaxGr*0.5))) / grlimit : grRaw;
 
-			grDb = grRaw;
+			mGrDb = grRaw;
 			grRaw = SRPlugins::SRHelpers::DBToAmp(grRaw);
-			grLin = grRaw;
+			mGrLin = grRaw;
 			// output gain
 			in1 *= grRaw;	// apply gain reduction to input
 			in2 *= grRaw;
@@ -341,16 +341,16 @@ namespace SRPlugins {
 			virtual void setAttack(double ms);
 			virtual void setRelease(double ms);
 
-			virtual double getThresh(void)  const { return threshdB_; }
-			virtual double getAttack(void)  const { return att_.getTc(); }
-			virtual double getRelease(void) const { return rel_.getTc(); }
+			virtual double getThresh(void)  const { return mThreshDb; }
+			virtual double getAttack(void)  const { return mEnvelopeDetectorAttack.getTc(); }
+			virtual double getRelease(void) const { return mEnvelopeDetectorRelease.getTc(); }
 
 			// latency
-			virtual const unsigned int getLatency(void) const { return peakHold_; }
+			virtual const unsigned int getLatency(void) const { return mPeakHoldSamples; }
 
 			// sample rate dependencies
 			virtual void   setSampleRate(double sampleRate);
-			virtual double getSampleRate(void) { return att_.getSampleRate(); }
+			virtual double getSampleRate(void) { return mEnvelopeDetectorAttack.getSampleRate(); }
 
 			// runtime
 			virtual void initRuntime(void);			// call before runtime (in resume())
@@ -375,26 +375,26 @@ namespace SRPlugins {
 		private:
 
 			// transfer function
-			double threshdB_;	// threshold (dB)
-			double thresh_;		// threshold (linear)
+			double mThreshDb;	// threshold (dB)
+			double mThreshLin;		// threshold (linear)
 
 								// max peak
-			unsigned int peakHold_;		// peak hold (samples)
-			unsigned int peakTimer_;	// peak hold timer
-			double maxPeak_;			// max peak
+			unsigned int mPeakHoldSamples;		// peak hold (samples)
+			unsigned int mPeakHoldTimer;	// peak hold timer
+			double mMaxPeak;			// max peak
 
 										// attack/release envelope
-			FastEnvelope att_;			// attack
-			FastEnvelope rel_;			// release
-			double env_;				// over-threshold envelope (linear)
+			FastEnvelope mEnvelopeDetectorAttack;			// attack
+			FastEnvelope mEnvelopeDetectorRelease;			// release
+			double currentOvershootLin;				// over-threshold envelope (linear)
 
 										// buffer
 										// BUFFER_SIZE default can handle up to ~10ms at 96kHz
 										// change this if you require more
 			static const int BUFFER_SIZE = 1024;	// buffer size (always a power of 2!)
-			unsigned int mask_;						// buffer mask
-			unsigned int cur_;						// cursor
-			std::vector< double > outBuffer_[2];	// output buffer
+			unsigned int mBufferMask;						// buffer mask
+			unsigned int mCursor;						// cursor
+			std::vector< double > mOutputBuffer[2];	// output buffer
 
 		};
 		//-------------------------------------------------------------
@@ -411,23 +411,23 @@ namespace SRPlugins {
 		{
 			// create sidechain
 
-			double rect1 = fabs(in1);	// rectify input
-			double rect2 = fabs(in2);
+			double rectifiedInput1 = fabs(in1);	// rectify input
+			double rectifiedInput2 = fabs(in2);
 
-			double keyLink = std::max(rect1, rect2);	// link channels with greater of 2
+			double keyLink = std::max(rectifiedInput1, rectifiedInput2);	// link channels with greater of 2
 
 														// threshold
 														// we always want to feed the sidechain AT LEATS the threshold value
-			if (keyLink < thresh_)
-				keyLink = thresh_;
+			if (keyLink < mThreshLin)
+				keyLink = mThreshLin;
 
 			// test:
 			// a) whether peak timer has "expired"
 			// b) whether new peak is greater than previous max peak
-			if ((++peakTimer_ >= peakHold_) || (keyLink > maxPeak_)) {
+			if ((++mPeakHoldTimer >= mPeakHoldSamples) || (keyLink > mMaxPeak)) {
 				// if either condition is met:
-				peakTimer_ = 0;		// reset peak timer
-				maxPeak_ = keyLink;	// assign new peak to max peak
+				mPeakHoldTimer = 0;		// reset peak timer
+				mMaxPeak = keyLink;	// assign new peak to max peak
 			}
 
 			/* REGARDING THE MAX PEAK: This method assumes that the only important
@@ -448,10 +448,10 @@ namespace SRPlugins {
 			*/
 
 			// attack/release
-			if (maxPeak_ > env_)
-				att_.run(maxPeak_, env_);		// run attack phase
+			if (mMaxPeak > currentOvershootLin)
+				mEnvelopeDetectorAttack.run(mMaxPeak, currentOvershootLin);		// run attack phase
 			else
-				rel_.run(maxPeak_, env_);		// run release phase
+				mEnvelopeDetectorRelease.run(mMaxPeak, currentOvershootLin);		// run release phase
 
 												/* REGARDING THE ATTACK: This limiter achieves "look-ahead" detection
 												* by allowing the envelope follower to attack the max peak, which is
@@ -466,24 +466,24 @@ namespace SRPlugins {
 												*/
 
 												// gain reduction
-			double gR = thresh_ / env_;
+			double grRaw = mThreshLin / currentOvershootLin;
 
 			// unload current buffer index
-			// ( cur_ - delay ) & mask_ gets sample from [delay] samples ago
-			// mask_ variable wraps index
-			unsigned int delayIndex = (cur_ - peakHold_) & mask_;
-			double delay1 = outBuffer_[0][delayIndex];
-			double delay2 = outBuffer_[1][delayIndex];
+			// ( mCursor - delay ) & mBufferMask gets sample from [delay] samples ago
+			// mBufferMask variable wraps index
+			unsigned int delayIndex = (mCursor - mPeakHoldSamples) & mBufferMask;
+			double delay1 = mOutputBuffer[0][delayIndex];
+			double delay2 = mOutputBuffer[1][delayIndex];
 
 			// load current buffer index and advance current index
-			// mask_ wraps cur_ index
-			outBuffer_[0][cur_] = in1;
-			outBuffer_[1][cur_] = in2;
-			++cur_ &= mask_;
+			// mBufferMask wraps mCursor index
+			mOutputBuffer[0][mCursor] = in1;
+			mOutputBuffer[1][mCursor] = in2;
+			++mCursor &= mBufferMask;
 
 			// output gain
-			in1 = delay1 * gR;	// apply gain reduction to input
-			in2 = delay2 * gR;
+			in1 = delay1 * grRaw;	// apply gain reduction to input
+			in2 = delay2 * grRaw;
 
 			/* REGARDING THE GAIN REDUCTION: Due to the logarithmic nature
 			* of the attack phase, the sidechain will never achieve "full"
@@ -497,11 +497,11 @@ namespace SRPlugins {
 			*
 			* 2) Clip the output at the threshold, as such:
 			*
-			*		if ( in1 > thresh_ )		in1 = thresh_;
-			*		else if ( in1 < -thresh_ )	in1 = -thresh_;
+			*		if ( in1 > mThreshLin )		in1 = mThreshLin;
+			*		else if ( in1 < -mThreshLin )	in1 = -mThreshLin;
 			*
-			*		if ( in2 > thresh_ )		in2 = thresh_;
-			*		else if ( in2 < -thresh_ )	in2 = -thresh_;
+			*		if ( in2 > mThreshLin )		in2 = mThreshLin;
+			*		else if ( in2 < -mThreshLin )	in2 = -mThreshLin;
 			*
 			*		(... or replace with your favorite branchless clipper ...)
 			*/
@@ -524,7 +524,7 @@ namespace SRPlugins {
 
 			// parameters
 			virtual void   setThresh(double dB);
-			virtual double getThresh(void) const { return threshdB_; }
+			virtual double getThresh(void) const { return mThreshDb; }
 
 			// runtime
 			virtual void initRuntime(void);			// call before runtime (in resume())
@@ -534,11 +534,11 @@ namespace SRPlugins {
 		private:
 
 			// transfer function
-			double threshdB_;	// threshold (dB)
-			double thresh_;		// threshold (linear)
+			double mThreshDb;	// threshold (dB)
+			double mThreshLin;		// threshold (linear)
 
 								// runtime variables
-			double env_;		// over-threshold envelope (linear)
+			double currentOvershootLin;		// over-threshold envelope (linear)
 
 		};
 		//-------------------------------------------------------------
@@ -562,7 +562,7 @@ namespace SRPlugins {
 
 			// RMS window
 			virtual void setWindow(double ms);
-			virtual double getWindow(void) const { return ave_.getTc(); }
+			virtual double getWindow(void) const { return mEnvelopeDetectorAverager.getTc(); }
 
 			// runtime process
 			virtual void initRuntime(void);			// call before runtime (in resume())
@@ -570,8 +570,8 @@ namespace SRPlugins {
 
 		private:
 
-			EnvelopeDetector ave_;	// averager
-			double aveOfSqrs_;		// average of squares
+			EnvelopeDetector mEnvelopeDetectorAverager;	// averager
+			double mAverageOfSquares;		// average of squares
 
 		};
 		//-------------------------------------------------------------
@@ -591,16 +591,16 @@ namespace SRPlugins {
 		{
 			// create sidechain
 
-			double rect1 = fabs(in1);	// rectify input
-			double rect2 = fabs(in2);
+			double rectifiedInput1 = fabs(in1);	// rectify input
+			double rectifiedInput2 = fabs(in2);
 
 			/* if desired, one could use another EnvelopeDetector to smooth
 			* the rectified signal.
 			*/
 
-			double link = std::max(rect1, rect2);	// link channels with greater of 2
+			double rectifiedInputMaxed = std::max(rectifiedInput1, rectifiedInput2);	// link channels with greater of 2
 
-			process(in1, in2, link);	// rest of process
+			process(in1, in2, rectifiedInputMaxed);	// rest of process
 		}
 
 		// Inline RMS Gate Sidechain
@@ -609,13 +609,13 @@ namespace SRPlugins {
 		{
 			// create sidechain
 
-			double inSq1 = in1 * in1;	// square input
-			double inSq2 = in2 * in2;
+			double squaredInput1 = in1 * in1;	// square input
+			double squaredInput2 = in2 * in2;
 
-			double sum = inSq1 + inSq2;			// power summing
-			sum += DC_OFFSET;					// DC offset, to prevent denormal
-			ave_.run(sum, aveOfSqrs_);		// average of squares
-			double rms = sqrt(aveOfSqrs_);	// rms (sort of ...)
+			double summedSquaredInput = squaredInput1 + squaredInput2;			// power summing
+			summedSquaredInput += DC_OFFSET;					// DC offset, to prevent denormal
+			mEnvelopeDetectorAverager.run(summedSquaredInput, mAverageOfSquares);		// average of squares
+			double sidechainRms = sqrt(mAverageOfSquares);	// sidechainRms (sort of ...)
 
 											/* REGARDING THE RMS AVERAGER: Ok, so this isn't a REAL RMS
 											* calculation. A true RMS is an FIR moving average. This
@@ -624,23 +624,23 @@ namespace SRPlugins {
 											* giving comparable results.
 											*/
 
-			SRGate::process(in1, in2, rms);	// rest of process
+			SRGate::process(in1, in2, sidechainRms);	// rest of process
 		}
 
 		// Inline Gates Process
 		//-------------------------------------------------------------
-		INLINE void SRGate::process(double &in1, double &in2, double keyLinked)
+		INLINE void SRGate::process(double &in1, double &in2, double sidechain)
 		{
-			keyLinked = fabs(keyLinked);	// rectify (just in case)
+			sidechain = fabs(sidechain);	// rectify (just in case)
 
 											// threshold
 											// key over threshold ( 0.0 or 1.0 )
-			double over = double(keyLinked > thresh_);
+			double gateGainApply = double(sidechain > mThreshLin);
 
 			// attack/release
-			over += DC_OFFSET;					// add DC offset to avoid denormal
-			AttRelEnvelope::run(over, env_);	// run attack/release
-			over = env_ - DC_OFFSET;			// subtract DC offset
+			gateGainApply += DC_OFFSET;					// add DC offset to avoid denormal
+			AttRelEnvelope::run(gateGainApply, currentOvershootLin);	// run attack/release
+			gateGainApply = currentOvershootLin - DC_OFFSET;			// subtract DC offset
 
 												/* REGARDING THE DC OFFSET: In this case, since the offset is added before
 												* the attack/release processes, the envelope will never fall below the offset,
@@ -650,8 +650,8 @@ namespace SRPlugins {
 												*/
 
 												// output gain
-			in1 *= over;	// apply gain reduction to input
-			in2 *= over;
+			in1 *= gateGainApply;	// apply gain reduction to input
+			in2 *= gateGainApply;
 		}
 		//-------------------------------------------------------------
 		// End Gate Inline Functions

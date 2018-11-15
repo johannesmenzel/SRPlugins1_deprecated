@@ -10,8 +10,8 @@ namespace SRPlugins {
 		{
 			assert(sampleRate > 0.0);
 			assert(ms > 0.0);
-			sampleRate_ = sampleRate;
-			ms_ = ms;
+			mSampleRate = sampleRate;
+			mTimeConstantMs = ms;
 			setCoef();
 		}
 
@@ -21,7 +21,7 @@ namespace SRPlugins {
 		void EnvelopeDetector::setTc(double ms)
 		{
 			//assert( ms > 0.0 );
-			ms_ = ms;
+			mTimeConstantMs = ms;
 			setCoef();
 		}
 
@@ -29,42 +29,42 @@ namespace SRPlugins {
 		void EnvelopeDetector::setSampleRate(double sampleRate)
 		{
 			assert(sampleRate > 0.0);
-			sampleRate_ = sampleRate;
+			mSampleRate = sampleRate;
 			setCoef();
 		}
 
 		//-------------------------------------------------------------
 		void EnvelopeDetector::setCoef(void)
 		{
-			coef_ = exp(-1000.0 / (ms_ * sampleRate_));
+			mRuntimeCoeff = exp(-1000.0 / (mTimeConstantMs * mSampleRate));
 		}
 
 		//-------------------------------------------------------------
 		// attack/release envelope
 		//-------------------------------------------------------------
 		AttRelEnvelope::AttRelEnvelope(double att_ms, double rel_ms, double sampleRate)
-			: att_(att_ms, sampleRate)
-			, rel_(rel_ms, sampleRate)
+			: mEnvelopeDetectorAttack(att_ms, sampleRate)
+			, mEnvelopeDetectorRelease(rel_ms, sampleRate)
 		{
 		}
 
 		//-------------------------------------------------------------
 		void AttRelEnvelope::setAttack(double ms)
 		{
-			att_.setTc(ms);
+			mEnvelopeDetectorAttack.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void AttRelEnvelope::setRelease(double ms)
 		{
-			rel_.setTc(ms);
+			mEnvelopeDetectorRelease.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void AttRelEnvelope::setSampleRate(double sampleRate)
 		{
-			att_.setSampleRate(sampleRate);
-			rel_.setSampleRate(sampleRate);
+			mEnvelopeDetectorAttack.setSampleRate(sampleRate);
+			mEnvelopeDetectorRelease.setSampleRate(sampleRate);
 		}
 
 
@@ -74,14 +74,14 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		SRCompressor::SRCompressor()
 			: AttRelEnvelope(10.0, 100.0)
-			, threshdB_(0.0)
-			, ratio_(1.0)
+			, mThreshDb(0.0)
+			, mRatio(1.0)
 			, currentOvershootDb(DC_OFFSET)
 			, mSidechainFc(0.0)
-			, grLin(1.0)
-			, grDb(0.0)
-			, kneeDb_(0.0)
-			, maxGr(0.0)
+			, mGrLin(1.0)
+			, mGrDb(0.0)
+			, mKneeWidthDb(0.0)
+			, mMaxGr(0.0)
 		{
 		}
 
@@ -100,21 +100,21 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		void SRCompressor::setThresh(double dB)
 		{
-			threshdB_ = dB;
+			mThreshDb = dB;
 		}
 
 		//-------------------------------------------------------------
 		void SRCompressor::setRatio(double ratio)
 		{
 			//assert( ratio > 0.0 );
-			ratio_ = ratio;
-			maxGr = 73.4979484210802 - 88.939188010773 * (1 - exp(-1.75091102973106 * (1 / ratio)));
+			mRatio = ratio;
+			mMaxGr = 73.4979484210802 - 88.939188010773 * (1 - exp(-1.75091102973106 * (1 / ratio)));
 		}
 
 		void SRCompressor::setKnee(double kneeDb)
 		{
 			//assert( ratio > 0.0 );
-			kneeDb_ = kneeDb;
+			mKneeWidthDb = kneeDb;
 		}
 
 		void SRCompressor::setSidechainFilter(double sidechainFc) {
@@ -140,8 +140,8 @@ namespace SRPlugins {
 		// simple compressor with RMS detection
 		//-------------------------------------------------------------
 		SRCompressorRMS::SRCompressorRMS()
-			: ave_(5.0)
-			, aveOfSqrs_(DC_OFFSET)
+			: mEnvelopeDetectorAverager(5.0)
+			, mAverageOfSquares(DC_OFFSET)
 		{
 		}
 
@@ -149,87 +149,87 @@ namespace SRPlugins {
 		void SRCompressorRMS::setSampleRate(double sampleRate)
 		{
 			SRCompressor::setSampleRate(sampleRate);
-			ave_.setSampleRate(sampleRate);
+			mEnvelopeDetectorAverager.setSampleRate(sampleRate);
 		}
 
 		//-------------------------------------------------------------
 		void SRCompressorRMS::setWindow(double ms)
 		{
-			ave_.setTc(ms);
+			mEnvelopeDetectorAverager.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void SRCompressorRMS::initRuntime(void)
 		{
 			SRCompressor::initRuntime();
-			aveOfSqrs_ = DC_OFFSET;
+			mAverageOfSquares = DC_OFFSET;
 		}
 
 		//-------------------------------------------------------------
 		SRLimiter::SRLimiter()
-			: threshdB_(0.0)
-			, thresh_(1.0)
-			, peakHold_(0)
-			, peakTimer_(0)
-			, maxPeak_(1.0)
-			, att_(1.0)
-			, rel_(10.0)
-			, env_(1.0)
-			, mask_(BUFFER_SIZE - 1)
-			, cur_(0)
+			: mThreshDb(0.0)
+			, mThreshLin(1.0)
+			, mPeakHoldSamples(0)
+			, mPeakHoldTimer(0)
+			, mMaxPeak(1.0)
+			, mEnvelopeDetectorAttack(1.0)
+			, mEnvelopeDetectorRelease(10.0)
+			, currentOvershootLin(1.0)
+			, mBufferMask(BUFFER_SIZE - 1)
+			, mCursor(0)
 		{
 			setAttack(1.0);
-			outBuffer_[0].resize(BUFFER_SIZE, 0.0);
-			outBuffer_[1].resize(BUFFER_SIZE, 0.0);
+			mOutputBuffer[0].resize(BUFFER_SIZE, 0.0);
+			mOutputBuffer[1].resize(BUFFER_SIZE, 0.0);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::setThresh(double dB)
 		{
-			threshdB_ = dB;
-			thresh_ = SRPlugins::SRHelpers::DBToAmp(dB);
+			mThreshDb = dB;
+			mThreshLin = SRPlugins::SRHelpers::DBToAmp(dB);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::setAttack(double ms)
 		{
-			unsigned int samp = int(0.001 * ms * att_.getSampleRate());
+			unsigned int samp = int(0.001 * ms * mEnvelopeDetectorAttack.getSampleRate());
 
 			assert(samp < BUFFER_SIZE);
 
-			peakHold_ = samp;
-			att_.setTc(ms);
+			mPeakHoldSamples = samp;
+			mEnvelopeDetectorAttack.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::setRelease(double ms)
 		{
-			rel_.setTc(ms);
+			mEnvelopeDetectorRelease.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::setSampleRate(double sampleRate)
 		{
-			att_.setSampleRate(sampleRate);
-			rel_.setSampleRate(sampleRate);
+			mEnvelopeDetectorAttack.setSampleRate(sampleRate);
+			mEnvelopeDetectorRelease.setSampleRate(sampleRate);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::initRuntime(void)
 		{
-			peakTimer_ = 0;
-			maxPeak_ = thresh_;
-			env_ = thresh_;
-			cur_ = 0;
-			outBuffer_[0].assign(BUFFER_SIZE, 0.0);
-			outBuffer_[1].assign(BUFFER_SIZE, 0.0);
+			mPeakHoldTimer = 0;
+			mMaxPeak = mThreshLin;
+			currentOvershootLin = mThreshLin;
+			mCursor = 0;
+			mOutputBuffer[0].assign(BUFFER_SIZE, 0.0);
+			mOutputBuffer[1].assign(BUFFER_SIZE, 0.0);
 		}
 
 		//-------------------------------------------------------------
 		void SRLimiter::FastEnvelope::setCoef(void)
 		{
 			// rises to 99% of in value over duration of time constant
-			coef_ = pow(0.01, (1000.0 / (ms_ * sampleRate_)));
+			mRuntimeCoeff = pow(0.01, (1000.0 / (mTimeConstantMs * mSampleRate)));
 		}
 
 
@@ -237,31 +237,31 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		SRGate::SRGate()
 			: AttRelEnvelope(1.0, 100.0)
-			, threshdB_(0.0)
-			, thresh_(1.0)
-			, env_(DC_OFFSET)
+			, mThreshDb(0.0)
+			, mThreshLin(1.0)
+			, currentOvershootLin(DC_OFFSET)
 		{
 		}
 
 		//-------------------------------------------------------------
 		void SRGate::setThresh(double dB)
 		{
-			threshdB_ = dB;
-			thresh_ = SRPlugins::SRHelpers::DBToAmp(dB);
+			mThreshDb = dB;
+			mThreshLin = SRPlugins::SRHelpers::DBToAmp(dB);
 		}
 
 		//-------------------------------------------------------------
 		void SRGate::initRuntime(void)
 		{
-			env_ = DC_OFFSET;
+			currentOvershootLin = DC_OFFSET;
 		}
 
 		//-------------------------------------------------------------
 		// simple gate with RMS detection
 		//-------------------------------------------------------------
 		SRGateRms::SRGateRms()
-			: ave_(5.0)
-			, aveOfSqrs_(DC_OFFSET)
+			: mEnvelopeDetectorAverager(5.0)
+			, mAverageOfSquares(DC_OFFSET)
 		{
 		}
 
@@ -269,20 +269,20 @@ namespace SRPlugins {
 		void SRGateRms::setSampleRate(double sampleRate)
 		{
 			SRGate::setSampleRate(sampleRate);
-			ave_.setSampleRate(sampleRate);
+			mEnvelopeDetectorAverager.setSampleRate(sampleRate);
 		}
 
 		//-------------------------------------------------------------
 		void SRGateRms::setWindow(double ms)
 		{
-			ave_.setTc(ms);
+			mEnvelopeDetectorAverager.setTc(ms);
 		}
 
 		//-------------------------------------------------------------
 		void SRGateRms::initRuntime(void)
 		{
 			SRGate::initRuntime();
-			aveOfSqrs_ = DC_OFFSET;
+			mAverageOfSquares = DC_OFFSET;
 		}
 
 

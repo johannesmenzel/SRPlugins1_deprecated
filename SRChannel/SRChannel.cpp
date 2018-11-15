@@ -19,6 +19,7 @@
 
 
 const int kNumPrograms = 4;									// Here you find the total number of presets defined
+//const double METER_ATTACK = 1., METER_DECAY = 0.001;			// This is the global attack and release constants for meters
 const double METER_ATTACK = .6, METER_DECAY = .05;			// This is the global attack and release constants for meters
 const double halfpi = PI / 2;								// Half pi defined
 const double dcoff = 1e-15;									// amount of DC offset added and subtracted respectivly at the beginning and the end of DoubleReplacing loop
@@ -275,20 +276,24 @@ const parameterProperties_struct parameterProperties[kNumParams] = {
 
 SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
   :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo),
-	meterInputPeak1(0.),
-	meterInputPeak2(0.),
-	mCompRmsGr(0.),
-	mCompPeakGr(0.),
-	meterOutputPeak1(0.),
-	meterOutputPeak2(0.),
-	meterInputPrev1(0.),
-	meterInputPrev2(0.),
-	meterOutputPrev1(0.),
-	meterOutputPrev2(0.),
-	xMeterInput1(0.),
-	xMeterInput2(0.),
-	xMeterOutput1(0.),
-	xMeterOutput2(0.)
+	mInputPeakMeterValue1(0.),
+	mInputPeakMeterValue2(0.),
+	mRmsGrMeterValue(0.),
+	mPeakGrMeterValue(0.),
+	mOutputPeakMeterValue1(0.),
+	mOutputPeakMeterValue2(0.),
+	mInputPeakMeterPreviousValue1(0.),
+	mInputPeakMeterPreviousValue2(0.),
+	mOutputPeakMeterPreviousValue1(0.),
+	mOutputPeakMeterPreviousValue2(0.),
+	mInputPeakMeterTimeConst1(0.),
+	mInputPeakMeterTimeConst2(0.),
+	mOutputPeakMeterTimeConst1(0.),
+	mOutputPeakMeterTimeConst2(0.),
+	mOutputVuMeterValue1(0.),
+	mOutputVuMeterValue2(0.),
+	mOutputVuMeterSos1(0.),
+	mOutputVuMeterSos2(0.)
 {
   TRACE;
 
@@ -446,12 +451,15 @@ void SRChannel::CreateGraphics() {
 	// Meters
 		// Peak and GR
 		IRECT meter = IRECT(kWidth - 60, kControlY, kWidth, kHeight);
-		meterInput1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 59, bitmapLogo.H, kWidth - 51, kHeight), colorMeterBg, colorMeterFg));
-		meterInput2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 49, bitmapLogo.H, kWidth - 41, kHeight), colorMeterBg, colorMeterFg));
-		meterGrRms = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
-		meterGrPeak = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
-		meterOutput1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
-		meterOutput2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
+		cInputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 59, bitmapLogo.H, kWidth - 51, kHeight), colorMeterBg, colorMeterFg));
+		cInputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 49, bitmapLogo.H, kWidth - 41, kHeight), colorMeterBg, colorMeterFg));
+		cRmsGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
+		cPeakGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
+		cOuputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
+		cOutputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
+		cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 79, bitmapLogo.H, kWidth - 71, kHeight), colorMeterBg, colorMeterFg));
+		cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 69, bitmapLogo.H, kWidth - 61, kHeight), colorMeterBg, colorMeterFg));
+
 
 		// Peak Meter Labels
 		for (int measureDb = 0; measureDb <= 20; measureDb++) {
@@ -469,7 +477,7 @@ void SRChannel::CreateGraphics() {
 		}
 
 		// Biquad Frequency Response
-		//meterFreqResp = pGraphics->AttachControl(new SRControls::IFreqRespGraph(this, IRECT(kControlX + kScaleX * 15 - 32, kControlY + kScaleY * 8, kControlX + kScaleX * 19 - 8, kHeight), meterFreqRespValues, 64));
+		//cFreqRespGraph = pGraphics->AttachControl(new SRControls::IFreqRespGraph(this, IRECT(kControlX + kScaleX * 15 - 32, kControlY + kScaleY * 8, kControlX + kScaleX * 19 - 8, kHeight), meterFreqRespValues, 64));
 
 
 
@@ -595,12 +603,12 @@ void SRChannel::CreateGraphics() {
 void SRChannel::InitGUI() {
 	if (GetGUI()) {
 		GetGUI()->AssignParamNameToolTips();
-		GetGUI()->GetControl(meterInput1)->SetTooltip("VU Meter of left input channel");
-		GetGUI()->GetControl(meterInput2)->SetTooltip("VU Meter of right input channel");
-		GetGUI()->GetControl(meterGrRms)->SetTooltip("Gain reduction of RMS compressor");
-		GetGUI()->GetControl(meterGrPeak)->SetTooltip("Gain reduction of peak compressor");
-		GetGUI()->GetControl(meterOutput1)->SetTooltip("VU Meter of left output channel");
-		GetGUI()->GetControl(meterOutput2)->SetTooltip("VU Meter of right output channel");
+		GetGUI()->GetControl(cInputPeakMeter1)->SetTooltip("VU Meter of left input channel");
+		GetGUI()->GetControl(cInputPeakMeter2)->SetTooltip("VU Meter of right input channel");
+		GetGUI()->GetControl(cRmsGrMeter)->SetTooltip("Gain reduction of RMS compressor");
+		GetGUI()->GetControl(cPeakGrMeter)->SetTooltip("Gain reduction of peak compressor");
+		GetGUI()->GetControl(cOuputPeakMeter1)->SetTooltip("VU Meter of left output channel");
+		GetGUI()->GetControl(cOutputPeakMeter2)->SetTooltip("VU Meter of right output channel");
 		GetGUI()->EnableTooltips(true);
 		GetGUI()->UpdateTooltips();
 	}
@@ -726,6 +734,15 @@ void SRChannel::InitDeesser() {
 	fDeesser.setCompressor(mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, 20, 5.0, mSampleRate);
 }
 
+void SRChannel::InitMeter() {
+	mSampleRate = GetSampleRate();
+	fOutputVuMeterEnvelope1.setAttack(300), fOutputVuMeterEnvelope2.setAttack(300);
+	fOutputVuMeterEnvelope1.setRelease(300), fOutputVuMeterEnvelope2.setRelease(300);
+	fOutputVuMeterEnvelope1.setSampleRate(mSampleRate), fOutputVuMeterEnvelope2.setSampleRate(mSampleRate);
+	fOutputVuMeterEnvelopeDetector1.setSampleRate(mSampleRate), fOutputVuMeterEnvelopeDetector2.setSampleRate(mSampleRate);
+	fOutputVuMeterEnvelopeDetector1.setTc(5), fOutputVuMeterEnvelopeDetector2.setTc(5);
+}
+
 
 /*
 void SRChannel::CalculateFreqResp() {
@@ -749,9 +766,9 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	double* out1 = outputs[0];
 	double* out2 = outputs[1];
 
-	meterInputPeak1 = 0., meterInputPeak2 = 0.;
-	mCompRmsGr = 0., mCompPeakGr = 0.;
-	meterOutputPeak1 = 0., meterOutputPeak2 = 0.;
+	mInputPeakMeterValue1 = 0., mInputPeakMeterValue2 = 0.;
+	mRmsGrMeterValue = 0., mPeakGrMeterValue = 0.;
+	mOutputPeakMeterValue1 = 0., mOutputPeakMeterValue2 = 0.;
 
 
 	// Begin Processing per Frame
@@ -778,8 +795,8 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 			}
 
 			// Input Meter
-			meterInputPeak1 = IPMAX(meterInputPeak1, fabs(*out1));
-			meterInputPeak2 = IPMAX(meterInputPeak2, fabs(*out2));
+			mInputPeakMeterValue1 = IPMAX(mInputPeakMeterValue1, fabs(*out1));
+			mInputPeakMeterValue2 = IPMAX(mInputPeakMeterValue2, fabs(*out2));
 
 			// Fill circular buffer with input gain values
 			//circularBuffer[1][circularBufferPointer] = *out1;
@@ -1099,19 +1116,25 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 		// Output Meter +  GR Meter
 		if (mCompBypass != 1 && mCompRmsRatio != 1. && mCompRmsThresh != 0. && mBypass != 1) {
-			mCompRmsGr += (-fabs(fCompressorRms.getGrDb()) + 60) / 60;
+			mRmsGrMeterValue += (-fabs(fCompressorRms.getGrDb()) + 60) / 60;
 		} else {
-			mCompRmsGr += 1.;
+			mRmsGrMeterValue += 1.;
 		}
 
 		if (mCompBypass != 1 && mCompPeakRatio != 1. && mCompPeakThresh != 0. && mBypass != 1) {
-			mCompPeakGr += (-fabs(fCompressorPeak.getGrDb()) + 60) / 60;
+			mPeakGrMeterValue += (-fabs(fCompressorPeak.getGrDb()) + 60) / 60;
 		} else {
-			mCompPeakGr += 1.;
+			mPeakGrMeterValue += 1.;
 		}
 
-		meterOutputPeak1 = IPMAX(meterOutputPeak1, fabs(*out1));
-		meterOutputPeak2 = IPMAX(meterOutputPeak2, fabs(*out2));
+		mOutputPeakMeterValue1 = IPMAX(mOutputPeakMeterValue1, fabs(*out1));
+		mOutputPeakMeterValue2 = IPMAX(mOutputPeakMeterValue2, fabs(*out2));
+
+		fOutputVuMeterEnvelopeDetector1.run(fabs(*out1), mOutputVuMeterSos1);
+		fOutputVuMeterEnvelopeDetector2.run(fabs(*out2), mOutputVuMeterSos2);
+		fOutputVuMeterEnvelope1.run(AmpToDB(mOutputVuMeterSos1), mOutputVuMeterValue1);
+		fOutputVuMeterEnvelope2.run(AmpToDB(mOutputVuMeterSos2), mOutputVuMeterValue2);
+
 
 		(circularBufferPointer >= 65535) ? circularBufferPointer = 0 : circularBufferPointer++;
 
@@ -1120,35 +1143,38 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 	// Begin Processing per Framesize
 
-    xMeterInput1 = (meterInputPeak1 < meterInputPrev1 ? METER_DECAY : METER_ATTACK);
-	xMeterInput2 = (meterInputPeak2 < meterInputPrev2 ? METER_DECAY : METER_ATTACK);
-	meterInputPeak1 = meterInputPeak1 * xMeterInput1 + meterInputPrev1 * (1.0 - xMeterInput1);
-	meterInputPeak2 = meterInputPeak2 * xMeterInput2 + meterInputPrev2 * (1.0 - xMeterInput2);
-	meterInputPrev1 = meterInputPeak1;
-	meterInputPrev2 = meterInputPeak2;
-	meterInputPeak1 = (AmpToDB(meterInputPeak1) + 60) / 60;
-	meterInputPeak2 = (AmpToDB(meterInputPeak2) + 60) / 60;
+    mInputPeakMeterTimeConst1 = (mInputPeakMeterValue1 < mInputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
+	mInputPeakMeterTimeConst2 = (mInputPeakMeterValue2 < mInputPeakMeterPreviousValue2 ? METER_DECAY : METER_ATTACK);
+	mInputPeakMeterValue1 = mInputPeakMeterValue1 * mInputPeakMeterTimeConst1 + mInputPeakMeterPreviousValue1 * (1.0 - mInputPeakMeterTimeConst1);
+	mInputPeakMeterValue2 = mInputPeakMeterValue2 * mInputPeakMeterTimeConst2 + mInputPeakMeterPreviousValue2 * (1.0 - mInputPeakMeterTimeConst2);
+	mInputPeakMeterPreviousValue1 = mInputPeakMeterValue1;
+	mInputPeakMeterPreviousValue2 = mInputPeakMeterValue2;
+	mInputPeakMeterValue1 = (AmpToDB(mInputPeakMeterValue1) + 60) / 60;
+	mInputPeakMeterValue2 = (AmpToDB(mInputPeakMeterValue2) + 60) / 60;
 
-	xMeterOutput1 = (meterOutputPeak1 < meterOutputPrev1 ? METER_DECAY : METER_ATTACK);
-	xMeterOutput2 = (meterOutputPeak2 < meterOutputPrev2 ? METER_DECAY : METER_ATTACK);
-	meterOutputPeak1 = meterOutputPeak1 * xMeterOutput1 + meterOutputPrev1 * (1.0 - xMeterOutput1);
-	meterOutputPeak2 = meterOutputPeak2 * xMeterOutput2 + meterOutputPrev2 * (1.0 - xMeterOutput2);
-	meterOutputPrev1 = meterOutputPeak1;
-	meterOutputPrev2 = meterOutputPeak2;
-	meterOutputPeak1 = (AmpToDB(meterOutputPeak1) + 60) / 60;
-	meterOutputPeak2 = (AmpToDB(meterOutputPeak2) + 60) / 60;
+	mOutputPeakMeterTimeConst1 = (mOutputPeakMeterValue1 < mOutputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
+	mOutputPeakMeterTimeConst2 = (mOutputPeakMeterValue2 < mOutputPeakMeterPreviousValue2 ? METER_DECAY : METER_ATTACK);
+	mOutputPeakMeterValue1 = mOutputPeakMeterValue1 * mOutputPeakMeterTimeConst1 + mOutputPeakMeterPreviousValue1 * (1.0 - mOutputPeakMeterTimeConst1);
+	mOutputPeakMeterValue2 = mOutputPeakMeterValue2 * mOutputPeakMeterTimeConst2 + mOutputPeakMeterPreviousValue2 * (1.0 - mOutputPeakMeterTimeConst2);
+	mOutputPeakMeterPreviousValue1 = mOutputPeakMeterValue1;
+	mOutputPeakMeterPreviousValue2 = mOutputPeakMeterValue2;
+	mOutputPeakMeterValue1 = (AmpToDB(mOutputPeakMeterValue1) + 60) / 60;
+	mOutputPeakMeterValue2 = (AmpToDB(mOutputPeakMeterValue2) + 60) / 60;
+
 	
-	mCompRmsGr /= (double)nFrames;
-	mCompPeakGr /= (double)nFrames;
+	mRmsGrMeterValue /= (double)nFrames;
+	mPeakGrMeterValue /= (double)nFrames;
 
 	if (GetGUI())
 	{
-		GetGUI()->SetControlFromPlug(meterInput1, meterInputPeak1);
-		GetGUI()->SetControlFromPlug(meterInput2, meterInputPeak2);
-		GetGUI()->SetControlFromPlug(meterGrRms, mCompRmsGr);
-		GetGUI()->SetControlFromPlug(meterGrPeak, mCompPeakGr);
-		GetGUI()->SetControlFromPlug(meterOutput1, meterOutputPeak1);
-		GetGUI()->SetControlFromPlug(meterOutput2, meterOutputPeak2);
+		GetGUI()->SetControlFromPlug(cInputPeakMeter1, mInputPeakMeterValue1);
+		GetGUI()->SetControlFromPlug(cInputPeakMeter2, mInputPeakMeterValue2);
+		GetGUI()->SetControlFromPlug(cRmsGrMeter, mRmsGrMeterValue);
+		GetGUI()->SetControlFromPlug(cPeakGrMeter, mPeakGrMeterValue);
+		GetGUI()->SetControlFromPlug(cOuputPeakMeter1, mOutputPeakMeterValue1);
+		GetGUI()->SetControlFromPlug(cOutputPeakMeter2, mOutputPeakMeterValue2);
+		GetGUI()->SetControlFromPlug(cOutputVuMeter1, (mOutputVuMeterValue1 + 60) / 60);
+		GetGUI()->SetControlFromPlug(cOutputVuMeter2, (mOutputVuMeterValue2 + 60) / 60);
 	}
 
 }
@@ -1163,12 +1189,14 @@ void SRChannel::Reset()
 	TRACE;
 	IMutexLock lock(this);
 
+	mSampleRate = GetSampleRate();
 	InitBiquad();
 	InitSafePan();
 	InitCompPeak();
 	InitCompRms();
 	InitLimiter();
 	InitDeesser();
+	InitMeter();
 	circularBufferPointer = 0;
 }
 
