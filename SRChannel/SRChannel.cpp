@@ -607,58 +607,58 @@ void SRChannel::InitGUI() {
 void SRChannel::InitBiquad() {
 	mSampleRate = GetSampleRate();
 	fEqHpFilterOnepoleL.setFc(mEqHpFreq);
-	fEqHpFilter1L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter2L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter3L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter4L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter5L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter6L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter7L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter8L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter9L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter10L.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqLpFilter1L.setFilter(biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
-//	fEqHpFilter1L.setFilter(iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
-//	fEqLpFilter1L.setFilter(iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
-	fEqHfFilterL.setFilter(biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
-	fEqHmfFilterL.setFilter(biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
-	fEqLmfFilterL.setFilter(biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
-	fEqLfFilterL.setFilter(biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
+	fEqHpFilter1L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter2L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter3L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter4L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter5L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter6L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter7L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter8L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter9L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter10L.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqLpFilter1L.setFilter(SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
+//	fEqHpFilter1L.setFilter(SRFilters::iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
+//	fEqLpFilter1L.setFilter(SRFilters::iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
+	fEqHfFilterL.setFilter(SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
+	fEqHmfFilterL.setFilter(SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
+	fEqLmfFilterL.setFilter(SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
+	fEqLfFilterL.setFilter(SRFilters::biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
 
 	fDcBlockerL.setFc(10. / mSampleRate);
 
-	//fSatHpFilterL.setFilter(biquad_highpass, 20 / mSampleRate, stQ, 0., mSampleRate);
-	//fSatLfFilterL.setFilter(biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
-	//fSatMfFilterL.setFilter(biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
-	//fSatHfFilterL.setFilter(biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
-	//fSatLpFilterL.setFilter(biquad_lowpass, 20000 / mSampleRate, stQ, 0., mSampleRate);
+	//fSatHpFilterL.setFilter(SRFilters::biquad_highpass, 20 / mSampleRate, stQ, 0., mSampleRate);
+	//fSatLfFilterL.setFilter(SRFilters::biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
+	//fSatMfFilterL.setFilter(SRFilters::biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
+	//fSatHfFilterL.setFilter(SRFilters::biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
+	//fSatLpFilterL.setFilter(SRFilters::biquad_lowpass, 20000 / mSampleRate, stQ, 0., mSampleRate);
 
 	fEqHpFilterOnepoleR.setFc(mEqHpFreq);
-	fEqHpFilter1R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter2R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter3R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter4R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter5R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter6R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter7R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter8R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter9R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqHpFilter10R.setFilter(biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
-	fEqLpFilter1R.setFilter(biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter1R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter2R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter3R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter4R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter5R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter6R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter7R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter8R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter9R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqHpFilter10R.setFilter(SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
+	fEqLpFilter1R.setFilter(SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
 //	fEqHpFilter1R.setFilter(iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
 //	fEqLpFilter1R.setFilter(iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
-	fEqHfFilterR.setFilter(biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
-	fEqHmfFilterR.setFilter(biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
-	fEqLmfFilterR.setFilter(biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
-	fEqLfFilterR.setFilter(biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
+	fEqHfFilterR.setFilter(SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
+	fEqHmfFilterR.setFilter(SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
+	fEqLmfFilterR.setFilter(SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
+	fEqLfFilterR.setFilter(SRFilters::biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
 
 	fDcBlockerR.setFc(10. / mSampleRate);
 
-	//fSatHpFilterR.setFilter(biquad_highpass, 20 / mSampleRate, 0.70710678, 0., mSampleRate);
-	//fSatLfFilterR.setFilter(biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
-	//fSatMfFilterR.setFilter(biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
-	//fSatHfFilterR.setFilter(biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
-	//fSatLpFilterR.setFilter(biquad_lowpass, 20000 / mSampleRate, 0.70710678, 0., mSampleRate);
+	//fSatHpFilterR.setFilter(SRFilters::biquad_highpass, 20 / mSampleRate, 0.70710678, 0., mSampleRate);
+	//fSatLfFilterR.setFilter(SRFilters::biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
+	//fSatMfFilterR.setFilter(SRFilters::biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
+	//fSatHfFilterR.setFilter(SRFilters::biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
+	//fSatLpFilterR.setFilter(SRFilters::biquad_lowpass, 20000 / mSampleRate, 0.70710678, 0., mSampleRate);
 }
 
 void SRChannel::InitCompPeak() {
@@ -695,31 +695,31 @@ void SRChannel::InitLimiter() {
 
 void SRChannel::InitSafePan() {
 	mSampleRate = GetSampleRate();
-	fSafePanHpL.setFilter(iir_linkwitz_highpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
-	fSafePanLpL.setFilter(iir_linkwitz_lowpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
-	fSafePanHpR.setFilter(iir_linkwitz_highpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
-	fSafePanLpR.setFilter(iir_linkwitz_lowpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
+	fSafePanHpL.setFilter(SRFilters::iir_linkwitz_highpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
+	fSafePanLpL.setFilter(SRFilters::iir_linkwitz_lowpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
+	fSafePanHpR.setFilter(SRFilters::iir_linkwitz_highpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
+	fSafePanLpR.setFilter(SRFilters::iir_linkwitz_lowpass, mSafePanFreq / mSampleRate, 0., 0., mSampleRate);
 }
 
 void SRChannel::InitDeesser() {
 	mSampleRate = GetSampleRate();
-	fDeesserBottomLpFilterL.setFilter(iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserBottomLpFilterR.setFilter(iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidHpFilterL.setFilter(iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidHpFilterR.setFilter(iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidLpFilterL.setFilter(iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidLpFilterR.setFilter(iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserTopHpFilterL.setFilter(iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserTopHpFilterR.setFilter(iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserBottomLpFilterL.setFilter(SRFilters::iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserBottomLpFilterR.setFilter(SRFilters::iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserMidHpFilterL.setFilter(SRFilters::iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserMidHpFilterR.setFilter(SRFilters::iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserMidLpFilterL.setFilter(SRFilters::iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserMidLpFilterR.setFilter(SRFilters::iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserTopHpFilterL.setFilter(SRFilters::iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
+	fDeesserTopHpFilterR.setFilter(SRFilters::iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
 
-	//fDeesserBottomLpFilterL.setFilter(biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserBottomLpFilterR.setFilter(biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidHpFilterL.setFilter(biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidHpFilterR.setFilter(biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidLpFilterL.setFilter(biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidLpFilterR.setFilter(biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserTopHpFilterL.setFilter(biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserTopHpFilterR.setFilter(biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserBottomLpFilterL.setFilter(SRFilters::biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserBottomLpFilterR.setFilter(SRFilters::biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserMidHpFilterL.setFilter(SRFilters::biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserMidHpFilterR.setFilter(SRFilters::biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserMidLpFilterL.setFilter(SRFilters::biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserMidLpFilterR.setFilter(SRFilters::biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserTopHpFilterL.setFilter(SRFilters::biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
+	//fDeesserTopHpFilterR.setFilter(SRFilters::biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
 
 	fDeesser.setCompressor(mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, 20, 5.0, mSampleRate);
 }
@@ -1369,14 +1369,14 @@ void SRChannel::OnParamChange(int paramIdx)
 
   case kEqHfBell:
 	  mEqHfIsBell = GetParam(paramIdx)->Value();
-	  if (mEqHfIsBell == 1) {fEqHfFilterL.setType(biquad_peak); fEqHfFilterR.setType(biquad_peak);}
-	  else {fEqHfFilterL.setType(biquad_highshelf); fEqHfFilterR.setType(biquad_highshelf);}
+	  if (mEqHfIsBell == 1) {fEqHfFilterL.setType(SRFilters::biquad_peak); fEqHfFilterR.setType(SRFilters::biquad_peak);}
+	  else {fEqHfFilterL.setType(SRFilters::biquad_highshelf); fEqHfFilterR.setType(SRFilters::biquad_highshelf);}
 	  break;
 
   case kEqLfBell:
 	  mEqLfIsBell = GetParam(paramIdx)->Value();
-	  if (mEqLfIsBell == 1) {fEqLfFilterL.setType(biquad_peak); fEqLfFilterR.setType(biquad_peak);}
-	  else {fEqLfFilterL.setType(biquad_lowshelf); fEqLfFilterR.setType(biquad_lowshelf);}
+	  if (mEqLfIsBell == 1) {fEqLfFilterL.setType(SRFilters::biquad_peak); fEqLfFilterR.setType(SRFilters::biquad_peak);}
+	  else {fEqLfFilterL.setType(SRFilters::biquad_lowshelf); fEqLfFilterR.setType(SRFilters::biquad_lowshelf);}
 	  break;
 
   case kEqLfGain: mEqLfGain = GetParam(paramIdx)->Value(); fEqLfFilterL.setPeakGain(mEqLfGain); fEqLfFilterR.setPeakGain(mEqLfGain); break;

@@ -131,7 +131,7 @@ private:
 
 	// FILTERS
 	// Spectral Filters
-	SRFiltersTwoPole fEqHpFilter1L, fEqHpFilter2L, fEqHpFilter3L, fEqHpFilter4L, fEqHpFilter5L, fEqHpFilter6L, fEqHpFilter7L, fEqHpFilter8L, fEqHpFilter9L, fEqHpFilter10L,
+	SRFilters::SRFiltersTwoPole fEqHpFilter1L, fEqHpFilter2L, fEqHpFilter3L, fEqHpFilter4L, fEqHpFilter5L, fEqHpFilter6L, fEqHpFilter7L, fEqHpFilter8L, fEqHpFilter9L, fEqHpFilter10L,
 		fEqLpFilter1L,
 		fEqLfFilterL, fEqLmfFilterL, fEqHmfFilterL, fEqHfFilterL,
 		fEqHpFilter1R, fEqHpFilter2R, fEqHpFilter3R, fEqHpFilter4R, fEqHpFilter5R, fEqHpFilter6R, fEqHpFilter7R, fEqHpFilter8R, fEqHpFilter9R, fEqHpFilter10R,
@@ -144,7 +144,7 @@ private:
 		fDeesserBottomLpFilterL, fDeesserBottomLpFilterR, fDeesserMidHpFilterL, fDeesserMidHpFilterR, fDeesserMidLpFilterL, fDeesserMidLpFilterR, fDeesserTopHpFilterL, fDeesserTopHpFilterR;
 				//fSatHpFilterL, fSatHpFilterR, fSatLfFilterL, fSatLfFilterR, fSatMfFilterL, fSatMfFilterR, fSatHfFilterL, fSatHfFilterR, fSatLpFilterL, fSatLpFilterR // These were the filters to alter the saturated sound
 			
-	SRFiltersOnePole fDcBlockerL, fDcBlockerR, fEqHpFilterOnepoleL, fEqHpFilterOnepoleR, fEqLpFilterOnepoleL, fEqLpFilterOnepoleR;
+	SRFilters::SRFiltersOnePole fDcBlockerL, fDcBlockerR, fEqHpFilterOnepoleL, fEqHpFilterOnepoleR, fEqLpFilterOnepoleL, fEqLpFilterOnepoleR;
 	
 	// Dynamic Filters
 	SRDynamics::SRCompressor fCompressorPeak;

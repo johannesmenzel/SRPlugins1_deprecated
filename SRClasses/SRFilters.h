@@ -20,6 +20,8 @@
 #ifndef SRFilters_h
 #define SRFilters_h
 
+namespace SRFilters {
+
 	// TWO POLE FILTERS
 
 	enum {
@@ -98,5 +100,8 @@
 		in -= z1;
 		return in;
 	}
+
+}
+// end namespace SRFilters
 
 #endif // SRFilters_h

@@ -92,8 +92,8 @@ namespace SRDynamics {
 			setSidechainFilterFreq(sidechainFc);
 			setSampleRate(samplerate);
 			setKnee(kneeDb);
-			fSidechainFilter1.setFilter(biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
-			fSidechainFilter2.setFilter(biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
+			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
+			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
 		}
 
 		//-------------------------------------------------------------
@@ -118,8 +118,8 @@ namespace SRDynamics {
 
 		void SRCompressor::setSidechainFilter(double sidechainFc) {
 			mSidechainFc = sidechainFc;
-			fSidechainFilter1.setFilter(biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
-			fSidechainFilter2.setFilter(biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
+			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
+			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
 		}
 
 		void SRCompressor::setSidechainFilterFreq(double sidechainFc)

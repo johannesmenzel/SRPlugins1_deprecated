@@ -176,7 +176,7 @@ static INLINE double dB2lin(double dB) {
 		// runtime variables
 		double currentOvershootDb;			// over-threshold envelope (dB)
 
-		SRFiltersTwoPole fSidechainFilter1, fSidechainFilter2;
+		SRFilters::SRFiltersTwoPole fSidechainFilter1, fSidechainFilter2;
 
 	};	// end SimpleComp class
 
