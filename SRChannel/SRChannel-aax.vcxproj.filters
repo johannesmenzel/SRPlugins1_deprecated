@@ -55,12 +55,10 @@
     <ClCompile Include="..\..\AAX_SDK\Interfaces\AAX_Exports.cpp">
       <Filter>Libs</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRClasses\SimpleComp.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleEnvelope.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleGate.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleLimit.cpp" />
-    <ClCompile Include="..\SRClasses\SRChannelControls.cpp" />
-    <ClCompile Include="..\SRClasses\SRChannelFilters.cpp" />
+    <ClCompile Include="..\SRClasses\SRControls.cpp" />
+    <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
+    <ClCompile Include="..\SRClasses\SRFilters.cpp" />
+    <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\IPlug\Containers.h">
@@ -119,16 +117,10 @@
     </ClInclude>
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="..\SRClasses\SimpleComp.h" />
-    <ClInclude Include="..\SRClasses\SimpleEnvelope.h" />
-    <ClInclude Include="..\SRClasses\SimpleGain.h" />
-    <ClInclude Include="..\SRClasses\SimpleGate.h" />
-    <ClInclude Include="..\SRClasses\SimpleHeader.h" />
-    <ClInclude Include="..\SRClasses\SimpleLimit.h" />
-    <ClInclude Include="..\SRClasses\SRChannelControls.h" />
-    <ClInclude Include="..\SRClasses\SRChannelFilters.h" />
-    <ClInclude Include="..\SRClasses\SRChannelGraphics.h" />
-    <ClInclude Include="..\SRClasses\Oversampler.h" />
+    <ClInclude Include="..\SRClasses\SRHelpers.h" />
+    <ClInclude Include="..\SRClasses\SRControls.h" />
+    <ClInclude Include="..\SRClasses\SRDynamics.h" />
+    <ClInclude Include="..\SRClasses\SRFilters.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SRChannel.rc" />
@@ -146,10 +138,5 @@
     <Library Include="..\..\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
       <Filter>Libs</Filter>
     </Library>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SRClasses\SimpleCompProcess.inl" />
-    <None Include="..\SRClasses\SimpleGateProcess.inl" />
-    <None Include="..\SRClasses\SimpleLimitProcess.inl" />
   </ItemGroup>
 </Project>

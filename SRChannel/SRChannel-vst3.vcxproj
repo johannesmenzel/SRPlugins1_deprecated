@@ -339,17 +339,9 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\SRChann
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.h" />
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h" />
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST3.h" />
-    <ClInclude Include="..\SRClasses\Oversampler.h" />
-    <ClInclude Include="..\SRClasses\SimpleComp.h" />
-    <ClInclude Include="..\SRClasses\SimpleEnvelope.h" />
-    <ClInclude Include="..\SRClasses\SimpleGain.h" />
-    <ClInclude Include="..\SRClasses\SimpleGate.h" />
-    <ClInclude Include="..\SRClasses\SimpleHeader.h" />
-    <ClInclude Include="..\SRClasses\SimpleLimit.h" />
     <ClInclude Include="..\SRClasses\SRControls.h" />
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
-    <ClInclude Include="..\SRClasses\SRGraphics.h" />
     <ClInclude Include="..\SRClasses\SRHelpers.h" />
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
@@ -370,10 +362,6 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\SRChann
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.cpp" />
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp" />
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST3.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleComp.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleEnvelope.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleGate.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleLimit.cpp" />
     <ClCompile Include="..\SRClasses\SRControls.cpp" />
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
@@ -382,11 +370,6 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\SRChann
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SRChannel.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SRClasses\SimpleCompProcess.inl" />
-    <None Include="..\SRClasses\SimpleGateProcess.inl" />
-    <None Include="..\SRClasses\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

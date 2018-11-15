@@ -13,8 +13,9 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 #include "../SRClasses/SRFilters.h"
 //#include "../SRClasses/SROnePole.h"
 //#include "../SRClasses/SimpleHeader.h"
-#include "../SRClasses/SimpleComp.h"
-#include "../SRClasses/SimpleLimit.h"
+//#include "../SRClasses/SimpleComp.h"
+//#include "../SRClasses/SimpleLimit.h"
+#include "../SRClasses/SRDynamics.h"
 #include "../SRClasses/SRHelpers.h"
 #include "../SRClasses/SRControls.h"
 #include "../SRClasses/Oversampler.h"
@@ -148,7 +149,7 @@ private:
 	// Dynamic Filters
 	SRDynamics::SRCompressor fCompressorPeak;
 	SRDynamics::SRCompressorRMS fCompressorRms;
-	SRDynamics::SimpleLimit fLimiter;
+	SRDynamics::SRLimiter fLimiter;
 	SRDynamics::SRCompressor fDeesser;
 	
 	// TESTVARS

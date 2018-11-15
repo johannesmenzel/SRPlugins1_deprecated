@@ -453,12 +453,10 @@ CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities
     <ClCompile Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.cpp" />
     <ClCompile Include="..\..\WDL\IPlug\IPlugAAX.cpp" />
     <ClCompile Include="..\..\WDL\IPlug\AAX\IPlugAAX_Describe.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleComp.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleEnvelope.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleGate.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleLimit.cpp" />
-    <ClCompile Include="..\SRClasses\SRChannelControls.cpp" />
-    <ClCompile Include="..\SRClasses\SRChannelFilters.cpp" />
+    <ClCompile Include="..\SRClasses\SRControls.cpp" />
+    <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
+    <ClCompile Include="..\SRClasses\SRFilters.cpp" />
+    <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
     <ClCompile Include="SRChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -509,16 +507,10 @@ CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities
     <ClInclude Include="..\..\WDL\IPlug\Log.h" />
     <ClInclude Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.h" />
     <ClInclude Include="..\..\WDL\IPlug\IPlugAAX.h" />
-    <ClInclude Include="..\SRClasses\Oversampler.h" />
-    <ClInclude Include="..\SRClasses\SimpleComp.h" />
-    <ClInclude Include="..\SRClasses\SimpleEnvelope.h" />
-    <ClInclude Include="..\SRClasses\SimpleGain.h" />
-    <ClInclude Include="..\SRClasses\SimpleGate.h" />
-    <ClInclude Include="..\SRClasses\SimpleHeader.h" />
-    <ClInclude Include="..\SRClasses\SimpleLimit.h" />
-    <ClInclude Include="..\SRClasses\SRChannelControls.h" />
-    <ClInclude Include="..\SRClasses\SRChannelFilters.h" />
-    <ClInclude Include="..\SRClasses\SRChannelGraphics.h" />
+    <ClInclude Include="..\SRClasses\SRControls.h" />
+    <ClInclude Include="..\SRClasses\SRDynamics.h" />
+    <ClInclude Include="..\SRClasses\SRFilters.h" />
+    <ClInclude Include="..\SRClasses\SRHelpers.h" />
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -552,11 +544,6 @@ CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">true</ExcludedFromBuild>
     </Library>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SRClasses\SimpleCompProcess.inl" />
-    <None Include="..\SRClasses\SimpleGateProcess.inl" />
-    <None Include="..\SRClasses\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

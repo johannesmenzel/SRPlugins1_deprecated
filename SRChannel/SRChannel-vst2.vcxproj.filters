@@ -5,10 +5,6 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST.cpp">
       <Filter>vst2</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRClasses\SimpleComp.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleEnvelope.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleGate.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleLimit.cpp" />
     <ClCompile Include="..\SRClasses\SRControls.cpp" />
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
@@ -21,17 +17,9 @@
       <Filter>vst2</Filter>
     </ClInclude>
     <ClInclude Include="..\SRClasses\SRHelpers.h" />
-    <ClInclude Include="..\SRClasses\SimpleComp.h" />
-    <ClInclude Include="..\SRClasses\SimpleEnvelope.h" />
-    <ClInclude Include="..\SRClasses\SimpleGain.h" />
-    <ClInclude Include="..\SRClasses\SimpleGate.h" />
-    <ClInclude Include="..\SRClasses\SimpleHeader.h" />
-    <ClInclude Include="..\SRClasses\SimpleLimit.h" />
     <ClInclude Include="..\SRClasses\SRControls.h" />
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
-    <ClInclude Include="..\SRClasses\SRGraphics.h" />
-    <ClInclude Include="..\SRClasses\Oversampler.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SRChannel.rc" />
@@ -40,10 +28,5 @@
     <Filter Include="vst2">
       <UniqueIdentifier>{ea16de74-9d15-4c60-ba09-d0924088d3e5}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SRClasses\SimpleCompProcess.inl" />
-    <None Include="..\SRClasses\SimpleGateProcess.inl" />
-    <None Include="..\SRClasses\SimpleLimitProcess.inl" />
   </ItemGroup>
 </Project>

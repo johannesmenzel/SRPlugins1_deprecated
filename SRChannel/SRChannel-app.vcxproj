@@ -276,19 +276,10 @@
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h" />
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtError.h" />
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtMidi.h" />
-    <ClInclude Include="..\SRClasses\Oversampler.h" />
-    <ClInclude Include="..\SRClasses\SimpleComp.h" />
-    <ClInclude Include="..\SRClasses\SimpleEnvelope.h" />
-    <ClInclude Include="..\SRClasses\SimpleGain.h" />
-    <ClInclude Include="..\SRClasses\SimpleGate.h" />
-    <ClInclude Include="..\SRClasses\SimpleHeader.h" />
-    <ClInclude Include="..\SRClasses\SimpleLimit.h" />
     <ClInclude Include="..\SRClasses\SRControls.h" />
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
-    <ClInclude Include="..\SRClasses\SRGraphics.h" />
     <ClInclude Include="..\SRClasses\SRHelpers.h" />
-    <ClInclude Include="..\SRClasses\SROnePole.h" />
     <ClInclude Include="app_wrapper\app_main.h" />
     <ClInclude Include="app_wrapper\app_resource.h" />
     <ClInclude Include="SRChannel.h" />
@@ -301,10 +292,6 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugStandalone.cpp" />
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp" />
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleComp.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleEnvelope.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleGate.cpp" />
-    <ClCompile Include="..\SRClasses\SimpleLimit.cpp" />
     <ClCompile Include="..\SRClasses\SRControls.cpp" />
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
@@ -315,11 +302,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SRChannel.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\SRClasses\SimpleCompProcess.inl" />
-    <None Include="..\SRClasses\SimpleGateProcess.inl" />
-    <None Include="..\SRClasses\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
