@@ -3,6 +3,29 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# WDL-OL gitignore
+*.exe
+*.zip
+## *.vcproj.*
+*.pkg
+*.dmg
+*.depend
+*.layout
+*.mode1v3
+*.db
+*.LSOverride
+*.xcworkspace
+*.xcuserdata
+*.xcschememanagement.plist
+build-*
+ipch/*
+gui/*
+
+Icon?
+.DS_Stor*
+.vs/*
+
+
 # User-specific files
 *.suo
 *.user
