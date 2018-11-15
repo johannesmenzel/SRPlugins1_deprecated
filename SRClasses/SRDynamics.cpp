@@ -1,70 +1,71 @@
 #include "SRDynamics.h"
+namespace SRPlugins {
 
-namespace SRDynamics {
+	namespace SRDynamics {
 
-	//-------------------------------------------------------------
-	// envelope detector
-	//-------------------------------------------------------------
-	EnvelopeDetector::EnvelopeDetector(double ms, double sampleRate)
-	{
-		assert(sampleRate > 0.0);
-		assert(ms > 0.0);
-		sampleRate_ = sampleRate;
-		ms_ = ms;
-		setCoef();
-	}
+		//-------------------------------------------------------------
+		// envelope detector
+		//-------------------------------------------------------------
+		EnvelopeDetector::EnvelopeDetector(double ms, double sampleRate)
+		{
+			assert(sampleRate > 0.0);
+			assert(ms > 0.0);
+			sampleRate_ = sampleRate;
+			ms_ = ms;
+			setCoef();
+		}
 
-	
 
-	//-------------------------------------------------------------
-	void EnvelopeDetector::setTc(double ms)
-	{
-		//assert( ms > 0.0 );
-		ms_ = ms;
-		setCoef();
-	}
 
-	//-------------------------------------------------------------
-	void EnvelopeDetector::setSampleRate(double sampleRate)
-	{
-		assert(sampleRate > 0.0);
-		sampleRate_ = sampleRate;
-		setCoef();
-	}
+		//-------------------------------------------------------------
+		void EnvelopeDetector::setTc(double ms)
+		{
+			//assert( ms > 0.0 );
+			ms_ = ms;
+			setCoef();
+		}
 
-	//-------------------------------------------------------------
-	void EnvelopeDetector::setCoef(void)
-	{
-		coef_ = exp(-1000.0 / (ms_ * sampleRate_));
-	}
+		//-------------------------------------------------------------
+		void EnvelopeDetector::setSampleRate(double sampleRate)
+		{
+			assert(sampleRate > 0.0);
+			sampleRate_ = sampleRate;
+			setCoef();
+		}
 
-	//-------------------------------------------------------------
-	// attack/release envelope
-	//-------------------------------------------------------------
-	AttRelEnvelope::AttRelEnvelope(double att_ms, double rel_ms, double sampleRate)
-		: att_(att_ms, sampleRate)
-		, rel_(rel_ms, sampleRate)
-	{
-	}
+		//-------------------------------------------------------------
+		void EnvelopeDetector::setCoef(void)
+		{
+			coef_ = exp(-1000.0 / (ms_ * sampleRate_));
+		}
 
-	//-------------------------------------------------------------
-	void AttRelEnvelope::setAttack(double ms)
-	{
-		att_.setTc(ms);
-	}
+		//-------------------------------------------------------------
+		// attack/release envelope
+		//-------------------------------------------------------------
+		AttRelEnvelope::AttRelEnvelope(double att_ms, double rel_ms, double sampleRate)
+			: att_(att_ms, sampleRate)
+			, rel_(rel_ms, sampleRate)
+		{
+		}
 
-	//-------------------------------------------------------------
-	void AttRelEnvelope::setRelease(double ms)
-	{
-		rel_.setTc(ms);
-	}
+		//-------------------------------------------------------------
+		void AttRelEnvelope::setAttack(double ms)
+		{
+			att_.setTc(ms);
+		}
 
-	//-------------------------------------------------------------
-	void AttRelEnvelope::setSampleRate(double sampleRate)
-	{
-		att_.setSampleRate(sampleRate);
-		rel_.setSampleRate(sampleRate);
-	}
+		//-------------------------------------------------------------
+		void AttRelEnvelope::setRelease(double ms)
+		{
+			rel_.setTc(ms);
+		}
+
+		//-------------------------------------------------------------
+		void AttRelEnvelope::setSampleRate(double sampleRate)
+		{
+			att_.setSampleRate(sampleRate);
+			rel_.setSampleRate(sampleRate);
+		}
 
 
 
@@ -186,7 +187,7 @@ namespace SRDynamics {
 		void SRLimiter::setThresh(double dB)
 		{
 			threshdB_ = dB;
-			thresh_ = dB2lin(dB);
+			thresh_ = SRPlugins::SRHelpers::DBToAmp(dB);
 		}
 
 		//-------------------------------------------------------------
@@ -246,7 +247,7 @@ namespace SRDynamics {
 		void SRGate::setThresh(double dB)
 		{
 			threshdB_ = dB;
-			thresh_ = dB2lin(dB);
+			thresh_ = SRPlugins::SRHelpers::DBToAmp(dB);
 		}
 
 		//-------------------------------------------------------------
@@ -285,4 +286,5 @@ namespace SRDynamics {
 		}
 
 
+	}
 } // end namespace
