@@ -1,15 +1,5 @@
 #include "SRControls.h"
-namespace SRPlugins {
 
-	namespace SRControls {
-		SRControls::SRControls()
-		{
-		}
+namespace SRPlugins { namespace SRControls {
 
-
-		SRControls::~SRControls()
-		{
-		}
-
-	}
-} // end namespace SRControls
+}} // end namespace SRControls

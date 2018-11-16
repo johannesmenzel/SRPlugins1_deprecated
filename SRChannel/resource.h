@@ -46,7 +46,8 @@
 instrument determined by PLUG _IS _INST
 */
 
-#define PLUG_CHANNEL_IO "1-1 2-2"
+#define PLUG_CHANNEL_IO "2-2 4-2" // 1-1 removed; hannes
+#define PLUG_SC_CHANS 2
 
 #define PLUG_LATENCY 0
 #define PLUG_IS_INST 0

@@ -17,7 +17,6 @@
 
 
 
-
 const int kNumPrograms = 4;									// Here you find the total number of presets defined
 //const double METER_ATTACK = 1., METER_DECAY = 0.001;			// This is the global attack and release constants for meters
 const double METER_ATTACK = .6, METER_DECAY = .05;			// This is the global attack and release constants for meters
@@ -147,6 +146,8 @@ enum EParams
   kCompPeakKneeWidthDb,
   kCompRmsKneeWidthDb,
   kInputBypass,
+  kCompPeakIsExtSc,
+  kCompRmsIsExrSc,
   kNumParams
 };
 
@@ -193,18 +194,20 @@ typedef struct {
 	const char* labelMin;
 	const char* labelMax;
 	const char* labelCtr;
-} parameterProperties_struct;
+	const char* tooltip;
+} structParameterProperties;
+
 
 															/* 
 															Actual properties struct.
 															Keep in order of the above listet parameters.
 															These are constants.
 															*/
-const parameterProperties_struct parameterProperties[kNumParams] = {
+const structParameterProperties parameterProperties[kNumParams] = {
 	//{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR"},
-	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10./12.,"dB",	"Input",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0" },
-	{ "Highpass Freq",	"HP",	16.,	16.,	350.,	1.,		120.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 4,		kControlY + kScaleY * 1,		"16", "350", "120" },
-	{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX	* 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k" },
+	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10./12.,"dB",	"Input",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0", "Input Gain is applied before everything else" },
+	{ "Highpass Freq",	"HP",	16.,	16.,	350.,	1.,		120.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 4,		kControlY + kScaleY * 1,		"16", "350", "120", "Set the frequency of the High Pass Filter, turn down to deactivate" },
+	{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX	* 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k", "Set the frequency of the Low Pass Filter, turn up to deactivate" },
 	{ "HF Gain",		"HF",	0.,		-12.,	12.,	.1,		0.,		.5,		"dB",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 4,		kControlY + kScaleY * 3,		"-12", "12", "0" },
 	{ "HF Freq",		"FQ",	8000.,	1500.,	16000.,	1.,		8000.,	.5,		"Hz",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 6,		kControlY + kScaleY * 4,		"1.5k", "16k", "8k" },
 	{ "HF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"W", "N", "" },
@@ -229,7 +232,7 @@ const parameterProperties_struct parameterProperties[kNumParams] = {
 	{ "Peak Attack",	"ATT",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 10,		"0.01", "200", "20" },
 	{ "Peak Release",	"REL",	200.,	1.,		2000.,	0.01,	200.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 11,		"1", "2k", "200" },
 	{ "Peak Makeup",	"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"0", "40", "10" },
-	{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50" },
+	{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50", "Here you can mix the signal of the RMS and Peak Compressor" },
 	{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50" },
 	{ "Saturation",		"SAT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Compressor",typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50" },
 	{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Input",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50" },
@@ -262,7 +265,10 @@ const parameterProperties_struct parameterProperties[kNumParams] = {
 	{ "Deesser Makeup",	"DSM",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 12,		"0", "40", "10" },
 	{ "Peak Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 13,		"0", "30", "10" },
 	{ "RMS Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 5,		"0", "30", "10" },
-	{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Input",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "" }
+	{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Input",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "" },
+	{ "Peak Ext SC",	"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15,		"INT", "EXT", "" },
+	{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "" },
+
 
 
 //	{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL", TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR"},
@@ -319,7 +325,7 @@ void SRChannel::CreateParams() {
 	for (int i = 0; i < kNumParams; i++) {											// We iterate through ALL parameters
 
 		IParam* param = GetParam(i);												// ... for which we temporally create a pointer "param"
-		const parameterProperties_struct& properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
+		const structParameterProperties& properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
 		/*
 		switch (i) {																// this is the old 
 				// Enum Parameters:
@@ -397,6 +403,7 @@ void SRChannel::CreateParams() {
 	}
 }
 
+
 void SRChannel::CreatePresets() {
 															// These have to be created when Parameters are complete, so work in progress.
 															// Following are original procedures to make default presets
@@ -408,6 +415,25 @@ void SRChannel::CreatePresets() {
 	MakePreset("Vocals", 0., 90., 22000., 5.7, 12200., .707, 0, 2.6, 5000., .3, -2., 478., 3.8, 2., 133., .707, 0, -25., 3., 20., 320., 3., -21., 19., .18, 80., 1.6, 50., 100., 50., 0., -1.5, 0., 150., -5., 0);
 	MakePreset("Mix Bus", 0., 30., 22000., 4., 14000., .707, 0, 3.5, 5700., .2, -2., 610., 3., 2., 60., .707, 1, -20., 3., 55., 450., 7.5, -13., 15., .8, 85., 2.5, 50., 80., 20., 0., -4., 0., 150., -.5, 1);
 //	MakePreset("NAME", InGain, HpFreq, LpFreq, HfGain, HfFreq, HfQ, HfBell, HmfGain, HmfFreq, HmfQ, LmfGain, LmfFreq, LmfQ, LfGain, LfFreq, LfQ, LfBell, RmsThresh, RmsRatio, RmsAttack, RmsRelease, RmsMakeup, PeakThresh, PeakRatio, PeakAttack, PeakRelease, PeakMakeup, PeakRmsRatio, DryWet, Sat, Clp, OutGain);
+}
+
+void SRChannel::InitExtSidechain()
+{
+	if (GetAPI() == kAPIVST2) // for VST2 we name individual outputs
+	{
+		SetInputLabel(0, "In Left");
+		SetInputLabel(1, "In Right");
+		SetInputLabel(2, "ExtSC Left");
+		SetInputLabel(3, "ExtSC Right");
+		SetOutputLabel(0, "Out Left");
+		SetOutputLabel(1, "Out Right");
+	}
+	else // for AU and VST3 we name buses
+	{
+		SetInputBusLabel(0, "Input");
+		SetInputBusLabel(1, "Ext SC");
+		SetOutputBusLabel(0, "Output");
+	}
 }
 
 void SRChannel::CreateGraphics() {
@@ -494,8 +520,11 @@ void SRChannel::CreateGraphics() {
 	IBitmap buttonSimple = pGraphics->LoadIBitmap(BUTTON_ID, BUTTON_FN, 2, false);
 	IBitmap faderGain = pGraphics->LoadIBitmap(FADER_ID, FADER_FN, 1);
 
+	size_t cControlMatrixSize = kNumParams;
+	cControlMatrix.resize(cControlMatrixSize);
+
 	for (int i = 0; i < kNumParams; i++) {
-		const parameterProperties_struct& properties = parameterProperties[i];
+		const structParameterProperties& properties = parameterProperties[i];
 		IBitmap *knob;									// We're pointing at the type of knob we want to add
 		
 		switch (properties.Knobs) {						// "knob" is gonna be a pointer to IBitmap
@@ -585,7 +614,7 @@ void SRChannel::CreateGraphics() {
 					properties.y + 6
 				), &textKnobLabelProp, properties.shortName));
 														// Actual rotary control
-				pGraphics->AttachControl(new SRPlugins::SRControls::IKnobMultiControlText(this, IRECT(
+				cControlMatrix[i] = pGraphics->AttachControl(new SRPlugins::SRControls::IKnobMultiControlText(this, IRECT(
 					properties.x,
 					properties.y,
 					properties.x + knobwidth,
@@ -609,6 +638,9 @@ void SRChannel::InitGUI() {
 		GetGUI()->GetControl(cPeakGrMeter)->SetTooltip("Gain reduction of peak compressor");
 		GetGUI()->GetControl(cOuputPeakMeter1)->SetTooltip("VU Meter of left output channel");
 		GetGUI()->GetControl(cOutputPeakMeter2)->SetTooltip("VU Meter of right output channel");
+		for (int i = 0; i < kNumParams; i++) {
+			GetGUI()->GetControl(cControlMatrix[i])->SetTooltip(parameterProperties[i].tooltip);
+		}
 		GetGUI()->EnableTooltips(true);
 		GetGUI()->UpdateTooltips();
 	}
@@ -761,8 +793,16 @@ SRChannel::~SRChannel() {}
 void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames) {
 	// Mutex is already locked for us.
 
+	// for platform safe implementation check wdl sidechain example again and research for resource.h channel-io implementation
+	//bool in1ic = IsInChannelConnected(0);
+	//bool in2ic = IsInChannelConnected(1);
+	//bool in3ic = IsInChannelConnected(2);
+	//bool in4ic = IsInChannelConnected(3);
+
 	double* in1 = inputs[0];
 	double* in2 = inputs[1];
+	double* sc1 = inputs[2];
+	double* sc2 = inputs[3];
 	double* out1 = outputs[0];
 	double* out2 = outputs[1];
 
@@ -997,11 +1037,11 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 					vCompPeakIn2 = *out2;
 
 					if (mCompRmsRatio != 1. && mCompRmsThresh != 0.) {
-						fCompressorRms.process(vCompRmsIn1, vCompRmsIn2);
+						(mCompRmsIsExtSc != 1) ? fCompressorRms.process(vCompRmsIn1, vCompRmsIn2) : fCompressorRms.process(vCompRmsIn1, vCompRmsIn2, *sc1, *sc2);
 					}
 
 					if (mCompPeakRatio != 1. && mCompPeakThresh != 0.) {
-						fCompressorPeak.process(vCompPeakIn1, vCompPeakIn2);
+						(mCompPeakIsExtSc != 1) ? fCompressorPeak.process(vCompPeakIn1, vCompPeakIn2) : fCompressorPeak.process(vCompPeakIn1, vCompPeakIn2, *sc1, *sc2);
 					}
 
 					if ((mCompRmsRatio != 1 && mCompRmsThresh != 0) || (mCompPeakRatio != 1 && mCompPeakThresh != 0)) {
@@ -1011,15 +1051,15 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				}
 				else {
 					if (mCompRmsRatio != 1. && mCompRmsThresh != 0.) {
-						fCompressorRms.process(*out1, *out2);
+						(mCompRmsIsExtSc != 1) ? fCompressorRms.process(*out1, *out2) : fCompressorRms.process(*out1, *out2, *sc1, *sc2);
 						*out1 *= mCompRmsMakeup * mCompRmsAutoMakeup;
 						*out2 *= mCompRmsMakeup * mCompRmsAutoMakeup;
 					}
 
 					if (mCompPeakRatio != 1. && mCompPeakThresh != 0.) {
-						fCompressorPeak.process(*out1, *out2);
-						*out1 = *out1 * mCompPeakMakeup * mCompPeakAutoMakeup;
-						*out2 = *out2 * mCompPeakMakeup * mCompPeakAutoMakeup;
+						(mCompPeakIsExtSc != 1) ? fCompressorPeak.process(*out1, *out2) : fCompressorPeak.process(*out1, *out2, *sc1, *sc2);
+						*out1 *= mCompPeakMakeup * mCompPeakAutoMakeup;
+						*out2 *= mCompPeakMakeup * mCompPeakAutoMakeup;
 					}
 				}
 
@@ -1432,6 +1472,9 @@ void SRChannel::OnParamChange(int paramIdx)
 		  (mCompIsParallel == 0) ? GetGUI()->GrayOutControl(kCompPeakRmsRatio, true) : GetGUI()->GrayOutControl(kCompPeakRmsRatio, false);
 	  }
 	  break;
+
+  case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
+  case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
 
   case kCompPeakRatio:
 	  mCompPeakRatio = (1. / GetParam(paramIdx)->Value());

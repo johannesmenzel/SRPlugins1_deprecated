@@ -27,6 +27,7 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
+#include <vector>
 //#include "SRGraphics.h"
 //#include "../SRClasses/SRDynamics.h"
 
@@ -100,7 +101,7 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 
 
 	// BOOL VARS
-		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass,
+		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mCompPeakIsExtSc, mCompRmsIsExtSc, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass,
 			mAgc;
 
 		// INT VARS
@@ -113,6 +114,8 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 
 		// CIRCULAR BUFFER
 		unsigned short int circularBufferPointer;
+		
+		std::vector<int> cControlMatrix;
 
 
 		// FUNCTIONS
@@ -123,6 +126,7 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 			InitBiquad(),
 			InitCompPeak(),
 			InitCompRms(),
+			InitExtSidechain(),
 			InitDeesser(),
 			InitLimiter(),
 			InitSafePan(),

@@ -177,8 +177,10 @@ namespace SRPlugins {
 			virtual double getGrDb(void) { return mGrDb; } // Returns GR dB
 
 														  // runtime
-			virtual void initRuntime(void);			// call before runtime (in resume())
-			void process(double &in1, double &in2);	// compressor runtime process
+			virtual void initRuntime(void);
+			// call before runtime (in resume())
+			void process(double &in1, double &in2); // compressor runtime process if internal sidechain 
+			void process(double &in1, double &in2, double &extSC1, double &extSC2); // if eternal sidechain
 			void process(double &in1, double &in2, double keyLinked);	// with stereo-linked key in
 
 		private:
@@ -222,7 +224,9 @@ namespace SRPlugins {
 			virtual double getWindow(void) const { return mEnvelopeDetectorAverager.getTc(); }
 
 			// runtime process
-			virtual void initRuntime(void);			// call before runtime (in resume())
+			virtual void initRuntime(void);
+			// call before runtime (in resume())
+			void process(double &in1, double &in2, double &extSC1, double &extSC2);
 			void process(double &in1, double &in2);	// compressor runtime process
 
 		private:
@@ -244,8 +248,30 @@ namespace SRPlugins {
 
 		// Inline Compressor Sidechain
 		//-------------------------------------------------------------
-		inline void SRCompressor::process(double &in1, double &in2)
-		{
+
+		inline void SRCompressor::process(double &in1, double &in2, double &extSC1, double &extSC2) {
+			double rectifiedInput1 = extSC1;
+			double rectifiedInput2 = extSC2;
+			// create sidechain
+			if (mSidechainFc > 16. / getSampleRate()) {
+				rectifiedInput1 = fSidechainFilter1.process(rectifiedInput1);
+				rectifiedInput2 = fSidechainFilter2.process(rectifiedInput2);
+			}
+
+			rectifiedInput1 = fabs(rectifiedInput1);	// rectify input
+			rectifiedInput2 = fabs(rectifiedInput2);
+
+
+			/* if desired, one could use another EnvelopeDetector to smooth
+			* the rectified signal.
+			*/
+
+			double rectifiedInputMaxed = std::max(rectifiedInput1, rectifiedInput2);	// link channels with greater of 2
+
+			process(in1, in2, rectifiedInputMaxed);	// rest of process
+		}
+
+		inline void SRCompressor::process(double &in1, double &in2) {
 			double rectifiedInput1 = in1;
 			double rectifiedInput2 = in2;
 			// create sidechain
@@ -267,10 +293,32 @@ namespace SRPlugins {
 			process(in1, in2, rectifiedInputMaxed);	// rest of process
 		}
 
+
 		// Inline RMS Compressor Sidechain
 		//-------------------------------------------------------------
-		inline void SRCompressorRMS::process(double &in1, double &in2)
-		{
+
+		inline void SRCompressorRMS::process(double &in1, double &in2, double &extSC1, double &extSC2) {
+			// create sidechain
+
+			double squaredInput1 = extSC1 * extSC1;	// square input
+			double squaredInput2 = extSC2 * extSC2;
+
+			double summedSquaredInput = squaredInput1 + squaredInput2;			// power summing
+			summedSquaredInput += DC_OFFSET;					// DC offset, to prevent denormal
+			mEnvelopeDetectorAverager.run(summedSquaredInput, mAverageOfSquares);		// average of squares
+			double sidechainRms = sqrt(mAverageOfSquares);	// sidechainRms (sort of ...)
+
+															/* REGARDING THE RMS AVERAGER: Ok, so this isn't a REAL RMS
+															* calculation. A true RMS is an FIR moving average. This
+															* approximation is a 1-pole IIR. Nonetheless, in practice,
+															* and in the interest of simplicity, this method will suffice,
+															* giving comparable results.
+															*/
+
+			SRCompressor::process(in1, in2, sidechainRms);	// rest of process
+		}
+
+		inline void SRCompressorRMS::process(double &in1, double &in2) {
 			// create sidechain
 
 			double squaredInput1 = in1 * in1;	// square input
@@ -281,20 +329,19 @@ namespace SRPlugins {
 			mEnvelopeDetectorAverager.run(summedSquaredInput, mAverageOfSquares);		// average of squares
 			double sidechainRms = sqrt(mAverageOfSquares);	// sidechainRms (sort of ...)
 
-											/* REGARDING THE RMS AVERAGER: Ok, so this isn't a REAL RMS
-											* calculation. A true RMS is an FIR moving average. This
-											* approximation is a 1-pole IIR. Nonetheless, in practice,
-											* and in the interest of simplicity, this method will suffice,
-											* giving comparable results.
-											*/
+															/* REGARDING THE RMS AVERAGER: Ok, so this isn't a REAL RMS
+															* calculation. A true RMS is an FIR moving average. This
+															* approximation is a 1-pole IIR. Nonetheless, in practice,
+															* and in the interest of simplicity, this method will suffice,
+															* giving comparable results.
+															*/
 
 			SRCompressor::process(in1, in2, sidechainRms);	// rest of process
 		}
 
 		// Inline Compressors Process
 		//-------------------------------------------------------------
-		inline void SRCompressor::process(double &in1, double &in2, double sidechain)
-		{
+		inline void SRCompressor::process(double &in1, double &in2, double sidechain) {
 			sidechain = fabs(sidechain);		// rectify (just in case)
 
 												// convert key to dB
