@@ -4,8 +4,6 @@
 
 nothing
 
----
-
 ## Alpha Ready
 
 ### General
@@ -38,8 +36,6 @@ nothing
 
 * VU Meter
 * GR Meter
-
----
 
 ## To Do
 
@@ -94,8 +90,6 @@ nothing
 * Channelstrip-like Graphics
 * Setting controls position in relation to section position
 
----
-
 ## Planned Features
 
 ### Input and output stage
@@ -107,17 +101,21 @@ nothing
 * Vector grapghic based controls
 * Spectral analyser
 
+---
+
 # Compile
 
 Clone this repository to your wdl-ol folders first level (not into any subdirectory).
+
+---
 
 # External libraries used or modified
 
 * WDL-OL framework
 * EarLevels Biquad c++ class
 * chunkware simple source dynamics classes
-* IPlug2 oversampling class *
+* __IPlug2 oversampling class__
 
-\* : not implemented yet
+__italic__: not implemented yet
 
 (may not be complete yet)
