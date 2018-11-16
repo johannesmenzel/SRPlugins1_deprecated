@@ -2,7 +2,7 @@
 
 ## Release Ready
 
-* none
+nothing
 
 ---
 
@@ -13,11 +13,14 @@
 * All sections can be bypassed individually
 * Manual global AGC (on button click)
 
-### Input Stage
+### Input and output Stage
 
-* Gain driven saturation
+* Input gain driven saturation
   		\- Adding input drive control (0dB .. 60 dB)
   		\- Putting input fader pre-meter
+* Output Safe Pan
+* Output Limiter
+* Output Clipper
 
 ### Filters
 
@@ -27,14 +30,9 @@
 
 ### Compressor
 
-* Parallel RMS/Peak Compression
-* Soft knee compressor
-
-### Output Stage
-
-* Safe Pan
-* Output Limiter
-* Output Clipper
+* Parallel RMS/Peak compression
+* Soft knee RMS compressorcompressor
+* Compressor Sidechain RMS/Peak compressor
 
 ### GUI
 
@@ -47,52 +45,67 @@
 
 ### General
 
-* Implement proper oversampling
-* Implement global AGC
+* Add proper oversampling
+* Add global AGC
+      \- Add current algorithm to OnParamChange(all) after improvements of circularBuffer
 
-### Input Stage
+### Input and output stage
 
-* Gain driven saturation
+* Improve Gain driven saturation
   		\- Changing SAT control to "Amount" 
-* Component level input transformer
 
 ### Filters
 
-* Up to 20th order LP filter
+* Add up to 20th order LP filter
 * Merge filter classes (n-pole)
   		\- Changing SROnePole and SRTwoPole back to SRFilter
   		\- Adding member variable mPoles = (1 .. 2), altered in SRFilter.setType (and .setFilter if not calling)
   		\- Changing SRFilter.process to conditional processing
-* Adding constant Q peak filter
+* Add constant Q peak filter
   		\- Adding asymmetric (non-)constant Q peak filter or adding member initializer bool constantQboost and constantQcut = (false .. true)
-* Other filter classes (bessel...)
-* Adding custom 2-Pole filter (parameters a0, a1 ...)
+* Add other filter classes (bessel...)
+* Add filter class type for higher order filters
+* Add custom 2-Pole filter (parameters a0, a1 ...)
   		\- or filter class with morphing 
 
 ### Classes
 
-* Saturation class
-* Circular buffer class
+* Add Saturation class
+      \- Asymetric saturation (even/odd harmonics AND skew)
+      \- Further evalutation of types (Pirkle tanh/atan; Zoelzer; musicDSP waveshaper; ...)
+* Add Circular buffer class
 
 ### Compressor
 
-* AGC algorithm
-* Deesser
-* (Switchable) smooth GR-limiter (knee)
-
-### Output Stage
-
-* Component level output transformer
+* Improve AGC algorithm
+      \- Improve time constant transfer function OR
+      \- Implement circular buffer based RMS in-out detection
+* Improve Deesser
+      \- Add higher order linkwitz-riley filter or add allpass network
+* Improve (Switchable) smooth GR-limiter (knee)
+* Add feedback/feedforward detector topology
 
 ### GUI
 
 * Frequency response graph
-* Spectral analyser
 * Compressor characteristics graph
 * Combined RMS/Peak/VU meter
+* Extend range to +12 dBFS
 * Channelstrip-like Graphics
 * Setting controls position in relation to section position
 
+---
+
+## Planned Features
+
+### Input and output stage
+
+* Analog component level input and output transformer
+
+### GUI
+
+* Vector grapghic based controls
+* Spectral analyser
 
 # Compile
 
@@ -103,5 +116,8 @@ Clone this repository to your wdl-ol folders first level (not into any subdirect
 * WDL-OL framework
 * EarLevels Biquad c++ class
 * chunkware simple source dynamics classes
+* IPlug2 oversampling class *
+
+\* : not implemented yet
 
 (may not be complete yet)
