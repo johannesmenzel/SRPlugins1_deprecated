@@ -1,3 +1,13 @@
+# Introduction
+
+Intentionally started as (and still being) a project to learn C++ and audio plugin programming, SRChannel as a part of SRPlugins is an ever growing VST/VST3 plugin project. For included features see the code, this README file or the projects tab. It uses the WDL-OL plugin framework as well as, besides own processing algorithms, different open source filter/processing classes provided under GnuGPL or MIT licence. Consequently it is and will remain free and open source.
+
+Binaries will be possibly provided as soon as it works properly.
+
+Additionally, the wiki should be a resource for DSP in general and implemetation methods for WDL-OL.
+
+Feel free to contribute code and/or ideas.
+
 # Current State
 
 ## Release Ready
