@@ -92,3 +92,16 @@
 * Combined RMS/Peak/VU meter
 * Channelstrip-like Graphics
 * Setting controls position in relation to section position
+
+
+# Compile
+
+Clone this repository to your wdl-ol folders first level (not into any subdirectory).
+
+# External libraries used or modified
+
+* WDL-OL framework
+* EarLevels Biquad c++ class
+* chunkware simple source dynamics classes
+
+(may not be complete yet)
