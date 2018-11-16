@@ -114,8 +114,8 @@ Clone this repository to your wdl-ol folders first level (not into any subdirect
 * WDL-OL framework
 * EarLevels Biquad c++ class
 * chunkware simple source dynamics classes
-* __IPlug2 oversampling class__
+* _IPlug2 oversampling class_
 
-__italic__: not implemented yet
+_italic_: not implemented yet
 
 (may not be complete yet)
