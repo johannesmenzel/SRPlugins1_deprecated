@@ -112,7 +112,8 @@ _nothing_
 
 # Compile
 
-Clone this repository to your wdl-ol folders first level (not into any subdirectory).
+Clone this repository to your wdl-ol folders first level (not into any subdirectory). 
+If you want to use project files, only VS solution is properly linked. Includes for xcode must be added manually.
 
 ---
 
