@@ -103,43 +103,49 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
     <LinkIncremental />
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">
-    <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>
+    <OutDir>build-win\$(ProjectName)\$(Platform)\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">
-    <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>build-win\$(ProjectName)\$(Platform)\$(Configuration)\temp\</IntDir>
+    <TargetName>$(ProjectName)-$(Platform)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -182,6 +188,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Post-Build: copy "$(TargetFileName)" binary to Binaries folder ...
+copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileName)"</Command>
+      <Message>Copying "$(TargetFileName)" binary to Binaries folder ...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -200,6 +211,11 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(x64_LIB_PATHS);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Post-Build: copy "$(TargetFileName)" binary to Binaries folder ...
+copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileName)"</Command>
+      <Message>Copying "$(TargetFileName)" binary to Binaries folder ...</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <ClCompile>

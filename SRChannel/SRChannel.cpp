@@ -1176,7 +1176,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 		fOutputVuMeterEnvelope2.run(AmpToDB(mOutputVuMeterSos2), mOutputVuMeterValue2);
 
 
-		(circularBufferPointer >= 65535) ? circularBufferPointer = 0 : circularBufferPointer++;
+		(circularBufferPointer >= circularBufferLenght - 1) ? circularBufferPointer = 0 : circularBufferPointer++;
 
 	}	// End Processing per Frame
 
@@ -1581,17 +1581,18 @@ void SRChannel::OnParamChange(int paramIdx)
 	  // Automatic Gain Control
 
   case kAgc:
-	  sumIn = 0;
-	  sumOut = 0;
-	  aveIn = 0;
-	  aveOut = 0;
-	  diffInOut = 0;
-		  for (int i = 0; i <= 65535; i++) {
-			  sumIn += abs(circularBufferInL[i]) + abs(circularBufferInR[i]);
-			  sumOut += abs(circularBufferOutL[i]) + abs(circularBufferOutR[i]);
+	  if (circularBufferInL[circularBufferLenght-1]) {
+		  sumIn = 0.;
+		  sumOut = 0.;
+		  aveIn = 0.;
+		  aveOut = 0.;
+		  diffInOut = 0.;
+		  for (int i = 0; i <= circularBufferLenght-1; i++) {
+			  sumIn += fabs(circularBufferInL[i]) + fabs(circularBufferInR[i]);
+			  sumOut += fabs(circularBufferOutL[i]) + fabs(circularBufferOutR[i]);
 		  }
-		  aveIn = sumIn / (2. * 65535.);
-		  aveOut = sumOut / (2. * 65535.);
+		  aveIn = sumIn / (2. * (double(circularBufferLenght)));
+		  aveOut = sumOut / (2. * (double(circularBufferLenght)));
 		  diffInOut = sumIn / sumOut;
 		  if (GetGUI()) {
 			  if (diffInOut > 4.) {
@@ -1604,6 +1605,7 @@ void SRChannel::OnParamChange(int paramIdx)
 				  GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(diffInOut), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
 			  }
 		  }
+	  }
 	  break;
 
 	  // Deesser

@@ -31,6 +31,8 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 //#include "SRGraphics.h"
 //#include "../SRClasses/SRDynamics.h"
 
+//#define circularBufferLenght 65536
+const int circularBufferLenght = 65536;
 
 
 
@@ -44,8 +46,8 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 		void OnParamChange(int paramIdx);
 		void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
 		// CIRCULAR BUFFER
-		//double circularBuffer[4][65536];
-		double circularBufferInL[65536], circularBufferInR[65536], circularBufferOutL[65536], circularBufferOutR[65536];
+		//double circularBuffer[4][circularBufferLenght];
+		double circularBufferInL[circularBufferLenght], circularBufferInR[circularBufferLenght], circularBufferOutL[circularBufferLenght], circularBufferOutR[circularBufferLenght];
 
 	private:
 		// GAIN + PAN
