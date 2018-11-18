@@ -8,115 +8,11 @@ Additionally, the wiki should be a resource for DSP in general and implemetation
 
 Feel free to contribute code and/or ideas.
 
-# Current State
+# Features
 
-## Release Ready
+SRChannel is a Channelstrip, including input waveshapers, a four band parametric equalizer plus highpass and lowpass, two compressors/expanders that can be used parralel or serial, output limiter, clipper, panning with crossover, and automatic gain control as well as multiple metering options.
 
-_nothing_
-
-## Alpha Ready
-
-### General
-
-* All sections can be __bypassed individually__
-* Manual global __AGC__ (on button click)
-
-### Input and output Stage
-
-* Input __gain driven saturation__
-	* Adding input drive control (0dB .. 60 dB)
-	* Putting input fader pre-meter
-* Output __Safe Pan__
-* Output __Limiter__
-* Output __Clipper__
-
-### Filters
-
-* Up to __20th order highpass__ filter
-* __Biquad__ filter section
-* Switchable LF/HF __Bell/Shelf__
-
-### Compressor
-
-* __Parallel__ RMS/Peak compression
-* __Soft knee__ RMS/Peak compressor
-* Smooth __gain reduction limiter__ RMS/Peak compressor
-* __External sidechain__ RMS/Peak compressor
-* __Sidechain filter__ for Peak compressor
-
-### GUI
-
-* __VU__ Meter
-* __Gain Reduction__ Meter
-
-## To Do
-
-### General
-
-* Add proper __oversampling__
-* Improve global __AGC__
-	* Add current algorithm to OnParamChange(all) after improvements of circularBuffer
-
-### Input and output stage
-
-* Improve __Gain driven saturation__
-	* Changing SAT control to "Amount" 
-
-### Filters
-
-* Add up to __20th order lowpass filter__
-* Merge __filter classes__ (n-pole)  
-	* Changing SROnePole and SRTwoPole back to SRFilter
-	* Adding member variable mPoles = (1 .. 2), altered in SRFilter.setType (and .setFilter if not calling)
-	* Changing SRFilter.process to conditional processing
-* Add __constant Q peak__ filter  
-	* Adding asymmetric (non-)constant Q peak filter or adding member initializer bool constantQboost and constantQcut = (false .. true)
-* Add other __filter classes__ (bessel...)
-* Add filter class type for __higher order filters__
-* Add __custom 2-Pole__ filter (parameters a0, a1 ...)
-	* or filter class with morphing 
-
-### Classes
-
-* Add __Saturation__ class
-	* Asymetric saturation (even/odd harmonics AND skew)
-	* Further evalutation of types (Pirkle tanh/atan; Zoelzer; musicDSP waveshaper; ...)
-* Add __Circular buffer__ class
-
-### Compressor
-
-* Improve __AGC__ algorithm
-	* Improve time constant transfer function OR
-	* Implement circular buffer based RMS in-out detection
-* Improve __Deesser__
-	* Add higher order linkwitz-riley filter or add allpass network
-* Improve (Switchable) __smooth GR-limiter__ (knee)
-* Add __feedback/feedforward__ detector topology
-* Add __sidechain filter__ for RMS compressor
-
-### GUI
-
-* Add controls
-	* Add smaller control for minor parameters
-	* Add __frequency response__ graph
-	* Improve meter section
-		* Combined RMS/Peak/__VU__ meter
-		* Extend __meter range__ to +12 dBFS
-		* Improve VU meter __envelope coefficients__
-* Add Channelstrip-like Graphics
-* Setting controls position in relation to section position
-
-## Planned Features
-
-### Input and output stage
-
-* Analog component level input and output transformer
-
-### GUI
-
-* Vector grapghic based controls
-* Spectral analyser
-* Compressor characteristics graph
+For a more detailed overview of the current state and implemented features see the "Projects" tab above.
 
 ---
 
@@ -137,3 +33,19 @@ If you want to use project files, only VS solution is properly linked. Includes 
 _italic_: not implemented yet
 
 (may not be complete yet)
+
+# Disclaimers
+
+Since this is a hobby project and I have limited resources at hand, see following facts:
+
+* I test the plugin with DDMF PluginDoctor and Cockos REAPER on a x64 Windows machine. Besides I won't provide support at all, I also can't provide help for other platforms, configurations or hosts not mentioned above due to limited talent and knowledge.
+* There will be no MacOS AU/VST until I'll buy a mac (which most likely will never happen) or you'll compile your own. XCode project is included but not properly set up. LinuxVST is on the roadmap.
+* Due to above mentioned lack of talent, advice is highly appreciated.
+
+Copyright 2018 Johannes Menzel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. YOU WILL USE THIS SOFTWARE AT YOUR OWN RISK.
