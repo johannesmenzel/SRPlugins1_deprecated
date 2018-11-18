@@ -351,6 +351,7 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\SRChann
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
     <ClInclude Include="..\SRClasses\SRHelpers.h" />
+    <ClInclude Include="..\SRClasses\SRSaturation.h" />
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -374,6 +375,7 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\SRChann
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
     <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
+    <ClCompile Include="..\SRClasses\SRSaturation.cpp" />
     <ClCompile Include="SRChannel.cpp" />
   </ItemGroup>
   <ItemGroup>

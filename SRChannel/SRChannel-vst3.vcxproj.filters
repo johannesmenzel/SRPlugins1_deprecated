@@ -47,10 +47,21 @@
     <ClCompile Include="..\..\VST3_SDK\pluginterfaces\base\coreiids.cpp">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRClasses\SRControls.cpp" />
-    <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
-    <ClCompile Include="..\SRClasses\SRFilters.cpp" />
-    <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
+    <ClCompile Include="..\SRClasses\SRControls.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRDynamics.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRFilters.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRHelpers.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRSaturation.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SRChannel.h" />
@@ -196,10 +207,21 @@
     <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ucolorspec.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\SRClasses\SRHelpers.h" />
-    <ClInclude Include="..\SRClasses\SRControls.h" />
-    <ClInclude Include="..\SRClasses\SRDynamics.h" />
-    <ClInclude Include="..\SRClasses\SRFilters.h" />
+    <ClInclude Include="..\SRClasses\SRHelpers.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRControls.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRDynamics.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRFilters.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRSaturation.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="vst3">
@@ -231,6 +253,9 @@
     </Filter>
     <Filter Include="vst3\VST3SDK\public.sdk\main">
       <UniqueIdentifier>{ec7b025c-4ef1-4403-956b-b3673b4715b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SRClasses">
+      <UniqueIdentifier>{e16ec398-4642-4450-b39f-11a013e242d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

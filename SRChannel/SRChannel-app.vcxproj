@@ -296,6 +296,7 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
     <ClInclude Include="..\SRClasses\SRHelpers.h" />
+    <ClInclude Include="..\SRClasses\SRSaturation.h" />
     <ClInclude Include="app_wrapper\app_main.h" />
     <ClInclude Include="app_wrapper\app_resource.h" />
     <ClInclude Include="SRChannel.h" />
@@ -312,6 +313,7 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
     <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
+    <ClCompile Include="..\SRClasses\SRSaturation.cpp" />
     <ClCompile Include="app_wrapper\app_dialog.cpp" />
     <ClCompile Include="app_wrapper\app_main.cpp" />
     <ClCompile Include="SRChannel.cpp" />

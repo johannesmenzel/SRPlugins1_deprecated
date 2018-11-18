@@ -10,6 +10,9 @@
     <Filter Include="app\ASIO_SDK">
       <UniqueIdentifier>{b91b9db4-5584-4959-a395-7394ba3cf5a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SRClasses">
+      <UniqueIdentifier>{9e310792-7daf-4f02-be7d-0c83e6e2adec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h">
@@ -48,10 +51,21 @@
       <Filter>app</Filter>
     </ClInclude>
     <ClInclude Include="app_wrapper\app_resource.h" />
-    <ClInclude Include="..\SRClasses\SRHelpers.h" />
-    <ClInclude Include="..\SRClasses\SRControls.h" />
-    <ClInclude Include="..\SRClasses\SRDynamics.h" />
-    <ClInclude Include="..\SRClasses\SRFilters.h" />
+    <ClInclude Include="..\SRClasses\SRHelpers.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRControls.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRDynamics.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRFilters.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRSaturation.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp">
@@ -79,10 +93,21 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugStandalone.cpp">
       <Filter>app</Filter>
     </ClCompile>
-    <ClCompile Include="..\SRClasses\SRControls.cpp" />
-    <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
-    <ClCompile Include="..\SRClasses\SRFilters.cpp" />
-    <ClCompile Include="..\SRClasses\SRHelpers.cpp" />
+    <ClCompile Include="..\SRClasses\SRControls.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRDynamics.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRFilters.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRHelpers.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SRClasses\SRSaturation.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SRChannel.rc" />
