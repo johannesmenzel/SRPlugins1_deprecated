@@ -20,6 +20,7 @@
 build-*
 ipch/*
 gui/*
+SRBinaries/*
 
 Icon?
 .DS_Stor*
