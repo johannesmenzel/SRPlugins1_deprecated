@@ -42,11 +42,13 @@ _italic_: not implemented yet
 
 Since this is a hobby project and I have limited resources at hand, see following facts:
 
+* If you see me violating your or any others copyrights, please contact me instantly, I did not intend that. Same goes for any advice concerning the copyright statements on this repository.
 * I test the plugin with DDMF PluginDoctor and Cockos REAPER on a x64 Windows machine. Besides I won't provide support at all, I also can't provide help for other platforms, configurations or hosts not mentioned above due to limited talent and knowledge.
 * There will be no MacOS AU/VST until I'll buy a mac (which most likely will never happen) or you'll compile your own. XCode project is included but not properly set up. LinuxVST is on the roadmap.
 * Due to above mentioned lack of talent, advice is highly appreciated.
 
 If no other copyrights listed:
+
 Copyright 2018 Johannes Menzel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
