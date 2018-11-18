@@ -1,12 +1,18 @@
 //
 //  Biquad.cpp
 //
+//  Modifications on class:
+//  Copyright Johannes Menzel 2018 MIT
+//
+//  This is an ever growing modified filter class, based on the 
+//  biquad source by Nigel Redmon. See the original licence below.
+//
 //  Created by Nigel Redmon on 11/24/12
 //  EarLevel Engineering: earlevel.com
 //  Copyright 2012 Nigel Redmon
 //
 //  For a complete explanation of the Biquad code:
-//  http://www.earlevel.com/main/2012/11/26/biquad-c-source-code/
+//  http://www.earlevel.com/main/2012/11/25/biquad-c-source-code/
 //
 //  License:
 //
