@@ -90,7 +90,7 @@ namespace SRPlugins {
 			setRatio(ratio);
 			setAttack(attackMs);
 			setRelease(releaseMs);
-			setSidechainFilterFreq(sidechainFc);
+			initSidechainFilter(sidechainFc);
 			setSampleRate(samplerate);
 			setKnee(kneeDb);
 			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
@@ -116,7 +116,7 @@ namespace SRPlugins {
 			mKneeWidthDb = kneeDb;
 		}
 
-		void SRCompressor::setSidechainFilter(double sidechainFc) {
+		void SRCompressor::initSidechainFilter(double sidechainFc) {
 			mSidechainFc = sidechainFc;
 			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
 			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());

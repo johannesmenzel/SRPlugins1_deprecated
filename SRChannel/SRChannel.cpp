@@ -705,6 +705,7 @@ void SRChannel::InitCompRms() {
 	fCompressorRms.setRelease(mCompRmsRelease);
 	fCompressorRms.setKnee(mCompRmsKneeWidthDb);
 	fCompressorRms.setWindow(300.);
+	fCompressorRms.initSidechainFilter(100.);
 	fCompressorRms.initRuntime();
 }
 

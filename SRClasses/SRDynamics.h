@@ -168,7 +168,7 @@ namespace SRPlugins {
 			virtual void setThresh(double dB);
 			virtual void setRatio(double dB);
 			virtual void setKnee(double kneeDb);
-			virtual void setSidechainFilter(double sidechainFC);
+			virtual void initSidechainFilter(double sidechainFC);
 			virtual void setSidechainFilterFreq(double sidechainFc);
 
 			virtual double getThresh(void) const { return mThreshDb; }
