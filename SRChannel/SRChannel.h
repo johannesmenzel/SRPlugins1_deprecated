@@ -16,6 +16,7 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 //#include "../SRClasses/SimpleComp.h"
 //#include "../SRClasses/SimpleLimit.h"
 #include "../SRClasses/SRDynamics.h"
+#include "../SRClasses/SRSaturation.h"
 #include "../SRClasses/SRHelpers.h"
 #include "../SRClasses/SRControls.h"
 #include "../SRClasses/Oversampler.h"
@@ -56,7 +57,7 @@ const int circularBufferLenght = 65536;
 			vSafePanLowSignal1, vSafePanHighSignal1, vSafePanLowSignal2, vSafePanHighSignal2,
 
 			// CLIP + LIMIT
-			mClipperThreshold, mSaturationThreshold, mSaturationHarmonics, mLimiterThresh,
+			mClipperThreshold, mSaturationAmount, mSaturationHarmonics, mLimiterThresh, mSaturationSkew,
 
 			//mSatLfGain, mSatLfFreq, mSatMfGain, mSatMfFreq, mSatHfGain, mSatHfFreq, mSatHpFreq, mSatLpFreq,
 
@@ -131,6 +132,7 @@ const int circularBufferLenght = 65536;
 			InitExtSidechain(),
 			InitDeesser(),
 			InitLimiter(),
+			InitSaturation(),
 			InitSafePan(),
 			InitMeter();
 		//CalculateFreqResp(),
@@ -160,6 +162,9 @@ const int circularBufferLenght = 65536;
 
 		SRPlugins::SRDynamics::EnvelopeDetector fOutputVuMeterEnvelopeDetector1, fOutputVuMeterEnvelopeDetector2;
 		SRPlugins::SRDynamics::AttRelEnvelope fOutputVuMeterEnvelope1, fOutputVuMeterEnvelope2;
+
+		// Saturation
+		SRPlugins::SRSaturation fInputSaturation;
 
 		// TESTVARS
 		double sumIn;

@@ -114,7 +114,7 @@ enum EParams
   kCompPeakMakeup,
   kCompPeakRmsRatio,
   kCompDryWet,
-  kSaturationThreshold,
+  kSaturationAmount,
   kClipperThreshold,
   kOutputGain,
   kPan,
@@ -148,6 +148,7 @@ enum EParams
   kInputBypass,
   kCompPeakIsExtSc,
   kCompRmsIsExrSc,
+  kSaturationSkew,
   kNumParams
 };
 
@@ -205,9 +206,9 @@ typedef struct {
 															*/
 const structParameterProperties parameterProperties[kNumParams] = {
 	//{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR"},
-	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10./12.,"dB",	"Input",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0", "Input Gain is applied before everything else" },
+	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Input",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0", "Input Gain is applied before everything else" },
 	{ "Highpass Freq",	"HP",	16.,	16.,	350.,	1.,		120.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 4,		kControlY + kScaleY * 1,		"16", "350", "120", "Set the frequency of the High Pass Filter, turn down to deactivate" },
-	{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX	* 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k", "Set the frequency of the Low Pass Filter, turn up to deactivate" },
+	{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k", "Set the frequency of the Low Pass Filter, turn up to deactivate" },
 	{ "HF Gain",		"HF",	0.,		-12.,	12.,	.1,		0.,		.5,		"dB",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 4,		kControlY + kScaleY * 3,		"-12", "12", "0" },
 	{ "HF Freq",		"FQ",	8000.,	1500.,	16000.,	1.,		8000.,	.5,		"Hz",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 6,		kControlY + kScaleY * 4,		"1.5k", "16k", "8k" },
 	{ "HF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"W", "N", "" },
@@ -236,7 +237,7 @@ const structParameterProperties parameterProperties[kNumParams] = {
 	{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50" },
 	{ "Saturation",		"SAT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Compressor",typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50" },
 	{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Input",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50" },
-	{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10./12.,"dB",	"Output",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0" },
+	{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Output",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0" },
 	{ "Pan",			"PAN",	0.,		-100.,	100.,	1.,		0.,		.5,		"%",	"Output",	typeDouble, SslBlue,	kControlX + kScaleX * 14,		kControlY + kScaleY * 1,		"L", "R", "C" },
 	{ "Pan Freq",		"PNF",	150.,	20.,	1000.,	1.,		150.,	.5,		"Hz",	"Output",	typeDouble, SslRed,		kControlX + kScaleX * 14,		kControlY + kScaleY * 3,		"20", "1k", "200" },
 	{ "Limiter",		"LMT",	10.,	-30.,	10.,	0.1,	0.,		.5,		"dB",	"Output",	typeDouble, SslOrange,	kControlX + kScaleX * 14,		kControlY + kScaleY * 5,		"-30", "10", "0" },
@@ -246,8 +247,8 @@ const structParameterProperties parameterProperties[kNumParams] = {
 	{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "" },
 	{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * -1 - 36,	"ACT", "BYP", "" },
 	{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix" },
-	{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"6", "120", "36" },
-	{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 6,		"6", "120", "36" },
+	{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 14,		"6", "120", "36" },
+	{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 16,		"6", "120", "36" },
 	{ "TestParam 1",	"T1",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 4,		0,								"0", "1", "0.5" },
 	{ "TestParam 2",	"T2",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 6,		0,								"0", "1", "0.5" },
 	{ "TestParam 3",	"T3",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 8,		0,								"0", "1", "0.5" },
@@ -268,11 +269,9 @@ const structParameterProperties parameterProperties[kNumParams] = {
 	{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Input",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "" },
 	{ "Peak Ext SC",	"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15,		"INT", "EXT", "" },
 	{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "" },
-
-
+	{ "Skew",			"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0" }
 
 //	{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL", TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR"},
-
 };
 
 
@@ -417,24 +416,7 @@ void SRChannel::CreatePresets() {
 //	MakePreset("NAME", InGain, HpFreq, LpFreq, HfGain, HfFreq, HfQ, HfBell, HmfGain, HmfFreq, HmfQ, LmfGain, LmfFreq, LmfQ, LfGain, LfFreq, LfQ, LfBell, RmsThresh, RmsRatio, RmsAttack, RmsRelease, RmsMakeup, PeakThresh, PeakRatio, PeakAttack, PeakRelease, PeakMakeup, PeakRmsRatio, DryWet, Sat, Clp, OutGain);
 }
 
-void SRChannel::InitExtSidechain()
-{
-	if (GetAPI() == kAPIVST2) // for VST2 we name individual outputs
-	{
-		SetInputLabel(0, "In Left");
-		SetInputLabel(1, "In Right");
-		SetInputLabel(2, "ExtSC Left");
-		SetInputLabel(3, "ExtSC Right");
-		SetOutputLabel(0, "Out Left");
-		SetOutputLabel(1, "Out Right");
-	}
-	else // for AU and VST3 we name buses
-	{
-		SetInputBusLabel(0, "Input");
-		SetInputBusLabel(1, "Ext SC");
-		SetOutputBusLabel(0, "Output");
-	}
-}
+
 
 void SRChannel::CreateGraphics() {
 	// Define colors and text properties
@@ -722,15 +704,15 @@ void SRChannel::InitCompRms() {
 	fCompressorRms.setAttack(mCompRmsAttack);
 	fCompressorRms.setRelease(mCompRmsRelease);
 	fCompressorRms.setKnee(mCompRmsKneeWidthDb);
-	fCompressorRms.setWindow(300);
+	fCompressorRms.setWindow(300.);
 	fCompressorRms.initRuntime();
 }
 
 void SRChannel::InitLimiter() {
 	mSampleRate = GetSampleRate();
 	fLimiter.setSampleRate(mSampleRate);
-	fLimiter.setAttack(1);
-	fLimiter.setRelease(100);
+	fLimiter.setAttack(1.);
+	fLimiter.setRelease(100.);
 	fLimiter.setThresh(mLimiterThresh);
 	fLimiter.initRuntime();
 }
@@ -775,6 +757,28 @@ void SRChannel::InitMeter() {
 	fOutputVuMeterEnvelopeDetector1.setTc(5), fOutputVuMeterEnvelopeDetector2.setTc(5);
 }
 
+void SRChannel::InitSaturation() {
+	fInputSaturation.setSaturation(SRPlugins::typeMusicDSP, mInputDrive, mSaturationAmount, mSaturationHarmonics, false, mSaturationSkew, 1.);
+}
+
+void SRChannel::InitExtSidechain()
+{
+	if (GetAPI() == kAPIVST2) // for VST2 we name individual outputs
+	{
+		SetInputLabel(0, "In Left");
+		SetInputLabel(1, "In Right");
+		SetInputLabel(2, "ExtSC Left");
+		SetInputLabel(3, "ExtSC Right");
+		SetOutputLabel(0, "Out Left");
+		SetOutputLabel(1, "Out Right");
+	}
+	else // for AU and VST3 we name buses
+	{
+		SetInputBusLabel(0, "Input");
+		SetInputBusLabel(1, "Ext SC");
+		SetOutputBusLabel(0, "Output");
+	}
+}
 
 /*
 void SRChannel::CalculateFreqResp() {
@@ -847,96 +851,12 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 			
 			if (mInputBypass != 1) {
 
-				// Upsample
-				// double y = mOverSampler.Process(x, [](double input) { return std::tanh(input); })
+				//// Upsample
+				//// double y = mOverSampler.Process(x, [](double input) { return std::tanh(input); })
 
-				// Input Drive
-				if (mInputDrive != 1.) {
-					*out1 *= mInputDrive;
-					*out2 *= mInputDrive;
-				}
+				fInputSaturation.process(*out1, *out2);
 
-				// Saturation
-				if (mSaturationThreshold != 1.) {
-
-					double sSatDry1 = *out1;
-					double sSatDry2 = *out2;
-
-					if (fabs(*out1) > mSaturationThreshold) {
-						if (*out1 > 0) {
-							*out1 = (mSaturationThreshold + (fabs(*out1) - mSaturationThreshold) / (1. + pow((fabs(*out1) - mSaturationThreshold) / (1 - mSaturationThreshold), 2))) * (*out1 / fabs(*out1));
-						}
-						else {
-							*out1 = ((mSaturationThreshold + (fabs(*out1) - mSaturationThreshold) / (1. + pow((fabs(*out1) - mSaturationThreshold) / (1 - mSaturationThreshold), 2))) * (*out1 / fabs(*out1))) * mSaturationHarmonics + *out1 * (1 - mSaturationHarmonics);
-						}
-					}
-
-					if (fabs(*out2) > mSaturationThreshold) {
-						if (*out2 > 0) {
-							*out2 = (mSaturationThreshold + (fabs(*out2) - mSaturationThreshold) / (1. + pow((fabs(*out2) - mSaturationThreshold) / (1 - mSaturationThreshold), 2))) * (*out2 / fabs(*out2));
-						}
-						else {
-							*out2 = ((mSaturationThreshold + (fabs(*out2) - mSaturationThreshold) / (1. + pow((fabs(*out2) - mSaturationThreshold) / (1 - mSaturationThreshold), 2))) * (*out2 / fabs(*out2))) * mSaturationHarmonics + *out2 * (1 - mSaturationHarmonics);
-						}
-					}
-
-					// If we want to process the sound of the saturated signal
-					//*out1 = fSatHfFilterL.process(fSatMfFilterL.process(fSatLfFilterL.process(fSatHpFilterL.process(fSatLpFilterL.process(*out1)))));
-					//*out2 = fSatHfFilterR.process(fSatMfFilterR.process(fSatLfFilterR.process(fSatHpFilterR.process(fSatLpFilterR.process(*out2)))));
-
-																	// We're mixing the saturated sound with the dry signal, with the ratio of the saturation threshold
-					*out1 = (1 - mSaturationThreshold) * *out1 + mSaturationThreshold * sSatDry1;
-					*out2 = (1 - mSaturationThreshold) * *out2 + mSaturationThreshold * sSatDry2;
-
-					// Saturation Normalization
-					*out1 *= (1. / ((mSaturationThreshold + 1.) / 2.));
-					*out2 *= (1. / ((mSaturationThreshold + 1.) / 2.));
-				}
-
-				// TEST: Pirkles Saturation
-
-				if (mTestParam1 > .2 || mTestParam2 > .2) {
-					if (*out1 >= 0) {
-						*out1 = tanh(mTestParam1 * *out1) / tanh(mTestParam1);
-					}
-					else {
-						*out1 = tanh(mTestParam2 * *out1) / tanh(mTestParam2);
-					}
-
-					if (*out2 >= 0) {
-						*out2 = tanh(mTestParam1 * *out2) / tanh(mTestParam1);
-					}
-					else {
-						*out2 = tanh(mTestParam2 * *out2) / tanh(mTestParam2);
-					}
-				}
-
-				// Test: Zoelzers Saturation
-
-				if (mTestParam3 > 0.) {
-					if (*out1 > 0) {
-						*out1 = (1 - exp(-*out1)) * mTestParam3 + *out1 * (1 - mTestParam3);
-					}
-					else {
-						*out1 = (-1 + exp(*out1)) * (mTestParam3 * (1 - mTestParam4)) + *out1 * (1 - (mTestParam3 * (1 - mTestParam4)));
-					}
-
-
-					if (*out2 > 0) {
-						*out2 = (1 - exp(-*out2)) * mTestParam3 + *out2 * (1 - mTestParam3);
-					}
-					else {
-						*out2 = (-1 + exp(*out2)) * (mTestParam3 * (1 - mTestParam4)) + *out2 * (1 - (mTestParam3 * (1 - mTestParam4)));
-					}
-				}
-
-				// Input Drive Reverse
-				if (mInputDrive != 1.) {
-					*out1 *= (1 / mInputDrive);
-					*out2 *= (1 / mInputDrive);
-				}
-
-				// Downsample
+				//// Downsample
 
 			}
 
@@ -1237,6 +1157,7 @@ void SRChannel::Reset()
 	InitLimiter();
 	InitDeesser();
 	InitMeter();
+	InitSaturation();
 	circularBufferPointer = 0;
 }
 
@@ -1255,18 +1176,31 @@ void SRChannel::OnParamChange(int paramIdx)
 	  // INPUT AND OUTPUT STAGE
 
   case kInputGain: mInputGain = DBToAmp(GetParam(paramIdx)->Value()); break;
-  case kInputDrive: mInputDrive = DBToAmp(GetParam(paramIdx)->Value()); break;
+  //case kInputDrive: mInputDrive = DBToAmp(GetParam(paramIdx)->Value()); break;
   case kOutputGain: mOutputGain = DBToAmp(GetParam(paramIdx)->Value()); break;
-  case kSaturationThreshold:
-	  mSaturationThreshold = 1 - GetParam(paramIdx)->Value() / 100;
-	  //mSatLfGain = (1 - mSaturationThreshold) * 3.;		 fSatLfFilterL.setPeakGain(mSatLfGain);	  fSatLfFilterR.setPeakGain(mSatLfGain);
-	  //mSatMfGain = (1 - mSaturationThreshold) * -3.; 	 fSatMfFilterL.setPeakGain(mSatMfGain);	  fSatMfFilterR.setPeakGain(mSatMfGain);
-	  //mSatHfGain = (1 - mSaturationThreshold) * 5.; 	 fSatHfFilterL.setPeakGain(mSatHfGain);	  fSatHfFilterR.setPeakGain(mSatHfGain);
-	  //mSatHpFreq = (1 - mSaturationThreshold) * 30.;	fSatHpFilterL.setFc(mSatHpFreq / mSampleRate); fSatHpFilterR.setFc(mSatHpFreq / mSampleRate);
-	  //mSatLpFreq = 22000 - (1 - mSaturationThreshold) * 10000.;	fSatLpFilterL.setFc(mSatLpFreq / mSampleRate); fSatLpFilterR.setFc(mSatLpFreq / mSampleRate);
+
+  case kInputDrive: 
+	  mInputDrive = GetParam(paramIdx)->Value(); 
+	  fInputSaturation.setDrive(mInputDrive);
 	  break;
-  case kSaturationHarmonics: mSaturationHarmonics = GetParam(paramIdx)->Value() / 100; break;
-  case kClipperThreshold: mClipperThreshold = 1 - GetParam(paramIdx)->Value() / 100; break;
+  case kSaturationAmount:
+	  mSaturationAmount = GetParam(paramIdx)->Value() / 100.;
+	  fInputSaturation.setAmount(mSaturationAmount);
+	  //mSatLfGain = (1 - mSaturationAmount) * 3.;		 fSatLfFilterL.setPeakGain(mSatLfGain);	  fSatLfFilterR.setPeakGain(mSatLfGain);
+	  //mSatMfGain = (1 - mSaturationAmount) * -3.; 	 fSatMfFilterL.setPeakGain(mSatMfGain);	  fSatMfFilterR.setPeakGain(mSatMfGain);
+	  //mSatHfGain = (1 - mSaturationAmount) * 5.; 	 fSatHfFilterL.setPeakGain(mSatHfGain);	  fSatHfFilterR.setPeakGain(mSatHfGain);
+	  //mSatHpFreq = (1 - mSaturationAmount) * 30.;	fSatHpFilterL.setFc(mSatHpFreq / mSampleRate); fSatHpFilterR.setFc(mSatHpFreq / mSampleRate);
+	  //mSatLpFreq = 22000 - (1 - mSaturationAmount) * 10000.;	fSatLpFilterL.setFc(mSatLpFreq / mSampleRate); fSatLpFilterR.setFc(mSatLpFreq / mSampleRate);
+	  break;
+  case kSaturationHarmonics: 
+	  mSaturationHarmonics = GetParam(paramIdx)->Value() / 100.;
+	  fInputSaturation.setHarmonics(mSaturationHarmonics);
+	  break;
+  case kSaturationSkew:
+	  mSaturationSkew = GetParam(paramIdx)->Value() * 0.05;
+	  fInputSaturation.setSkew(mSaturationSkew);
+	  break;
+  case kClipperThreshold: mClipperThreshold = 1. - GetParam(paramIdx)->Value() / 100.; break;
   case kLimiterThresh:
 	  mLimiterThresh = GetParam(paramIdx)->Value();
 	  GetParam(paramIdx)->SetDisplayText(10, "Off");
