@@ -1,11 +1,12 @@
-
 /*
+*	copyright 2018, Johannes Menzel, MIT
+*
 *	This is an ongoing modification of the code provided in the Simple Source
 *	library by Bojan Markovic. Licence disclaimer is merged here, since the
 *	classes and functions were merged to one .h and .cpp source file each.
 *	See the original disclaimer below:
 *
-*	© 2006, ChunkWare Music Software, OPEN-SOURCE
+*	copyright 2006, ChunkWare Music Software, OPEN-SOURCE
 *
 *	Permission is hereby granted, free of charge, to any person obtaining a
 *	copy of this software and associated documentation files (the "Software"),
