@@ -20,7 +20,7 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		void EnvelopeDetector::setTc(double ms)
 		{
-			//assert( ms > 0.0 );
+			assert( ms > 0.0 );
 			mTimeConstantMs = ms;
 			setCoef();
 		}
@@ -106,14 +106,13 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		void SRCompressor::setRatio(double ratio)
 		{
-			//assert( ratio > 0.0 );
+			assert( ratio >= 0.0 );
 			mRatio = ratio;
 			mMaxGr = 73.4979484210802 - 88.939188010773 * (1 - exp(-1.75091102973106 * (1 / ratio)));
 		}
 
 		void SRCompressor::setKnee(double kneeDb)
 		{
-			//assert( ratio > 0.0 );
 			mKneeWidthDb = kneeDb;
 		}
 
