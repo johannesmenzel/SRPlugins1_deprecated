@@ -9,11 +9,9 @@ namespace SRPlugins {
 
 
 
-
 		//------------------------------------
 		// Generic Template
 		// -----------------------------------
-
 
 		//class SRGenericControl : public IControl {
 		//public:
@@ -26,75 +24,30 @@ namespace SRPlugins {
 		//	};
 		//};
 
-
-
 		//------------------------------------
 		// Parameter Controls (Knob)
 		// -----------------------------------
 
 		class IKnobMultiControlText : public IKnobControl {
-		private:
-			IRECT mTextRECT, mImgRECT;
-			IBitmap mBitmap;
-			std::string mEnd;
-
 		public:
 			IKnobMultiControlText(IPlugBase* pPlug, IRECT pR, int paramIdx, IBitmap* pBitmap, IText* pText, const std::string& end, EDirection direction = kVertical,
 				double gearing = DEFAULT_GEARING)
-				: IKnobControl(pPlug, pR, paramIdx, direction, gearing), mBitmap(*pBitmap), mEnd(end)
-			{
+				: IKnobControl(pPlug, pR, paramIdx, direction, gearing), mBitmap(*pBitmap), mEnd(end) {
 				mText = *pText;
 				mTextRECT = IRECT(mRECT.L, mRECT.B - mText.mSize, mRECT.R, mRECT.B);
 				mImgRECT = IRECT(mRECT.L, mRECT.T, &mBitmap);
 				mDisablePrompt = false;
+				mMOWhenGreyed = true;
 			}
-
 			~IKnobMultiControlText() {}
-
-			bool Draw(IGraphics* pGraphics) {
-				int i = 1 + int(0.5 + mValue * (double)(mBitmap.N - 1));
-				i = BOUNDED(i, 1, mBitmap.N);
-				pGraphics->DrawBitmap(&mBitmap, &mImgRECT, i, &mBlend);
-
-				char disp[20];
-				mPlug->GetParam(mParamIdx)->GetDisplayForHost(disp);
-				std::string final = disp;
-				if (!mEnd.empty()) {
-					final += " " + mEnd;
-				}
-
-				if (CSTR_NOT_EMPTY(disp)) {
-					return pGraphics->DrawIText(&mText, const_cast<char*>(final.c_str()), &mTextRECT);
-				}
-				return true;
-			}
-
-			void OnMouseDown(int x, int y, IMouseMod* pMod) {
-				if (mTextRECT.Contains(x, y)) PromptUserInput(&mTextRECT);
-#ifdef RTAS_API
-				else if (pMod->A) {
-					if (mDefaultValue >= 0.0) {
-						mValue = mDefaultValue;
-						SetDirty();
-					}
-				}
-#endif
-				else {
-					OnMouseDrag(x, y, 0, 0, pMod);
-				}
-			}
-
-			void OnMouseDblClick(int x, int y, IMouseMod* pMod) {
-#ifdef RTAS_API
-				PromptUserInput(&mTextRECT);
-#else
-				if (mDefaultValue >= 0.0) {
-					mValue = mDefaultValue;
-					SetDirty();
-				}
-#endif
-			}
-
+			bool IKnobMultiControlText::GetMOWhenGrayed() { return true; }
+			bool Draw(IGraphics* pGraphics);
+			void OnMouseDown(int x, int y, IMouseMod* pMod);
+			void OnMouseDblClick(int x, int y, IMouseMod* pMod);
+		private:
+			IRECT mTextRECT, mImgRECT;
+			IBitmap mBitmap;
+			std::string mEnd;
 		};
 
 
@@ -103,117 +56,76 @@ namespace SRPlugins {
 		// Meters
 		// -----------------------------------
 
-
 		class SRMultiMeter : public IControl {
 		public:
 			SRMultiMeter(IPlugBase *pPlug, IRECT pR) : IControl(pPlug, pR) {}
 			~SRMultiMeter() {}
 			bool IsDirty() { return true; }
-
-			bool Draw(IGraphics*) {
-
-			}
+			bool Draw(IGraphics*);
 		};
 
-
-
+	
 		class IPeakMeterVert : public IControl {
 		public:
-
 			IPeakMeterVert(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
 				: IControl(pPlug, pR) {
 				meterbg = background;
 				meterfg = foreground;
 			}
-
 			~IPeakMeterVert() {}
 			bool IsDirty() { return true; }
-
-			bool Draw(IGraphics* pGraphics) {
-				pGraphics->FillIRect(&meterbg, &mRECT);
-				IRECT filledBit = IRECT(mRECT.L, mRECT.T + int((1 - mValue) * mRECT.H()), mRECT.R, mRECT.B);
-				pGraphics->FillIRect(&meterfg, &filledBit);
-				return true;
-			}
-
-
+			bool Draw(IGraphics* pGraphics);
 		protected:
 			IColor meterfg, meterbg;
 		};
 
-
-
+		
 		class IGrMeterVert : public IPeakMeterVert {
 		public:
-
 			IGrMeterVert(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
-				: IPeakMeterVert (pPlug, pR, background, foreground) {
+				: IPeakMeterVert(pPlug, pR, background, foreground) {
 				mValue = 1.;
 			}
-
 			~IGrMeterVert() {}
 			bool IsDirty() { return true; }
-
-			bool Draw(IGraphics* pGraphics)
-			{
-				pGraphics->FillIRect(&meterbg, &mRECT);
-				IRECT filledBit = IRECT(mRECT.L, mRECT.T, mRECT.R, mRECT.B - int(mValue * mRECT.H()));
-				pGraphics->FillIRect(&meterfg, &filledBit);
-				return true;
-			}
+			bool Draw(IGraphics* pGraphics);
 		};
 
-
-
+	
 		class IPeakMeterHoriz : public IPeakMeterVert {
 		public:
-
 			IPeakMeterHoriz(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
 				: IPeakMeterVert(pPlug, pR, background, foreground) {}
 			~IPeakMeterHoriz() {}
 			bool IsDirty() { return true; }
-
-			bool Draw(IGraphics* pGraphics) {
-				pGraphics->FillIRect(&meterbg, &mRECT);
-				IRECT filledBit = IRECT(mRECT.L, mRECT.T, mRECT.L + int(mValue * mRECT.W()), mRECT.B);
-				pGraphics->FillIRect(&meterfg, &filledBit);
-				return true;
-			}
+			bool Draw(IGraphics* pGraphics);
 		};
 
-
+	
 		class ITempoDisplay : public IControl {
-		private:
-			ITimeInfo * mTimeInfo;
-			WDL_String mDisplay;
-
 		public:
 			ITempoDisplay(IPlugBase* pPlug, IRECT pR, IText* pText, ITimeInfo* pTimeInfo)
 				: IControl(pPlug, pR) {
 				mText = *pText;
 				mTimeInfo = pTimeInfo;
 			}
+			bool Draw(IGraphics* pGraphics);
 			bool IsDirty() { return true; }
-
-			bool Draw(IGraphics* pGraphics) {
-				mDisplay.SetFormatted(80, "Tempo: %f, SamplePos: %i, PPQPos: %f", mTimeInfo->mTempo, (int)mTimeInfo->mSamplePos, mTimeInfo->mPPQPos);
-				return pGraphics->DrawIText(&mText, mDisplay.Get(), &mRECT);
-			}
-
+		private:
+			ITimeInfo * mTimeInfo;
+			WDL_String mDisplay;
 		};
 
-
-
+	
+		
 		//------------------------------------
 		// Menus
 		// -----------------------------------
 
 		// Popup Menu
 		// -----------------------------------
+	
 		class ITestPopupMenu : public IControl {
-		private:
-			IPopupMenu mMainMenu, mSubMenu;
-
 		public:
 			ITestPopupMenu(IPlugBase *pPlug, IRECT pR)
 				: IControl(pPlug, pR, -1) {
@@ -227,43 +139,15 @@ namespace SRPlugins {
 
 				mMainMenu.AddItem("sub menu", &mSubMenu);
 			}
-
-			bool Draw(IGraphics* pGraphics) {
-				return pGraphics->FillIRect(&COLOR_WHITE, &mRECT);;
-			}
-
-			void OnMouseDown(int x, int y, IMouseMod* pMod) {
-				doPopupMenu();
-
-				Redraw(); // seems to need this
-				SetDirty();
-			}
-
-			void doPopupMenu() {
-				IPopupMenu* selectedMenu = mPlug->GetGUI()->CreateIPopupMenu(&mMainMenu, &mRECT);
-
-				if (selectedMenu == &mMainMenu) {
-					int itemChosen = selectedMenu->GetChosenItemIdx();
-					selectedMenu->CheckItemAlone(itemChosen);
-					DBGMSG("item chosen, main menu %i\n", itemChosen);
-				}
-				else if (selectedMenu == &mSubMenu) {
-					int itemChosen = selectedMenu->GetChosenItemIdx();
-					selectedMenu->CheckItemAlone(itemChosen);
-					DBGMSG("item chosen, sub menu %i\n", itemChosen);
-				}
-				else {
-					DBGMSG("nothing chosen\n");
-				}
-			}
+			bool Draw(IGraphics* pGraphics);
+			void OnMouseDown(int x, int y, IMouseMod* pMod);
+			void doPopupMenu();
+		private:
+			IPopupMenu mMainMenu, mSubMenu;
 		};
 
 
-
 		class ITestPopupMenuB : public IControl {
-		private:
-			IPopupMenu mMainMenu;
-
 		public:
 			ITestPopupMenuB(IPlugBase *pPlug, IRECT pR)
 				: IControl(pPlug, pR, -1) {
@@ -272,38 +156,12 @@ namespace SRPlugins {
 				mMainMenu.AddItem("second item");
 				mMainMenu.AddItem("third item");
 			}
-
-			bool Draw(IGraphics* pGraphics) {
-				return pGraphics->FillIRect(&COLOR_WHITE, &mRECT);;
-			}
-
-			void OnMouseDown(int x, int y, IMouseMod* pMod) {
-				doPopupMenu();
-
-				Redraw(); // seems to need this
-				SetDirty();
-			}
-
-			void doPopupMenu() {
-				IPopupMenu* selectedMenu = mPlug->GetGUI()->CreateIPopupMenu(&mMainMenu, &mRECT);
-
-				if (selectedMenu) {
-					int idx = selectedMenu->GetChosenItemIdx();
-					selectedMenu->CheckItem(idx, !selectedMenu->IsItemChecked(idx));
-
-					WDL_String checkedItems;
-
-					checkedItems.Append("checked: ", 1024);
-
-					for (int i = 0; i < selectedMenu->GetNItems(); i++) {
-						checkedItems.AppendFormatted(1024, "%i ", selectedMenu->IsItemChecked(i));
-					}
-
-					DBGMSG("%s\n", checkedItems.Get());
-				}
-			}
+			bool Draw(IGraphics* pGraphics);
+			void OnMouseDown(int x, int y, IMouseMod* pMod);
+			void doPopupMenu();
+		private:
+			IPopupMenu mMainMenu;
 		};
-
 
 
 		class IPopUpMenuControl : public IControl {
@@ -314,30 +172,9 @@ namespace SRPlugins {
 				mDblAsSingleClick = true;
 				mText = IText(14);
 			}
-
-			bool Draw(IGraphics* pGraphics) {
-				pGraphics->FillIRect(&COLOR_WHITE, &mRECT);
-
-				char disp[32];
-				mPlug->GetParam(mParamIdx)->GetDisplayForHost(disp);
-
-				if (CSTR_NOT_EMPTY(disp)) {
-					return pGraphics->DrawIText(&mText, disp, &mRECT);
-				}
-
-				return true;
-			}
-
-			void OnMouseDown(int x, int y, IMouseMod* pMod) {
-				if (pMod->L) {
-					PromptUserInput(&mRECT);
-				}
-
-				mPlug->GetGUI()->SetAllControlsDirty();
-			}
-
+			bool Draw(IGraphics* pGraphics);
+			void OnMouseDown(int x, int y, IMouseMod* pMod);
 			//void OnMouseWheel(int x, int y, IMouseMod* pMod, int d){} //TODO: popup menus seem to hog the mousewheel
-
 		};
 
 
@@ -346,81 +183,18 @@ namespace SRPlugins {
 		// -----------------------------------
 
 		class IPresetMenu : public IControl {
-		private:
-			WDL_String mDisp;
 		public:
 			IPresetMenu(IPlugBase *pPlug, IRECT pR, IText* pText)
 				: IControl(pPlug, pR, -1) {
 				mTextEntryLength = MAX_PRESET_NAME_LEN - 3;
 				mText = *pText;
 			}
-
-			bool Draw(IGraphics* pGraphics) {
-				int pNumber = mPlug->GetCurrentPresetIdx();
-				mDisp.SetFormatted(32, "%02d: %s", pNumber + 1, mPlug->GetPresetName(pNumber));
-
-				IColor colorBg = IColor(50, 0, 0, 0);
-				pGraphics->FillIRect(&colorBg, &mRECT);
-
-				if (CSTR_NOT_EMPTY(mDisp.Get()))
-				{
-					return pGraphics->DrawIText(&mText, mDisp.Get(), &mRECT);
-				}
-
-				return true;
-			}
-
-			void OnMouseDown(int x, int y, IMouseMod* pMod) {
-				if (pMod->R) {
-					const char* pname = mPlug->GetPresetName(mPlug->GetCurrentPresetIdx());
-					mPlug->GetGUI()->CreateTextEntry(this, &mText, &mRECT, pname);
-				}
-				else {
-					doPopupMenu();
-				}
-
-				Redraw(); // seems to need this
-				SetDirty();
-			}
-
-			void doPopupMenu() {
-				int numItems = mPlug->NPresets();
-				IPopupMenu menu;
-
-				IGraphics* gui = mPlug->GetGUI();
-
-				int currentPresetIdx = mPlug->GetCurrentPresetIdx();
-
-				for (int i = 0; i < numItems; i++) {
-					const char* str = mPlug->GetPresetName(i);
-					if (i == currentPresetIdx)
-						menu.AddItem(str, -1, IPopupMenuItem::kChecked);
-					else
-						menu.AddItem(str);
-				}
-
-				menu.SetPrefix(2);
-
-				if (gui->CreateIPopupMenu(&menu, &mRECT)) {
-					int itemChosen = menu.GetChosenItemIdx();
-
-					if (itemChosen > -1) {
-						mPlug->RestorePreset(itemChosen);
-						mPlug->InformHostOfProgramChange();
-						mPlug->DirtyParameters();
-					}
-				}
-			}
-
-			void TextFromTextEntry(const char* txt) {
-				WDL_String safeName;
-				safeName.Set(txt, MAX_PRESET_NAME_LEN);
-
-				mPlug->ModifyCurrentPreset(safeName.Get());
-				mPlug->InformHostOfProgramChange();
-				mPlug->DirtyParameters();
-				SetDirty(false);
-			}
+			bool Draw(IGraphics* pGraphics);
+			void OnMouseDown(int x, int y, IMouseMod* pMod);
+			void doPopupMenu();
+			void TextFromTextEntry(const char* txt);
+		private:
+			WDL_String mDisp;
 		};
 
 
@@ -430,37 +204,15 @@ namespace SRPlugins {
 		// -----------------------------------
 
 		// Key catcher is an icontrol but only its OnKeyDown() is called... after all the other controls have been tested to see if they want keyboard input
+	
 		class IKeyCatcher : public IControl {
 		public:
 			IKeyCatcher(IPlugBase* pPlug, IRECT pR)
 				: IControl(pPlug, pR) {}
-
 			// this never gets called but is needed for an IControl
 			bool Draw(IGraphics* pGraphics) { return false; }
-
-			bool OnKeyDown(int x, int y, int key) {
-				switch (key) {
-					//case KEY_SPACE:
-					///  DBGMSG("Space\n");
-					//  return true;
-				case KEY_LEFTARROW:;
-					DBGMSG("Left\n");
-					return true;
-				case KEY_RIGHTARROW:
-					DBGMSG("Right\n");
-					return true;
-				case KEY_UPARROW:;
-					DBGMSG("Up\n");
-					return true;
-				case KEY_DOWNARROW:
-					DBGMSG("Down\n");
-					return true;
-				default:
-					return false;
-				}
-			}
+			bool OnKeyDown(int x, int y, int key);
 		};
-
 
 
 		class Point {
@@ -472,11 +224,6 @@ namespace SRPlugins {
 			bool operator > (const Point& point) const { return (this->x > point.x); };
 			bool operator == (const Point& point) const { return (this->uid == point.uid); };
 		};
-
-
-
-
-
 
 	} // End namespace SRControls
 } // End namespace SRPlugins

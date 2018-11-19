@@ -51,8 +51,9 @@ const int circularBufferLenght = 65536;
 		double circularBufferInL[circularBufferLenght], circularBufferInR[circularBufferLenght], circularBufferOutL[circularBufferLenght], circularBufferOutR[circularBufferLenght];
 
 	private:
+		double mSampleRate,
 		// GAIN + PAN
-		double mInputGain, mOutputGain, mInputDrive,
+			mInputGain, mOutputGain, mInputDrive,
 			mPan, mSafePanFreq,
 			vSafePanLowSignal1, vSafePanHighSignal1, vSafePanLowSignal2, vSafePanHighSignal2,
 
@@ -76,23 +77,25 @@ const int circularBufferLenght = 65536;
 			mCompPeakSidechainFilterFreq,
 			mCompPeakKneeWidthDb, mCompRmsKneeWidthDb,
 
-			vCompDry1, vCompDry2,
-			vCompRmsIn1, vCompPeakIn1, vCompRmsIn2, vCompPeakIn2,
+			//vCompDry1, vCompDry2,
+			//vCompRmsIn1, vCompPeakIn1, vCompRmsIn2, vCompPeakIn2,
 
 			// DEESSER
 			mDeesserBottomFreq, mDeesserTopFreq,
 			mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, mDeesserMakeup,
 
-			vDeesserLowSignalL, vDeesserLowSignalR, vDeesserMidSignalL, vDeesserMidSignalR, vDeesserHighSignalL, vDeesserHighSignalR,
+			//vDeesserLowSignalL, vDeesserLowSignalR, vDeesserMidSignalL, vDeesserMidSignalR, vDeesserHighSignalL, vDeesserHighSignalR,
 
 
 			// TESTPARAM
 			mTestParam1, mTestParam2, mTestParam3, mTestParam4, mTestParam5,
 
 			// METERS
-			mInputPeakMeterValue1, mInputPeakMeterValue2, mInputPeakMeterPreviousValue1, mInputPeakMeterPreviousValue2, mInputPeakMeterTimeConst1, mInputPeakMeterTimeConst2,
-			mOutputPeakMeterValue1, mOutputPeakMeterValue2, mOutputPeakMeterPreviousValue1, mOutputPeakMeterPreviousValue2, mOutputPeakMeterTimeConst1, mOutputPeakMeterTimeConst2,
+			mInputPeakMeterValue1, mInputPeakMeterValue2, mOutputPeakMeterValue1, mOutputPeakMeterValue2,
 			mRmsGrMeterValue, mPeakGrMeterValue,
+
+			mInputPeakMeterPreviousValue1, mInputPeakMeterPreviousValue2, mOutputPeakMeterPreviousValue1, mOutputPeakMeterPreviousValue2,
+			mInputPeakMeterTimeConst1, mInputPeakMeterTimeConst2, mOutputPeakMeterTimeConst1, mOutputPeakMeterTimeConst2,
 
 			mOutputVuMeterValue1, mOutputVuMeterValue2, mOutputVuMeterSos1, mOutputVuMeterSos2;
 
@@ -112,14 +115,13 @@ const int circularBufferLenght = 65536;
 
 			// METERS
 			cInputPeakMeter1, cInputPeakMeter2, cOuputPeakMeter1, cOutputPeakMeter2,
-			cRmsGrMeter, cPeakGrMeter, cFreqRespGraph, cOutputVuMeter1, cOutputVuMeter2;
+			cRmsGrMeter, cPeakGrMeter, /*cFreqRespGraph, */cOutputVuMeter1, cOutputVuMeter2;
 
 
 		// CIRCULAR BUFFER
 		unsigned short int circularBufferPointer;
 		
 		std::vector<int> cControlMatrix;
-
 
 		// FUNCTIONS
 		void CreatePresets(),
@@ -134,7 +136,8 @@ const int circularBufferLenght = 65536;
 			InitLimiter(),
 			InitSaturation(),
 			InitSafePan(),
-			InitMeter();
+			InitMeter(),
+			GrayOutControls();
 		//CalculateFreqResp(),
 
 	// FILTERS
