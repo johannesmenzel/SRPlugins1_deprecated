@@ -17,7 +17,7 @@
 
 
 
-const int kNumPrograms = 4;									// Here you find the total number of presets defined
+const int kNumPrograms = 1;									// Here you find the total number of presets defined
 //const double METER_ATTACK = 1., METER_DECAY = 0.001;			// This is the global attack and release constants for meters
 const double METER_ATTACK = .6, METER_DECAY = .05;			// This is the global attack and release constants for meters
 const double halfpi = PI / 2;								// Half pi defined
@@ -409,10 +409,7 @@ void SRChannel::CreatePresets() {
 //	MakePreset("Default", kNumPrograms);
 															// Here's the beginning of the real stuff.
 	MakeDefaultPreset("Default", 1);
-	MakePreset("Kick", 0., 30., 8500., 3., 8000., .707, 0, 4.5, 5600., .2, -6., 320., .707, 4., 57., 2., 1, 0., 1., 20., 200., 0., -33., 3., 25., 150., 4.5, 100., 70., 10., 0., -.3, 0., 150., -4., 0);
-	MakePreset("Vocals", 0., 90., 22000., 5.7, 12200., .707, 0, 2.6, 5000., .3, -2., 478., 3.8, 2., 133., .707, 0, -25., 3., 20., 320., 3., -21., 19., .18, 80., 1.6, 50., 100., 50., 0., -1.5, 0., 150., -5., 0);
-	MakePreset("Mix Bus", 0., 30., 22000., 4., 14000., .707, 0, 3.5, 5700., .2, -2., 610., 3., 2., 60., .707, 1, -20., 3., 55., 450., 7.5, -13., 15., .8, 85., 2.5, 50., 80., 20., 0., -4., 0., 150., -.5, 1);
-//	MakePreset("NAME", InGain, HpFreq, LpFreq, HfGain, HfFreq, HfQ, HfBell, HmfGain, HmfFreq, HmfQ, LmfGain, LmfFreq, LmfQ, LfGain, LfFreq, LfQ, LfBell, RmsThresh, RmsRatio, RmsAttack, RmsRelease, RmsMakeup, PeakThresh, PeakRatio, PeakAttack, PeakRelease, PeakMakeup, PeakRmsRatio, DryWet, Sat, Clp, OutGain);
+	//MakePresetFromNamedParams("Kick", kInputGain, 0.0, kEqHpFreq, kEqLpFreq, kEqHfGain, kEqHfFreq, kEqHfQ, kEqHfBell, kEqHmfGain, kEqHmfFreq, kEqHmfQ, kEqLmfGain, kEqLmfFreq, kEqLmfQ, kEqLfGain, kEqLfFreq, kEqLfQ, kEqLfBell, kCompRmsThresh, kCompRmsRatio, kCompRmsAttack, kCompRmsRelease, kCompRmsMakeup, kCompPeakThresh, kCompPeakRatio, kCompPeakAttack, kCompPeakRelease, kCompPeakMakeup, kCompPeakRmsRatio, kCompDryWet, kSaturationAmount, kClipperThreshold, kOutputGain, kPan, kPanFreq, kLimiterThresh, kCompIsParallel, kEqBypass, kCompBypass, kOutputBypass, kBypass, kSaturationHarmonics, kEqHpOrder, kEqLpOrder, kTestParam1, kTestParam2, kTestParam3, kTestParam4, kTestParam5, kInputDrive, kAgc, kCompPeakSidechainFilterFreq, kDeesserBottomFreq, kDeesserTopFreq, kDeesserThresh, kDeesserRatio, kDeesserAttack, kDeesserRelease, kDeesserMakeup, kCompPeakKneeWidthDb, kCompRmsKneeWidthDb, kInputBypass, kCompPeakIsExtSc, kCompRmsIsExrSc, kSaturationSkew);
 }
 
 void SRChannel::GrayOutControls()

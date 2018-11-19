@@ -17,8 +17,8 @@
 #define VIEW_CLASS_STR "SRChannel_View"
 
 // Format        0xMAJR.MN.BG - in HEX! so version 10.1.5 would be 0x000A0105
-#define PLUG_VER 0x00000001
-#define VST3_VER_STR "0.0.1"
+#define PLUG_VER 0x00000100
+#define VST3_VER_STR "0.1.0"
 
 #define PLUG_COPYRIGHT  "MIT"
 
