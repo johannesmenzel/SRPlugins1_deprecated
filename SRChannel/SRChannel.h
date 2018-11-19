@@ -52,7 +52,7 @@ const int circularBufferLenght = 65536;
 
 	private:
 		double mSampleRate,
-		// GAIN + PAN
+			// GAIN + PAN
 			mInputGain, mOutputGain, mInputDrive,
 			mPan, mSafePanFreq,
 			vSafePanLowSignal1, vSafePanHighSignal1, vSafePanLowSignal2, vSafePanHighSignal2,
@@ -81,10 +81,10 @@ const int circularBufferLenght = 65536;
 			//vCompRmsIn1, vCompPeakIn1, vCompRmsIn2, vCompPeakIn2,
 
 			// DEESSER
-			mDeesserBottomFreq, mDeesserTopFreq,
+			mDeesserFreq, mDeesserQ,
 			mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, mDeesserMakeup,
 
-			//vDeesserLowSignalL, vDeesserLowSignalR, vDeesserMidSignalL, vDeesserMidSignalR, vDeesserHighSignalL, vDeesserHighSignalR,
+		
 
 
 			// TESTPARAM
@@ -152,8 +152,7 @@ const int circularBufferLenght = 65536;
 			fSafePanHpL, fSafePanLpL, fSafePanHpR, fSafePanLpR,
 
 			// Deesser
-			fDeesserBottomLpFilterL, fDeesserBottomLpFilterR, fDeesserMidHpFilterL, fDeesserMidHpFilterR, fDeesserMidLpFilterL, fDeesserMidLpFilterR, fDeesserTopHpFilterL, fDeesserTopHpFilterR;
-		//fSatHpFilterL, fSatHpFilterR, fSatLfFilterL, fSatLfFilterR, fSatMfFilterL, fSatMfFilterR, fSatHfFilterL, fSatHfFilterR, fSatLpFilterL, fSatLpFilterR // These were the filters to alter the saturated sound
+			fDeesserSidechainBandpassFilterL, fDeesserSidechainBandpassFilterR, fDeesserReductionPeakFilterL, fDeesserReductionPeakFilterR;
 
 		SRPlugins::SRFilters::SRFiltersOnePole fDcBlockerL, fDcBlockerR, fEqHpFilterOnepoleL, fEqHpFilterOnepoleR, fEqLpFilterOnepoleL, fEqLpFilterOnepoleR;
 
@@ -161,7 +160,7 @@ const int circularBufferLenght = 65536;
 		SRPlugins::SRDynamics::SRCompressor fCompressorPeak;
 		SRPlugins::SRDynamics::SRCompressorRMS fCompressorRms;
 		SRPlugins::SRDynamics::SRLimiter fLimiter;
-		SRPlugins::SRDynamics::SRCompressor fDeesser;
+		SRPlugins::SRDynamics::SRDeesser fDeesser;
 
 		SRPlugins::SRDynamics::EnvelopeDetector fOutputVuMeterEnvelopeDetector1, fOutputVuMeterEnvelopeDetector2;
 		SRPlugins::SRDynamics::AttRelEnvelope fOutputVuMeterEnvelope1, fOutputVuMeterEnvelope2;

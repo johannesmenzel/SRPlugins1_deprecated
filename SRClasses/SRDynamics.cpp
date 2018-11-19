@@ -314,5 +314,84 @@ namespace SRPlugins {
 		}
 
 
+		//-------------------------------------------------------------
+		// DEESSER
+		//-------------------------------------------------------------
+		SRDeesser::SRDeesser()
+			: AttRelEnvelope(10.0, 100.0)
+			, mThreshDb(0.0)
+			, mRatio(1.0)
+			, currentOvershootDb(DC_OFFSET)
+			, mFilterFreq(0.5)
+			, mFilterQ(0.707)
+			, mFilterGain(0.0)
+			, mGrLin(1.0)
+			, mGrDb(0.0)
+			, mKneeWidthDb(0.0)
+		{
+		}
+
+		void SRDeesser::setDeesser(double threshDb, double ratio, double attackMs, double releaseMs, double freqNormalized, double q, double kneeDb, double samplerate) {
+			setThresh(threshDb);
+			setRatio(ratio);
+			setAttack(attackMs);
+			setRelease(releaseMs);
+			initFilter(freqNormalized, q);
+			setSampleRate(samplerate);
+			setKnee(kneeDb);
+		}
+
+		//-------------------------------------------------------------
+		void SRDeesser::setThresh(double dB)
+		{
+			mThreshDb = dB;
+		}
+
+		//-------------------------------------------------------------
+		void SRDeesser::setRatio(double ratio)
+		{
+			assert(ratio >= 0.0);
+			mRatio = ratio;
+		}
+
+		void SRDeesser::setKnee(double kneeDb)
+		{
+			mKneeWidthDb = kneeDb;
+		}
+
+		void SRDeesser::initFilter(double freq, double q)
+		{
+			this->mFilterFreq = freq;
+			this->mFilterQ = q;
+			this->fSidechainBandpass1.setFilter(SRPlugins::SRFilters::biquad_bandpass, mFilterFreq, mFilterQ, 0.0, getSampleRate());
+			this->fSidechainBandpass2.setFilter(SRPlugins::SRFilters::biquad_bandpass, mFilterFreq, mFilterQ, 0.0, getSampleRate());
+			this->fDynamicEqFilter1.setFilter(SRPlugins::SRFilters::biquad_peak, mFilterFreq, mFilterQ, 0.0, getSampleRate());
+			this->fDynamicEqFilter2.setFilter(SRPlugins::SRFilters::biquad_peak, mFilterFreq, mFilterQ, 0.0, getSampleRate());
+		}
+
+		void SRDeesser::setFrequency(double freq)
+		{
+			this->mFilterFreq = freq;
+			this->fSidechainBandpass1.setFc(mFilterFreq);
+			this->fSidechainBandpass2.setFc(mFilterFreq);
+			this->fDynamicEqFilter1.setFc(mFilterFreq);
+			this->fDynamicEqFilter2.setFc(mFilterFreq);
+		}
+
+		void SRDeesser::setQ(double q)
+		{
+			this->mFilterQ = q;
+			this->fSidechainBandpass1.setQ(mFilterQ);
+			this->fSidechainBandpass2.setQ(mFilterQ);
+			this->fDynamicEqFilter1.setQ(mFilterQ);
+			this->fDynamicEqFilter2.setQ(mFilterQ);
+		}
+
+		//-------------------------------------------------------------
+		void SRDeesser::initRuntime(void)
+		{
+			currentOvershootDb = DC_OFFSET;
+		}
+
 	}
 } // end namespace

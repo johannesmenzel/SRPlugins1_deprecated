@@ -136,8 +136,8 @@ enum EParams
   kInputDrive,
   kAgc,
   kCompPeakSidechainFilterFreq,
-  kDeesserBottomFreq,
-  kDeesserTopFreq,
+  kDeesserFreq,
+  kDeesserQ,
   kDeesserThresh,
   kDeesserRatio,
   kDeesserAttack,
@@ -235,15 +235,15 @@ const structParameterProperties parameterProperties[kNumParams] = {
 	{ "Peak Makeup",	"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"0", "40", "10",		"Makeup Gain of Peak Compressor" },
 	{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50",		"Mix the signal of the RMS and Peak Compressor" },
 	{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50",		"Do parallel compression by dialing in the uncompressed signal" },
-	{ "Sat Amount",		"AMT",	0.,		0.,		100.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of Saturation" },
+	{ "Sat Amount",		"AMT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of Saturation" },
 	{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Output",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of the Output Clipper (cuts amplitutde)" },
 	{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Output Gain" },
 	{ "Pan",			"PAN",	0.,		-100.,	100.,	1.,		0.,		.5,		"%",	"Output",	typeDouble, SslBlue,	kControlX + kScaleX * 14,		kControlY + kScaleY * 1,		"L", "R", "C",			"Pan" },
 	{ "Pan Freq",		"PNF",	150.,	20.,	1000.,	1.,		150.,	.5,		"Hz",	"Output",	typeDouble, SslRed,		kControlX + kScaleX * 14,		kControlY + kScaleY * 3,		"20", "1k", "200",		"Frequencies below crossover will be not affected by panner" },
 	{ "Limiter",		"LMT",	10.,	-30.,	10.,	0.1,	0.,		.5,		"dB",	"Output",	typeDouble, SslOrange,	kControlX + kScaleX * 14,		kControlY + kScaleY * 5,		"-30", "10", "0",		"Thresold of Output Limiter" },
 	{ "Comp Ser/Par",	"Par",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 9,		kControlY + kScaleY * 16,		"SER", "PAR", "",		"RMS and Peak Compressor can be run serial or parallel" },
-	{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",		typeBool,	Button,		kControlX + kScaleX * 4 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
-	{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",typeBool,	Button,		kControlX + kScaleX * 8 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
+	{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 4 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
+	{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 8 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
 	{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 14 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
 	{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * -1 - 36,	"ACT", "BYP", "",		"Bypass Plugin" },
 	{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix",	"Dial in even harmonics by turning the knob counter-clockwise" },
@@ -257,8 +257,8 @@ const structParameterProperties parameterProperties[kNumParams] = {
 	{ "Sat Drive",		"DRV",	0.,		0.,		60.,	0.1,	30.,	.5,		"dB",	"Input",	typeDouble, SslRed,		kControlX + kScaleX * 0,		kControlY + kScaleY * 0,		"0", "60", "30",		"Saturation input drive, hits the saturation module harder" },
 	{ "Auto Gain Comp",	"AGC",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 7,		"AGC", "", "",			"Automatic Gain Conpensation. Click to adjust output volume to input volume" },
 	{ "Peak SC Filter",	"SCF",	16.,	16.,	5000.,	1.,		1000.,	.5,		"Hz",	"Compressor",typeDouble, SslBlue,	kControlX + kScaleX * 8,		kControlY + kScaleY * 14,		"16", "5k", "1k",		"Frequency of the Compressors sidechain highpass filter" },
-	{ "Deesser Bottom",	"DSB",	6000.,	16.,	22000.,	1.,		7000.,	.5,		"Hz",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 0,		"16", "22k", "7k",		"NOT WORKING - Deessers affects frequencies above" },
-	{ "Deesser Top",	"DST",	7000.,	16.,	22000.,	1.,		7000.,	.5,		"Hz",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 2,		"16", "22k", "7k",		"NOT WORKING - Deessers affects frequencies below" },
+	{ "Deesser Freq",	"DSF",	7000.,	16.,	22000.,	1.,		7000.,	.5,		"Hz",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 0,		"16", "22k", "7k",		"NOT WORKING - Deessers center frequency" },
+	{ "Deesser Q",		"DSQ",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"Deesser",		typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 2,		"W", "N", "",			"NOT WORKING - Deessers width (Q)" },
 	{ "Deesser Thresh",	"DST",	0.,		-100.,	0.,		0.1,	-50.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 4,		"-100", "0", "-50",		"NOT WORKING - Deessers Threshold" },
 	{ "Deesser Ratio",	"DSR",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 6,		".5:1", "20:1", "3:1",	"NOT WORKING - Deessers Ratio" },
 	{ "Deesser Attack",	"DSA",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 8,		"0.01", "200", "20",	"NOT WORKING - Deessers Attack" },
@@ -430,14 +430,7 @@ void SRChannel::GrayOutControls()
 				|| i == kTestParam4 
 				|| i == kTestParam5 
 				|| i == kEqLpOrder 
-				|| i == kSaturationSkew 
-				|| i == kDeesserAttack 
-				|| i == kDeesserRelease 
-				|| i == kDeesserThresh 
-				|| i == kDeesserRatio 
-				|| i == kDeesserBottomFreq
-				|| i == kDeesserMakeup
-				|| i == kDeesserTopFreq) ? grayout = true
+				|| i == kSaturationSkew ) ? grayout = true
 			: grayout = false;
 
 			GetGUI()->GrayOutControl(i, grayout);
@@ -760,25 +753,8 @@ void SRChannel::InitSafePan() {
 
 void SRChannel::InitDeesser() {
 	mSampleRate = GetSampleRate();
-	fDeesserBottomLpFilterL.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserBottomLpFilterR.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidHpFilterL.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidHpFilterR.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mDeesserBottomFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidLpFilterL.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserMidLpFilterR.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserTopHpFilterL.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-	fDeesserTopHpFilterR.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mDeesserTopFreq / mSampleRate, 0., 0., mSampleRate);
-
-	//fDeesserBottomLpFilterL.setFilter(SRPlugins::SRFilters::biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserBottomLpFilterR.setFilter(SRPlugins::SRFilters::biquad_lowpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidHpFilterL.setFilter(SRPlugins::SRFilters::biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidHpFilterR.setFilter(SRPlugins::SRFilters::biquad_highpass, mDeesserBottomFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidLpFilterL.setFilter(SRPlugins::SRFilters::biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserMidLpFilterR.setFilter(SRPlugins::SRFilters::biquad_lowpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserTopHpFilterL.setFilter(SRPlugins::SRFilters::biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-	//fDeesserTopHpFilterR.setFilter(SRPlugins::SRFilters::biquad_highpass, mDeesserTopFreq / mSampleRate, stQ, 0., mSampleRate);
-
-	fDeesser.setCompressor(mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, 20, 5.0, mSampleRate);
+	fDeesser.setDeesser(mDeesserThresh, mDeesserRatio, mDeesserAttack, mDeesserRelease, mDeesserFreq / mSampleRate, mDeesserQ, 10., mSampleRate);
+	fDeesser.initRuntime();
 }
 
 void SRChannel::InitMeter() {
@@ -884,14 +860,16 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				//// Upsample
 				//// double y = mOverSampler.Process(x, [](double input) { return std::tanh(input); })
 
-				fInputSaturation.process(*out1, *out2);
+				// Saturation
+				if (mSaturationAmount != 0.) fInputSaturation.process(*out1, *out2);
 
 				//// Downsample
 
 			}
 
-			// EQ
+			// EQ SECTION
 			if (mEqBypass != 1) {
+				// Filter
 				if (mEqHpFreq > 16.) {
 					if (mEqHpOrder == 1 || mEqHpOrder == 3) {
 						*out1 = fEqHpFilterOnepoleL.process(*out1);
@@ -932,51 +910,20 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 						*out2 = fEqHpFilter10R.process(*out2);
 					}
 				}
-				if (mEqLpFreq < 22000.) {
-					*out1 = fEqLpFilter1L.process(*out1);
-					*out2 = fEqLpFilter1R.process(*out2);
-				}
-				if (mEqLfGain != 0.) {
-					*out1 = fEqLfFilterL.process(*out1);
-					*out2 = fEqLfFilterR.process(*out2);
-				}
-				if (mEqLmfGain != 0.) {
-					*out1 = fEqLmfFilterL.process(*out1);
-					*out2 = fEqLmfFilterR.process(*out2);
-				}
-				if (mEqHmfGain != 0.) {
-					*out1 = fEqHmfFilterL.process(*out1);
-					*out2 = fEqHmfFilterR.process(*out2);
-				}
-				if (mEqHfGain != 0.) {
-					*out1 = fEqHfFilterL.process(*out1);
-					*out2 = fEqHfFilterR.process(*out2);
-				}
+				if (mEqLpFreq < 22000.0) { *out1 = fEqLpFilter1L.process(*out1); *out2 = fEqLpFilter1R.process(*out2); }
+				// Parametric EQ
+				if (mEqLfGain != 0.0) { *out1 = fEqLfFilterL.process(*out1); *out2 = fEqLfFilterR.process(*out2); }
+				if (mEqLmfGain != 0.0) { *out1 = fEqLmfFilterL.process(*out1); *out2 = fEqLmfFilterR.process(*out2);	}
+				if (mEqHmfGain != 0.0) { *out1 = fEqHmfFilterL.process(*out1); *out2 = fEqHmfFilterR.process(*out2); }
+				if (mEqHfGain != 0.0) { *out1 = fEqHfFilterL.process(*out1); *out2 = fEqHfFilterR.process(*out2); }
 			}
 
-
+			if (mCompBypass != 1) {
 			// Deesser
-			/*vDeesserLowSignalL = *out1;
-			vDeesserLowSignalR = *out2;
-			vDeesserMidSignalL = *out1;
-			vDeesserMidSignalR = *out2;
-			vDeesserHighSignalL = *out1;
-			vDeesserHighSignalR = *out2;
-
-			vDeesserLowSignalL = fDeesserBottomLpFilterL.process(vDeesserLowSignalL);
-			vDeesserLowSignalR = fDeesserBottomLpFilterR.process(vDeesserLowSignalR);
-			vDeesserMidSignalL = fDeesserMidHpFilterL.process(fDeesserMidLpFilterL.process(vDeesserMidSignalL));
-			vDeesserMidSignalR = fDeesserMidHpFilterR.process(fDeesserMidLpFilterR.process(vDeesserMidSignalR));
-			vDeesserHighSignalL = fDeesserTopHpFilterL.process(vDeesserHighSignalL);
-			vDeesserHighSignalR = fDeesserTopHpFilterR.process(vDeesserHighSignalR);
-
-			fDeesser.process(vDeesserMidSignalL, vDeesserMidSignalR);
-
-			*out1 = (vDeesserLowSignalL - vDeesserMidSignalL + vDeesserHighSignalL) * mDeesserMakeup;
-			*out2 = (vDeesserLowSignalR - vDeesserMidSignalR + vDeesserHighSignalR) * mDeesserMakeup;*/
+			fDeesser.process(*out1, *out2);
+			
 
 			//	 Simple Compressor
-			if (mCompBypass != 1) {
 				double vCompDry1 = *out1;
 				double vCompDry2 = *out2;
 
@@ -1566,22 +1513,8 @@ void SRChannel::OnParamChange(int paramIdx)
 
 	  // Deesser
 
-  case kDeesserBottomFreq:
-	  mDeesserBottomFreq = GetParam(paramIdx)->Value();
-	  fDeesserBottomLpFilterL.setFc(mDeesserBottomFreq / mSampleRate);
-	  fDeesserBottomLpFilterR.setFc(mDeesserBottomFreq / mSampleRate);
-	  fDeesserMidHpFilterL.setFc(mDeesserBottomFreq / mSampleRate);
-	  fDeesserMidHpFilterR.setFc(mDeesserBottomFreq / mSampleRate);
-	  break;
-
-  case kDeesserTopFreq:
-	  mDeesserTopFreq = GetParam(paramIdx)->Value();
-	  fDeesserMidLpFilterL.setFc(mDeesserTopFreq / mSampleRate);
-	  fDeesserMidLpFilterR.setFc(mDeesserTopFreq / mSampleRate);
-	  fDeesserTopHpFilterL.setFc(mDeesserTopFreq / mSampleRate);
-	  fDeesserTopHpFilterR.setFc(mDeesserTopFreq / mSampleRate);
-	  break;
-
+  case kDeesserFreq: mDeesserFreq = GetParam(paramIdx)->Value(); fDeesser.setFrequency(mDeesserFreq / mSampleRate); break;
+  case kDeesserQ: mDeesserQ = GetParam(paramIdx)->Value(); fDeesser.setQ(mDeesserQ); break;
   case kDeesserThresh: mDeesserThresh = GetParam(paramIdx)->Value(); fDeesser.setThresh(mDeesserThresh); break;
   case kDeesserRatio: mDeesserRatio = (1. / GetParam(paramIdx)->Value()); fDeesser.setRatio(mDeesserRatio); break;
   case kDeesserAttack: mDeesserAttack = GetParam(paramIdx)->Value(); fDeesser.setAttack(mDeesserAttack); break;

@@ -182,7 +182,7 @@ namespace SRPlugins {
 			// call before runtime (in resume())
 			void process(double &in1, double &in2); // compressor runtime process if internal sidechain 
 			void process(double &in1, double &in2, double &extSC1, double &extSC2); // if eternal sidechain
-			void process(double &in1, double &in2, double keyLinked);	// with stereo-linked key in
+			void process(double &in1, double &in2, double sidechain);	// with stereo-linked key in
 
 		private:
 
@@ -731,6 +731,137 @@ namespace SRPlugins {
 		}
 		//-------------------------------------------------------------
 		// End Gate Inline Functions
+
+
+		//-------------------------------------------------------------
+		// DEESSER Class
+		//-------------------------------------------------------------
+		class SRDeesser : public AttRelEnvelope
+		{
+		public:
+			SRDeesser();
+			virtual ~SRDeesser() {}
+
+			// parameters
+			virtual void setDeesser(double threshDb, double ratio, double attackMs, double releaseMs, double freqNormalized, double q, double kneeDb, double samplerate);
+			virtual void setThresh(double dB);
+			virtual void setRatio(double dB);
+			virtual void setKnee(double kneeDb);
+			virtual void initFilter(double freq, double q);
+			virtual void setFrequency(double freq);
+			virtual void setQ(double q);
+
+			virtual double getThresh(void) const { return mThreshDb; }
+			virtual double getRatio(void) const { return mRatio; }
+			virtual double getGrLin(void) { return mGrLin; } // Returns GR Amp
+			virtual double getGrDb(void) { return mGrDb; } // Returns GR dB
+
+														   // runtime
+			virtual void initRuntime(void);
+			// call before runtime (in resume())
+			void process(double &in1, double &in2); // compressor runtime process if internal sidechain 
+			void process(double &in1, double &in2, double sidechain);	// with stereo-linked key in
+
+		private:
+
+			// transfer function
+			double mThreshDb;		// threshold (dB)
+			double mRatio;			// ratio (compression: < 1 ; expansion: > 1)
+			double mFilterFreq;
+			double mFilterQ;
+			double mFilterGain;
+			double mGrLin;
+			double mGrDb;
+			double mKneeWidthDb;
+
+			// runtime variables
+			double currentOvershootDb;			// over-threshold envelope (dB)
+
+			SRFilters::SRFiltersTwoPole fSidechainBandpass1, fSidechainBandpass2, fDynamicEqFilter1, fDynamicEqFilter2;
+
+		};
+		//-------------------------------------------------------------
+		// End SRDeesser Class
+
+
+
+		inline void SRDeesser::process(double &in1, double &in2) {
+			double rectifiedInput1 = in1;
+			double rectifiedInput2 = in2;
+			// create sidechain
+			rectifiedInput1 = fSidechainBandpass1.process(rectifiedInput1);
+			rectifiedInput2 = fSidechainBandpass2.process(rectifiedInput2);
+
+
+			rectifiedInput1 = fabs(rectifiedInput1);	// rectify input
+			rectifiedInput2 = fabs(rectifiedInput2);
+
+
+			/* if desired, one could use another EnvelopeDetector to smooth
+			* the rectified signal.
+			*/
+
+			double rectifiedInputMaxed = std::max(rectifiedInput1, rectifiedInput2);	// link channels with greater of 2
+
+			process(in1, in2, rectifiedInputMaxed);	// rest of process
+		}
+
+
+		// Inline SRDeesser Process
+		//-------------------------------------------------------------
+		inline void SRDeesser::process(double &in1, double &in2, double sidechain) {
+			sidechain = fabs(sidechain);		// rectify (just in case)
+
+												// convert key to dB
+			sidechain += DC_OFFSET;				// add DC offset to avoid log( 0 )
+			double sidechainDb = SRPlugins::SRHelpers::AmpToDB(sidechain);	// convert linear -> dB
+
+																			// threshold
+			double sampleOvershootDb = sidechainDb - mThreshDb;	// delta over threshold
+																//if (overdB < 0.0)
+																//	overdB = 0.0;
+
+																// attack/release
+
+			sampleOvershootDb += DC_OFFSET;					// add DC offset to avoid denormal
+			AttRelEnvelope::run(sampleOvershootDb, currentOvershootDb);	// run attack/release envelope
+
+																		/* REGARDING THE DC OFFSET: In this case, since the offset is added before
+																		* the attack/release processes, the envelope will never fall below the offset,
+																		* thereby avoiding denormals. However, to prevent the offset from causing
+																		* constant gain reduction, we must subtract it from the envelope, yielding
+																		* a minimum value of 0dB.
+																		*/
+
+																		// transfer function
+			sampleOvershootDb = currentOvershootDb - DC_OFFSET; // subtract DC offset
+																//grDb = overdB * (ratio_ - 1.0);	// gain reduction (dB)
+
+			double grRaw;
+
+			if (sampleOvershootDb > mKneeWidthDb * 0.5) {
+				grRaw = (mRatio - 1.) * (sampleOvershootDb);											// For linear gain reduction above knee range
+			}
+			else if (fabs(sampleOvershootDb) <= mKneeWidthDb * 0.5) {
+				grRaw = ((mRatio - 1.) * pow(sampleOvershootDb + mKneeWidthDb * 0.5, 2.)) / (2. * mKneeWidthDb); // For smoothed gain reduction within knee range
+			}
+			else {
+				grRaw = 0.;																			// For no gain reduction below knee range
+			}
+
+
+			mGrDb = grRaw;
+			mGrLin = SRPlugins::SRHelpers::DBToAmp(grRaw);
+			fDynamicEqFilter1.setPeakGain(grRaw);
+			fDynamicEqFilter2.setPeakGain(grRaw);
+			in1 = fDynamicEqFilter1.process(in1);
+			in2 = fDynamicEqFilter2.process(in2);
+		}
+		//-------------------------------------------------------------
+		// End SRDeesser Inline Functions
+
+
+
 
 
 	}	// end namespace SRDynamics
