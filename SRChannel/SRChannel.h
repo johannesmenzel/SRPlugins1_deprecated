@@ -92,7 +92,7 @@ const int circularBufferLenght = 65536;
 
 			// METERS
 			mInputPeakMeterValue1, mInputPeakMeterValue2, mOutputPeakMeterValue1, mOutputPeakMeterValue2,
-			mRmsGrMeterValue, mPeakGrMeterValue,
+			mRmsGrMeterValue, mPeakGrMeterValue, mDeesserMeterValue,
 
 			mInputPeakMeterPreviousValue1, mInputPeakMeterPreviousValue2, mOutputPeakMeterPreviousValue1, mOutputPeakMeterPreviousValue2,
 			mInputPeakMeterTimeConst1, mInputPeakMeterTimeConst2, mOutputPeakMeterTimeConst1, mOutputPeakMeterTimeConst2,
@@ -115,7 +115,7 @@ const int circularBufferLenght = 65536;
 
 			// METERS
 			cInputPeakMeter1, cInputPeakMeter2, cOuputPeakMeter1, cOutputPeakMeter2,
-			cRmsGrMeter, cPeakGrMeter, /*cFreqRespGraph, */cOutputVuMeter1, cOutputVuMeter2;
+			cRmsGrMeter, cPeakGrMeter, cDeesserMeter, /*cFreqRespGraph, */cOutputVuMeter1, cOutputVuMeter2;
 
 
 		// CIRCULAR BUFFER

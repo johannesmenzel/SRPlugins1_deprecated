@@ -285,6 +285,7 @@ SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
 	mInputPeakMeterValue2(0.),
 	mRmsGrMeterValue(0.),
 	mPeakGrMeterValue(0.),
+	mDeesserMeterValue(0.),
 	mOutputPeakMeterValue1(0.),
 	mOutputPeakMeterValue2(0.),
 	mInputPeakMeterPreviousValue1(0.),
@@ -447,8 +448,8 @@ void SRChannel::CreateGraphics() {
 	IColor colorBgShadow = IColor(50, 0, 0, 0);
 	IColor colorFg = IColor(255, 154, 168, 178);
 	IColor colorLabel = IColor(121, 255, 255, 255);
-	IColor colorMeterFg = IColor(150, 255, 120, 0);
-	IColor colorMeterBg = IColor(50, 0, 0, 0);
+	IColor colorMeterFg = IColor(/*1*/ 50, 255, 120, 0);
+	IColor colorMeterBg = IColor(/*50*/0, 0, 0, 0);
 
 		// Text Properties
 	IText textFg = IText(14, &colorFg, "", IText::kStyleNormal, IText::kAlignCenter, 0, IText::kQualityClearType);
@@ -485,10 +486,11 @@ void SRChannel::CreateGraphics() {
 		cInputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 49, bitmapLogo.H, kWidth - 41, kHeight), colorMeterBg, colorMeterFg));
 		cRmsGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
 		cPeakGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
+		cDeesserMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
 		cOuputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
 		cOutputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
-		cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 79, bitmapLogo.H, kWidth - 71, kHeight), colorMeterBg, colorMeterFg));
-		cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 69, bitmapLogo.H, kWidth - 61, kHeight), colorMeterBg, colorMeterFg));
+		cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
+		cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
 
 
 		// Peak Meter Labels
@@ -644,6 +646,7 @@ void SRChannel::InitGUI() {
 		GetGUI()->GetControl(cInputPeakMeter2)->SetTooltip("VU Meter of right input channel");
 		GetGUI()->GetControl(cRmsGrMeter)->SetTooltip("Gain reduction of RMS compressor");
 		GetGUI()->GetControl(cPeakGrMeter)->SetTooltip("Gain reduction of peak compressor");
+		GetGUI()->GetControl(cDeesserMeter)->SetTooltip("Gain reduction of Deesser");
 		GetGUI()->GetControl(cOuputPeakMeter1)->SetTooltip("VU Meter of left output channel");
 		GetGUI()->GetControl(cOutputPeakMeter2)->SetTooltip("VU Meter of right output channel");
 		for (int i = 0; i < kNumParams; i++) {
@@ -759,11 +762,11 @@ void SRChannel::InitDeesser() {
 
 void SRChannel::InitMeter() {
 	mSampleRate = GetSampleRate();
-	fOutputVuMeterEnvelope1.setAttack(300), fOutputVuMeterEnvelope2.setAttack(300);
-	fOutputVuMeterEnvelope1.setRelease(300), fOutputVuMeterEnvelope2.setRelease(300);
 	fOutputVuMeterEnvelope1.setSampleRate(mSampleRate), fOutputVuMeterEnvelope2.setSampleRate(mSampleRate);
 	fOutputVuMeterEnvelopeDetector1.setSampleRate(mSampleRate), fOutputVuMeterEnvelopeDetector2.setSampleRate(mSampleRate);
-	fOutputVuMeterEnvelopeDetector1.setTc(5), fOutputVuMeterEnvelopeDetector2.setTc(5);
+	fOutputVuMeterEnvelope1.setAttack(300.), fOutputVuMeterEnvelope2.setAttack(300.);
+	fOutputVuMeterEnvelope1.setRelease(300.), fOutputVuMeterEnvelope2.setRelease(300.);
+	fOutputVuMeterEnvelopeDetector1.setTc(5.), fOutputVuMeterEnvelopeDetector2.setTc(5.);
 }
 
 void SRChannel::InitSaturation() {
@@ -821,6 +824,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 	mInputPeakMeterValue1 = 0., mInputPeakMeterValue2 = 0.;
 	mRmsGrMeterValue = 0., mPeakGrMeterValue = 0.;
+	mDeesserMeterValue = 0., mDeesserMeterValue = 0.;
 	mOutputPeakMeterValue1 = 0., mOutputPeakMeterValue2 = 0.;
 
 
@@ -1049,26 +1053,17 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 		}
 
+				// Output Meter +  GR Meter
 
-
-		// Output Meter +  GR Meter
-		if (mCompBypass != 1 && mCompRmsRatio != 1. && mCompRmsThresh != 0. && mBypass != 1) {
-			mRmsGrMeterValue += (-fabs(fCompressorRms.getGrDb()) + 60) / 60;
-		} else {
-			mRmsGrMeterValue += 1.;
-		}
-
-		if (mCompBypass != 1 && mCompPeakRatio != 1. && mCompPeakThresh != 0. && mBypass != 1) {
-			mPeakGrMeterValue += (-fabs(fCompressorPeak.getGrDb()) + 60) / 60;
-		} else {
-			mPeakGrMeterValue += 1.;
-		}
 
 		mOutputPeakMeterValue1 = IPMAX(mOutputPeakMeterValue1, fabs(*out1));
 		mOutputPeakMeterValue2 = IPMAX(mOutputPeakMeterValue2, fabs(*out2));
+		
 
-		fOutputVuMeterEnvelopeDetector1.run(fabs(*out1), mOutputVuMeterSos1);
-		fOutputVuMeterEnvelopeDetector2.run(fabs(*out2), mOutputVuMeterSos2);
+		double limitedOut1 = (*out1 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out1;
+		double limitedOut2 = (*out2 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out2;
+		fOutputVuMeterEnvelopeDetector1.run(fabs(limitedOut1), mOutputVuMeterSos1);
+		fOutputVuMeterEnvelopeDetector2.run(fabs(limitedOut2), mOutputVuMeterSos2);
 		fOutputVuMeterEnvelope1.run(AmpToDB(mOutputVuMeterSos1), mOutputVuMeterValue1);
 		fOutputVuMeterEnvelope2.run(AmpToDB(mOutputVuMeterSos2), mOutputVuMeterValue2);
 
@@ -1098,9 +1093,29 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	mOutputPeakMeterValue1 = (AmpToDB(mOutputPeakMeterValue1) + 60) / 60;
 	mOutputPeakMeterValue2 = (AmpToDB(mOutputPeakMeterValue2) + 60) / 60;
 
-	
-	mRmsGrMeterValue /= (double)nFrames;
-	mPeakGrMeterValue /= (double)nFrames;
+	if (mCompBypass != 1 && mCompRmsRatio != 1. && mCompRmsThresh != 0. && mBypass != 1) {
+		mRmsGrMeterValue += (-fabs(fCompressorRms.getGrDb()) + 60) / 60;
+	}
+	else {
+		mRmsGrMeterValue += 1.;
+	}
+
+	if (mCompBypass != 1 && mCompPeakRatio != 1. && mCompPeakThresh != 0. && mBypass != 1) {
+		mPeakGrMeterValue += (-fabs(fCompressorPeak.getGrDb()) + 60) / 60;
+	}
+	else {
+		mPeakGrMeterValue += 1.;
+	}
+
+	if (mCompBypass != 1 && mDeesserRatio != 1. && mDeesserThresh != 0. && mBypass != 1) {
+		mDeesserMeterValue += (-fabs(fDeesser.getGrDb()) + 60) / 60;
+	}
+	else {
+		mDeesserMeterValue += 1.;
+	}
+	//mRmsGrMeterValue /= (double)nFrames;
+	//mPeakGrMeterValue /= (double)nFrames;
+	//mDeesserMeterValue /= (double)nFrames;
 
 	if (GetGUI())
 	{
@@ -1108,10 +1123,11 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 		GetGUI()->SetControlFromPlug(cInputPeakMeter2, mInputPeakMeterValue2);
 		GetGUI()->SetControlFromPlug(cRmsGrMeter, mRmsGrMeterValue);
 		GetGUI()->SetControlFromPlug(cPeakGrMeter, mPeakGrMeterValue);
+		GetGUI()->SetControlFromPlug(cDeesserMeter, mDeesserMeterValue);
 		GetGUI()->SetControlFromPlug(cOuputPeakMeter1, mOutputPeakMeterValue1);
 		GetGUI()->SetControlFromPlug(cOutputPeakMeter2, mOutputPeakMeterValue2);
-		GetGUI()->SetControlFromPlug(cOutputVuMeter1, (mOutputVuMeterValue1 + 60) / 60);
-		GetGUI()->SetControlFromPlug(cOutputVuMeter2, (mOutputVuMeterValue2 + 60) / 60);
+		GetGUI()->SetControlFromPlug(cOutputVuMeter1, ((mOutputVuMeterValue1 + 60) / 60));
+		GetGUI()->SetControlFromPlug(cOutputVuMeter2, ((mOutputVuMeterValue2 + 60) / 60));
 	}
 
 }
