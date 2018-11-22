@@ -76,7 +76,7 @@
       <TypeLibraryName>$(IntDir)$(TargetName).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>%40..\..\WDL\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%40$(WDL_PATH)\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -130,7 +130,7 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
 </Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>copy /Y ..\..\WDL\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
+      <Command>copy /Y $(WDL_PATH)\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
       <Outputs>$(TargetPath).rsr</Outputs>
       <Message>Copying dummy rsr</Message>
     </CustomBuildStep>
@@ -144,7 +144,7 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
       <TypeLibraryName>$(IntDir)$(TargetName).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>%40..\..\WDL\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%40$(WDL_PATH)\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -195,7 +195,7 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
 </Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>copy /Y ..\..\WDL\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
+      <Command>copy /Y $(WDL_PATH)\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
       <Outputs>$(TargetPath).rsr</Outputs>
       <Message>Copying dummy rsr</Message>
     </CustomBuildStep>
@@ -209,7 +209,7 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
       <TypeLibraryName>$(IntDir)$(TargetName).tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>%40..\..\WDL\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%40$(WDL_PATH)\IPlug\RTAS\Paths_90_SDK.txt %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -263,70 +263,70 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
 </Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>copy /Y ..\..\WDL\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
+      <Command>copy /Y $(WDL_PATH)\IPlug\RTAS\ResourceFile "$(TargetPath)".rsr</Command>
       <Outputs>$(TargetPath).rsr</Outputs>
       <Message>Copying dummy rsr</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DAE.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DigiExt.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSI.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSPManager.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSPManagerClientLib.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\PlugInLib.lib" />
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\RTASClientLib.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DAE.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DigiExt.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSI.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSPManager.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSPManagerClientLib.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\PlugInLib.lib" />
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\RTASClientLib.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\WDL\IPlug\Containers.h" />
-    <ClInclude Include="..\..\WDL\IPlug\Hosts.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IBitmapMonoText.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IControl.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IGraphics.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IGraphicsWin.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IKeyboardControl.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IMidiQueue.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IParam.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_hdr.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_src.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugBase.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugOSDetect.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugRTAS.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugStructs.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPopupMenu.h" />
-    <ClInclude Include="..\..\WDL\IPlug\Log.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\EditorInterface.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugCustomUI.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugDigiView.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugGroup.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcess.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcessAS.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcessRTAS.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\ProcessInterface.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\digicode.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Containers.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Hosts.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IBitmapMonoText.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IControl.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphics.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphicsWin.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IKeyboardControl.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IMidiQueue.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IParam.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_hdr.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_src.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugBase.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugOSDetect.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugRTAS.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugStructs.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPopupMenu.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Log.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\EditorInterface.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugCustomUI.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugDigiView.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugGroup.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcess.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessAS.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessRTAS.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\ProcessInterface.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\digicode.h" />
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\WDL\IPlug\Hosts.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IBitmapMonoText.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IControl.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IGraphics.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IGraphicsWin.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IParam.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugBase.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugRTAS.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugStructs.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPopupMenu.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\Log.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugCustomUI.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugGroup.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcess.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcessAS.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcessRTAS.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode1.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode2.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode3.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\Hosts.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IBitmapMonoText.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IControl.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphics.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphicsWin.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IParam.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugBase.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugRTAS.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugStructs.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPopupMenu.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\Log.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugCustomUI.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugGroup.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcess.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessAS.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessRTAS.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode1.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode2.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode3.cpp" />
     <ClCompile Include="SRChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -336,7 +336,7 @@ copy /Y "$(TargetPath)".rsr "$(RTAS_PLUGINS_PATH)\$(BINARY_NAME).dpm.rsr"
     <ResourceCompile Include="SRChannel.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PT9_SDK\AlturaPorts\TDMPlugIns\PlugInLibrary\WinBuild\PlugInLib.vcxproj">
+    <ProjectReference Include="$(WDL_ROOT_PATH)\PT9_SDK\AlturaPorts\TDMPlugIns\PlugInLibrary\WinBuild\PlugInLib.vcxproj">
       <Project>{d2ce28ff-63b8-48bc-936d-33f365b4053f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

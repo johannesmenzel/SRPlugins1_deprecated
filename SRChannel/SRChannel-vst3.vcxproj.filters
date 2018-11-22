@@ -2,49 +2,49 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="SRChannel.cpp" />
-    <ClCompile Include="..\..\VST3_SDK\pluginterfaces\base\funknown.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\funknown.cpp">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\pluginterfaces\base\ustring.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ustring.cpp">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\common\pluginview.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\common\pluginview.cpp">
       <Filter>vst3\VST3SDK\public.sdk\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstaudioeffect.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstaudioeffect.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstbus.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstbus.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstcomponent.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstcomponent.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstcomponentbase.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstcomponentbase.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstinitiids.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstinitiids.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstparameters.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\main\dllmain.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\main\dllmain.cpp">
       <Filter>vst3\VST3SDK\public.sdk\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\main\pluginfactoryvst3.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\main\pluginfactoryvst3.cpp">
       <Filter>vst3\VST3SDK\public.sdk\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugVST3.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugVST3.cpp">
       <Filter>vst3</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\pluginterfaces\base\conststringtable.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\conststringtable.cpp">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\VST3_SDK\pluginterfaces\base\coreiids.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\coreiids.cpp">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClCompile>
     <ClCompile Include="..\SRClasses\SRControls.cpp">
@@ -66,145 +66,145 @@
   <ItemGroup>
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\falignpop.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\falignpop.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\falignpush.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\falignpush.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\fplatform.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\fplatform.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ftypes.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ftypes.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\funknown.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\funknown.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ipluginbase.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ipluginbase.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\keycodes.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\keycodes.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ustring.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ustring.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstattributes.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstattributes.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstaudioprocessor.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstaudioprocessor.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstcomponent.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstcomponent.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivsteditcontroller.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivsteditcontroller.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstevents.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstevents.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivsthostapplication.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivsthostapplication.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstmessage.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstmessage.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstmidicontrollers.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstmidicontrollers.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstparameterchanges.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstparameterchanges.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstprocesscontext.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstprocesscontext.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\ivstunits.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\ivstunits.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\vstpresetkeys.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\vstpresetkeys.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\vst\vsttypes.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\vst\vsttypes.h">
       <Filter>vst3\VST3SDK\pluginterfaces\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\gui\iplugview.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\gui\iplugview.h">
       <Filter>vst3\VST3SDK\pluginterfaces\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\common\pluginview.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\common\pluginview.h">
       <Filter>vst3\VST3SDK\public.sdk\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstaudioeffect.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstaudioeffect.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstbus.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstbus.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstcomponent.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstcomponent.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstcomponentbase.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstcomponentbase.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vsteditcontroller.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vsteditcontroller.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstparameters.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\main\pluginfactoryvst3.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\main\pluginfactoryvst3.h">
       <Filter>vst3\VST3SDK\public.sdk\main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h">
       <Filter>vst3\VST3SDK\public.sdk\vst</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugVST3.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugVST3.h">
       <Filter>vst3</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\conststringtable.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\conststringtable.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\doc.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\doc.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\fstrdefs.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\fstrdefs.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\futils.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\futils.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\fvariant.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\fvariant.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\geoconstants.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\geoconstants.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ibstream.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ibstream.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\icloneable.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\icloneable.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ierrorcontext.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ierrorcontext.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ipersistent.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ipersistent.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\istringresult.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\istringresult.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\iupdatehandler.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\iupdatehandler.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\pluginbasefwd.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\pluginbasefwd.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\smartpointer.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\smartpointer.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\VST3_SDK\pluginterfaces\base\ucolorspec.h">
+    <ClInclude Include="$(WDL_ROOT_PATH)\VST3_SDK\pluginterfaces\base\ucolorspec.h">
       <Filter>vst3\VST3SDK\pluginterfaces\base</Filter>
     </ClInclude>
     <ClInclude Include="..\SRClasses\SRHelpers.h">

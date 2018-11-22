@@ -176,7 +176,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(APP_LIBS);%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(x64_LIB_PATHS);%(AdditionalLibraryDirectories);E:\DSP\modules</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(x64_LIB_PATHS);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>SA_API</PreprocessorDefinitions>
@@ -282,16 +282,16 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ASIO_SDK\asio.h" />
-    <ClInclude Include="..\..\ASIO_SDK\asiodrivers.h" />
-    <ClInclude Include="..\..\ASIO_SDK\asiolist.h" />
-    <ClInclude Include="..\..\ASIO_SDK\asiosys.h" />
-    <ClInclude Include="..\..\ASIO_SDK\ginclude.h" />
-    <ClInclude Include="..\..\ASIO_SDK\iasiodrv.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugStandalone.h" />
-    <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h" />
-    <ClInclude Include="..\..\WDL\rtaudiomidi\RtError.h" />
-    <ClInclude Include="..\..\WDL\rtaudiomidi\RtMidi.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\asio.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\asiodrivers.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\asiolist.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\asiosys.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\ginclude.h" />
+    <ClInclude Include="$(WDL_ROOT_PATH)\ASIO_SDK\iasiodrv.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugStandalone.h" />
+    <ClInclude Include="$(WDL_PATH)\rtaudiomidi\RtAudio.h" />
+    <ClInclude Include="$(WDL_PATH)\rtaudiomidi\RtError.h" />
+    <ClInclude Include="$(WDL_PATH)\rtaudiomidi\RtMidi.h" />
     <ClInclude Include="..\SRClasses\SRControls.h" />
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
@@ -303,12 +303,12 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ASIO_SDK\asio.cpp" />
-    <ClCompile Include="..\..\ASIO_SDK\asiodrivers.cpp" />
-    <ClCompile Include="..\..\ASIO_SDK\asiolist.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugStandalone.cpp" />
-    <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp" />
-    <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
+    <ClCompile Include="$(WDL_ROOT_PATH)\ASIO_SDK\asio.cpp" />
+    <ClCompile Include="$(WDL_ROOT_PATH)\ASIO_SDK\asiodrivers.cpp" />
+    <ClCompile Include="$(WDL_ROOT_PATH)\ASIO_SDK\asiolist.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugStandalone.cpp" />
+    <ClCompile Include="$(WDL_PATH)\rtaudiomidi\RtAudio.cpp" />
+    <ClCompile Include="$(WDL_PATH)\rtaudiomidi\RtMidi.cpp" />
     <ClCompile Include="..\SRClasses\SRControls.cpp" />
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />

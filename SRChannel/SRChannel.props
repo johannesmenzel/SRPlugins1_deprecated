@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
-    <Import Project="..\..\common.props" />
+    <Import Project="..\..\wdl-ol\common.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
+    <DSP_PATH>E:\DSP</DSP_PATH>
+    <WDL_ROOT_PATH>$(DSP_PATH)\wdl-ol</WDL_ROOT_PATH>
+    <WDL_PATH>$(WDL_ROOT_PATH)\WDL</WDL_PATH>
     <BINARY_NAME>SRChannel</BINARY_NAME>
     <APP_DEFS>SA_API;__WINDOWS_DS__;__WINDOWS_MM__;__WINDOWS_ASIO__;</APP_DEFS>
     <VST_DEFS>VST_API;VST_FORCE_DEPRECATED;</VST_DEFS>
@@ -11,14 +14,14 @@
     <DEBUG_DEFS>_DEBUG;</DEBUG_DEFS>
     <RELEASE_DEFS>NDEBUG;</RELEASE_DEFS>
     <TRACER_DEFS>TRACER_BUILD;NDEBUG;</TRACER_DEFS>
-    <ADDITIONAL_INCLUDES>$(ProjectDir)\..\..\..\MyDSP\;</ADDITIONAL_INCLUDES>
-    <APP_INCLUDES>..\..\ASIO_SDK;..\..\WDL\rtaudiomidi;</APP_INCLUDES>
+    <ADDITIONAL_INCLUDES>$(DSP_PATH)\;</ADDITIONAL_INCLUDES>
+    <APP_INCLUDES>$(WDL_ROOT_PATH)\ASIO_SDK;$(WDL_PATH)\rtaudiomidi;</APP_INCLUDES>
     <APP_LIBS>dsound.lib;winmm.lib;</APP_LIBS>
-    <VST3_INCLUDES>..\..\VST3_SDK;</VST3_INCLUDES>
-    <AAX_INCLUDES>.\..\..\AAX_SDK\Interfaces;.\..\..\AAX_SDK\Interfaces\ACF;.\..\..\WDL\IPlug\AAX</AAX_INCLUDES>
+    <VST3_INCLUDES>$(WDL_ROOT_PATH)\VST3_SDK;</VST3_INCLUDES>
+    <AAX_INCLUDES>$(WDL_ROOT_PATH)\AAX_SDK\Interfaces;$(WDL_ROOT_PATH)\AAX_SDK\Interfaces\ACF;$(WDL_PATH)\IPlug\AAX</AAX_INCLUDES>
     <AAX_DEFS>AAX_API;_WINDOWS;WIN32;_WIN32;WINDOWS_VERSION;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</AAX_DEFS>
     <AAX_LIBS>lice.lib;wininet.lib;odbc32.lib;odbccp32.lib;psapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comctl32.lib;</AAX_LIBS>
-    <RTAS_INCLUDES>.\..\..\WDL\IPlug\RTAS;.\</RTAS_INCLUDES>
+    <RTAS_INCLUDES>$(WDL_PATH)\IPlug\RTAS;.\</RTAS_INCLUDES>
     <RTAS_DEFS>RTAS_API;_STDINT;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_WINDOWS;WIN32;_WIN32;WINDOWS_VERSION;_LIB;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</RTAS_DEFS>
     <RTAS_LIBS>comdlg32.lib;uuid.lib;msimg32.lib;odbc32.lib;odbccp32.lib;user32.lib;gdi32.lib;advapi32.lib;shell32.lib</RTAS_LIBS>
   </PropertyGroup>
@@ -28,13 +31,25 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ADDITIONAL_INCLUDES);..\..\WDL;..\..\WDL\lice;..\..\WDL\IPlug</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ADDITIONAL_INCLUDES);$(WDL_PATH);$(WDL_PATH)\lice;$(WDL_PATH)\IPlug</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>IPlug.lib;lice.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <BuildMacro Include="DSP_PATH">
+      <Value>$(DSP_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="WDL_ROOT_PATH">
+      <Value>$(WDL_ROOT_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="WDL_PATH">
+      <Value>$(WDL_PATH)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
     <BuildMacro Include="BINARY_NAME">
       <Value>$(BINARY_NAME)</Value>
     </BuildMacro>

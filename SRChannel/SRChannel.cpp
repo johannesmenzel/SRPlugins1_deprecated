@@ -23,7 +23,7 @@ const double METER_ATTACK = .6, METER_DECAY = .05;			// This is the global attac
 const double halfpi = PI / 2;								// Half pi defined
 const double dcoff = 1e-15;									// amount of DC offset added and subtracted respectivly at the beginning and the end of DoubleReplacing loop
 
-const double mEqPassQ_O2_F1 = 0.70710678;					// Setting the Q constants für higher order low- and highpass filter.
+const double mEqPassQ_O2_F1 = 0.70710678;					// Setting the Q constants fï¿½r higher order low- and highpass filter.
 const double stQ = mEqPassQ_O2_F1;
 const double mEqPassQ_O3_F1 = 1.;
 const double mEqPassQ_O4_F1 = 0.54119610;
@@ -988,10 +988,10 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				//				*out2 = -vSafePanHighSignal2 * sin(mPan * (halfpi)) + vSafePanLowSignal2;
 				if (mPan < .5) {
 					*out1 = vSafePanHighSignal1 - vSafePanLowSignal1;
-					*out2 = vSafePanHighSignal2 * sqrt(mPan) * 1.41 - vSafePanLowSignal2;
+					*out2 = vSafePanHighSignal2 * sqrt(mPan) * sqrt(2.) - vSafePanLowSignal2;
 				}
 				else {
-					*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * 1.41 - vSafePanLowSignal1;
+					*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * sqrt(2.) - vSafePanLowSignal1;
 					*out2 = vSafePanHighSignal2 - vSafePanLowSignal2;
 				}
 				//*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * 1.41 - vSafePanLowSignal1;

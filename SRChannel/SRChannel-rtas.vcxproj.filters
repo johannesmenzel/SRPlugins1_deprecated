@@ -15,167 +15,167 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DAE.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DAE.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DigiExt.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DigiExt.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSI.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSI.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\PlugInLib.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\PlugInLib.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSPManager.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSPManager.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\DSPManagerClientLib.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\DSPManagerClientLib.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\PT9_SDK\WinBag\Release\lib\RTASClientLib.lib">
+    <Library Include="$(WDL_ROOT_PATH)\PT9_SDK\WinBag\Release\lib\RTASClientLib.lib">
       <Filter>Libs</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\WDL\IPlug\Containers.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Containers.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\Hosts.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Hosts.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IBitmapMonoText.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IBitmapMonoText.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IControl.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IControl.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IGraphics.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphics.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IGraphicsWin.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphicsWin.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IKeyboardControl.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IKeyboardControl.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IMidiQueue.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IMidiQueue.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IParam.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IParam.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_hdr.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_hdr.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_src.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_src.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugBase.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugBase.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugOSDetect.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugOSDetect.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugRTAS.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugRTAS.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugStructs.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugStructs.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPopupMenu.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPopupMenu.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\Log.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Log.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\EditorInterface.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\EditorInterface.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugCustomUI.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugCustomUI.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugDigiView.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugDigiView.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugGroup.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugGroup.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcess.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcess.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcessRTAS.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessRTAS.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\ProcessInterface.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\ProcessInterface.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\digicode.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\digicode.h">
       <Filter>IPlug\RTAS\include</Filter>
     </ClInclude>
     <ClInclude Include="SRChannel.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="..\..\WDL\IPlug\RTAS\IPlugProcessAS.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessAS.h">
       <Filter>IPlug\RTAS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\WDL\IPlug\Hosts.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\Hosts.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IBitmapMonoText.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IBitmapMonoText.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IControl.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IControl.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IGraphics.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphics.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IGraphicsWin.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphicsWin.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IParam.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IParam.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugBase.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugBase.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugRTAS.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugRTAS.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugStructs.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugStructs.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPopupMenu.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPopupMenu.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\Log.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\Log.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugCustomUI.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugCustomUI.cpp">
       <Filter>IPlug\RTAS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugGroup.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugGroup.cpp">
       <Filter>IPlug\RTAS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcess.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcess.cpp">
       <Filter>IPlug\RTAS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcessRTAS.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessRTAS.cpp">
       <Filter>IPlug\RTAS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode1.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode1.cpp">
       <Filter>IPlug\RTAS\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode2.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode2.cpp">
       <Filter>IPlug\RTAS\include</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\digicode3.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\digicode3.cpp">
       <Filter>IPlug\RTAS\include</Filter>
     </ClCompile>
     <ClCompile Include="SRChannel.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\RTAS\IPlugProcessAS.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\RTAS\IPlugProcessAS.cpp">
       <Filter>IPlug\RTAS</Filter>
     </ClCompile>
   </ItemGroup>

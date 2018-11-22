@@ -128,7 +128,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
       <Command>DEL /Q /F /S .\build-win\aax\bin\$(BINARY_NAME).aaxplugin\Contents\Win32\
-CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities\PlugIn.ico
+CALL $(WDL_ROOT_PATH)\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) $(WDL_ROOT_PATH)\AAX_SDK\Utilities\PlugIn.ico
 </Command>
     </PreBuildEvent>
     <CustomBuildStep>
@@ -179,7 +179,7 @@ CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
       <Command>DEL /Q /F /S .\build-win\aax\bin\$(BINARY_NAME).aaxplugin\Contents\Win32\
-CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities\PlugIn.ico
+CALL $(WDL_ROOT_PATH)\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) $(WDL_ROOT_PATH)\AAX_SDK\Utilities\PlugIn.ico
 </Command>
     </PreBuildEvent>
     <CustomBuildStep>
@@ -235,7 +235,7 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <PreBuildEvent>
       <Command>DEL /Q /F /S .\build-win\aax\bin\$(BINARY_NAME).aaxplugin\Contents\Win32\
-CALL ..\..\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) ..\..\AAX_SDK\Utilities\PlugIn.ico
+CALL $(WDL_ROOT_PATH)\AAX_SDK\Utilities\CreatePackage.bat $(OutDir) $(WDL_ROOT_PATH)\AAX_SDK\Utilities\PlugIn.ico
 </Command>
     </PreBuildEvent>
     <CustomBuildStep>
@@ -452,7 +452,7 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AAX_SDK\Interfaces\AAX_Exports.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\AAX_SDK\Interfaces\AAX_Exports.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
@@ -460,19 +460,19 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\Hosts.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IBitmapMonoText.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IControl.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IGraphics.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IGraphicsWin.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IParam.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugBase.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugStructs.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPopupMenu.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\Log.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\IPlugAAX.cpp" />
-    <ClCompile Include="..\..\WDL\IPlug\AAX\IPlugAAX_Describe.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\Hosts.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IBitmapMonoText.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IControl.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphics.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphicsWin.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IParam.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugBase.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugStructs.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPopupMenu.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\Log.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\AAX\AAX_CIPlugParameters.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugAAX.cpp" />
+    <ClCompile Include="$(WDL_PATH)\IPlug\AAX\IPlugAAX_Describe.cpp" />
     <ClCompile Include="..\SRClasses\SRControls.cpp" />
     <ClCompile Include="..\SRClasses\SRDynamics.cpp" />
     <ClCompile Include="..\SRClasses\SRFilters.cpp" />
@@ -481,26 +481,26 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     <ClCompile Include="SRChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuildStep Include="..\..\AAX_SDK\Libs\Release\AAXLibrary.lib">
+    <CustomBuildStep Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary.lib">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">true</ExcludedFromBuild>
     </CustomBuildStep>
-    <CustomBuildStep Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
+    <CustomBuildStep Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">true</ExcludedFromBuild>
     </CustomBuildStep>
-    <CustomBuildStep Include="..\..\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
+    <CustomBuildStep Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">true</ExcludedFromBuild>
     </CustomBuildStep>
-    <CustomBuildStep Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
+    <CustomBuildStep Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -510,24 +510,24 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     </CustomBuildStep>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\WDL\IPlug\Containers.h" />
-    <ClInclude Include="..\..\WDL\IPlug\Hosts.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IBitmapMonoText.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IControl.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IGraphics.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IGraphicsWin.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IKeyboardControl.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IMidiQueue.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IParam.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_hdr.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_src.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugBase.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugOSDetect.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugStructs.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPopupMenu.h" />
-    <ClInclude Include="..\..\WDL\IPlug\Log.h" />
-    <ClInclude Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.h" />
-    <ClInclude Include="..\..\WDL\IPlug\IPlugAAX.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Containers.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Hosts.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IBitmapMonoText.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IControl.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphics.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphicsWin.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IKeyboardControl.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IMidiQueue.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IParam.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_hdr.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_src.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugBase.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugOSDetect.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugStructs.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPopupMenu.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\Log.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\AAX\AAX_CIPlugParameters.h" />
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugAAX.h" />
     <ClInclude Include="..\SRClasses\SRControls.h" />
     <ClInclude Include="..\SRClasses\SRDynamics.h" />
     <ClInclude Include="..\SRClasses\SRFilters.h" />
@@ -540,27 +540,27 @@ copy /y "$(TargetPath)" "$(MSBuildProjectDirectory)\..\SRBinaries\$(TargetFileNa
     <ResourceCompile Include="SRChannel.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">true</ExcludedFromBuild>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">true</ExcludedFromBuild>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Release\AAXLibrary.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">true</ExcludedFromBuild>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

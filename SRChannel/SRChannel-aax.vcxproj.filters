@@ -15,47 +15,47 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\WDL\IPlug\Hosts.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\Hosts.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IBitmapMonoText.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IBitmapMonoText.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IControl.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IControl.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IGraphics.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphics.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IGraphicsWin.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IGraphicsWin.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IParam.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IParam.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugBase.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugBase.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugStructs.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugStructs.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPopupMenu.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPopupMenu.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\Log.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\Log.cpp">
       <Filter>IPlug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\AAX\AAX_CIPlugParameters.cpp">
       <Filter>IPlug\AAX</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\IPlugAAX.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\IPlugAAX.cpp">
       <Filter>IPlug\AAX</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WDL\IPlug\AAX\IPlugAAX_Describe.cpp">
+    <ClCompile Include="$(WDL_PATH)\IPlug\AAX\IPlugAAX_Describe.cpp">
       <Filter>IPlug\AAX</Filter>
     </ClCompile>
     <ClCompile Include="SRChannel.cpp" />
-    <ClCompile Include="..\..\AAX_SDK\Interfaces\AAX_Exports.cpp">
+    <ClCompile Include="$(WDL_ROOT_PATH)\AAX_SDK\Interfaces\AAX_Exports.cpp">
       <Filter>Libs</Filter>
     </ClCompile>
     <ClCompile Include="..\SRClasses\SRControls.cpp">
@@ -75,58 +75,58 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\WDL\IPlug\Containers.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Containers.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\Hosts.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Hosts.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IBitmapMonoText.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IBitmapMonoText.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IControl.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IControl.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IGraphics.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphics.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IGraphicsWin.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IGraphicsWin.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IKeyboardControl.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IKeyboardControl.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IMidiQueue.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IMidiQueue.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IParam.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IParam.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_hdr.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_hdr.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlug_include_in_plug_src.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlug_include_in_plug_src.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugBase.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugBase.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugOSDetect.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugOSDetect.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugStructs.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugStructs.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPopupMenu.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPopupMenu.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\Log.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\Log.h">
       <Filter>IPlug</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\AAX\AAX_CIPlugParameters.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\AAX\AAX_CIPlugParameters.h">
       <Filter>IPlug\AAX</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WDL\IPlug\IPlugAAX.h">
+    <ClInclude Include="$(WDL_PATH)\IPlug\IPlugAAX.h">
       <Filter>IPlug\AAX</Filter>
     </ClInclude>
     <ClInclude Include="SRChannel.h" />
@@ -151,16 +151,16 @@
     <ResourceCompile Include="SRChannel.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_x64_D.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Release\AAXLibrary.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Debug\AAXLibrary_D.lib">
       <Filter>Libs</Filter>
     </Library>
-    <Library Include="..\..\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
+    <Library Include="$(WDL_ROOT_PATH)\AAX_SDK\Libs\Release\AAXLibrary_x64.lib">
       <Filter>Libs</Filter>
     </Library>
   </ItemGroup>
