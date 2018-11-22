@@ -14,24 +14,27 @@ namespace SRPlugins
 			currentGain1 = currentGain2 = targetGain1 = targetGain2 = 1.0;
 			stepGain1 = stepGain2 = 0.0;
 			mRampNumSamples = 1.0;
+			mBypassed = false;
 		}
-		SRGain::SRGain(double pGainLin1, double pGainLin2, double pRampNumSamples)
+		SRGain::SRGain(double pGainLin1, double pGainLin2, double pRampNumSamples, bool pBypassed)
 		{
-			initGain(pGainLin1, pGainLin2, pRampNumSamples);
+			initGain(pGainLin1, pGainLin2, pRampNumSamples, pBypassed);
 		}
 		SRGain::~SRGain() {}
 
-		void SRGain::initGainDb(double pGainDb1, double pGainDb2, double pRampNumSamples) {
+		void SRGain::initGainDb(double pGainDb1, double pGainDb2, double pRampNumSamples, bool pBypassed) {
 			this->mGainLin1 = SRPlugins::SRHelpers::DBToAmp(pGainDb1);
 			this->mGainLin2 = SRPlugins::SRHelpers::DBToAmp(pGainDb2);
 			this->mRampNumSamples = pRampNumSamples;
+			this->mBypassed = pBypassed;
 			calcGain();
 		}
-		void SRGain::initGain(double pGainLin1, double pGainLin2, double pRampNumSamples)
+		void SRGain::initGain(double pGainLin1, double pGainLin2, double pRampNumSamples, bool pBypassed)
 		{
 			this->mGainLin1 = pGainLin1;
 			this->mGainLin2 = pGainLin2;
 			this->mRampNumSamples = pRampNumSamples;
+			this->mBypassed = pBypassed;
 			calcGain();
 		}
 		void SRGain::setGain(double pGainLin)
@@ -65,6 +68,12 @@ namespace SRPlugins
 			calcGain();
 		}
 
+		void SRGain::setBypassed(bool pBypassed)
+		{
+			this->mBypassed = pBypassed;
+			calcGain();
+		}
+
 		void SRGain::calcGain(void)
 		{
 			targetGain1 = mGainLin1;
@@ -86,6 +95,8 @@ namespace SRPlugins
 			mType = typeLinear;
 			mPanNormalized = 0.5;
 			mLinearMiddlePosition = true;
+			gain1 = 1.0;
+			gain2 = 1.0;
 		}
 
 		// Constructor
@@ -94,8 +105,7 @@ namespace SRPlugins
 			// set members on init
 			initPan(pType, pPanNormalized, pLinearMiddlePosition);
 			// init internal variables
-			gain1 = 1.0;
-			gain2 = 1.0;
+
 		}
 
 		// Destructor
@@ -124,6 +134,7 @@ namespace SRPlugins
 			this->mType = pType;
 			this->mPanNormalized = pPanNormalized;
 			this->mLinearMiddlePosition = pLinearMiddlePosition;
+			panSmoother.initGain(gain1, gain2, 4096, false);
 			calcPan();
 		}
 
@@ -169,12 +180,15 @@ namespace SRPlugins
 				}
 				break;
 			case typeTanh:
-				gain1 = (mPanNormalized > 0.5) ? tanh(4. * mPanNormalized) / tanh(2.) : 1.0; // you can scale it by replacing 4. and 2. by 2n and n (10. and 5.)
-				gain2 = (mPanNormalized < 0.5) ? tanh(4. * (1 - mPanNormalized)) / tanh(2.) : 1.0;
+				gain1 = (mPanNormalized > 0.5) ? tanh(4. * (1 - mPanNormalized)) / tanh(2.) : 1.0; // you can scale it by replacing 4. and 2. by 2n and n (10. and 5.)
+				gain2 = (mPanNormalized < 0.5) ? tanh(4. * mPanNormalized) / tanh(2.) : 1.0;
 				break;
 			default:
 				break;
 			}
+
+			panSmoother.setGain(gain1, gain2);
+
 			return;
 		}
 

@@ -145,6 +145,7 @@ const int circularBufferLenght = 65536;
 	// FILTERS
 		// Gain Filters
 		SRPlugins::SRGain::SRGain fInputGain, fOutputGain;
+		SRPlugins::SRGain::SRPan fPan;
 
 		// Spectral Filters
 		SRPlugins::SRFilters::SRFiltersTwoPole fEqHpFilter1L, fEqHpFilter2L, fEqHpFilter3L, fEqHpFilter4L, fEqHpFilter5L, fEqHpFilter6L, fEqHpFilter7L, fEqHpFilter8L, fEqHpFilter9L, fEqHpFilter10L,

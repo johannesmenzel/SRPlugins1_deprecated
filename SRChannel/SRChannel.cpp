@@ -82,77 +82,77 @@ enum ELayout
 	kSslKnobFrames = 128,									// Number of frames of the knob images
 };
 
-															// All plugins parameters listed here. Take care of the order for the next step
+// All plugins parameters listed here. Take care of the order for the next step
 enum EParams
 {
-  kInputGain = 0,
-  kEqHpFreq,
-  kEqLpFreq,
-  kEqHfGain,
-  kEqHfFreq,
-  kEqHfQ,
-  kEqHfBell,
-  kEqHmfGain,
-  kEqHmfFreq,
-  kEqHmfQ,
-  kEqLmfGain,
-  kEqLmfFreq,
-  kEqLmfQ,
-  kEqLfGain,
-  kEqLfFreq,
-  kEqLfQ,
-  kEqLfBell,
-  kCompRmsThresh,
-  kCompRmsRatio,
-  kCompRmsAttack,
-  kCompRmsRelease,
-  kCompRmsMakeup,
-  kCompPeakThresh,
-  kCompPeakRatio,
-  kCompPeakAttack,
-  kCompPeakRelease,
-  kCompPeakMakeup,
-  kCompPeakRmsRatio,
-  kCompDryWet,
-  kSaturationAmount,
-  kClipperThreshold,
-  kOutputGain,
-  kPan,
-  kPanFreq,
-  kLimiterThresh,
-  kCompIsParallel,
-  kEqBypass,
-  kCompBypass,
-  kOutputBypass,
-  kBypass,
-  kSaturationHarmonics,
-  kEqHpOrder,
-  kEqLpOrder,
-  kTestParam1,
-  kTestParam2,
-  kTestParam3,
-  kTestParam4,
-  kTestParam5,
-  kInputDrive,
-  kAgc,
-  kCompPeakSidechainFilterFreq,
-  kDeesserFreq,
-  kDeesserQ,
-  kDeesserThresh,
-  kDeesserRatio,
-  kDeesserAttack,
-  kDeesserRelease,
-  kDeesserMakeup,
-  kCompPeakKneeWidthDb,
-  kCompRmsKneeWidthDb,
-  kInputBypass,
-  kCompPeakIsExtSc,
-  kCompRmsIsExrSc,
-  kSaturationSkew,
-  kNumParams
+	kInputGain = 0,
+	kEqHpFreq,
+	kEqLpFreq,
+	kEqHfGain,
+	kEqHfFreq,
+	kEqHfQ,
+	kEqHfBell,
+	kEqHmfGain,
+	kEqHmfFreq,
+	kEqHmfQ,
+	kEqLmfGain,
+	kEqLmfFreq,
+	kEqLmfQ,
+	kEqLfGain,
+	kEqLfFreq,
+	kEqLfQ,
+	kEqLfBell,
+	kCompRmsThresh,
+	kCompRmsRatio,
+	kCompRmsAttack,
+	kCompRmsRelease,
+	kCompRmsMakeup,
+	kCompPeakThresh,
+	kCompPeakRatio,
+	kCompPeakAttack,
+	kCompPeakRelease,
+	kCompPeakMakeup,
+	kCompPeakRmsRatio,
+	kCompDryWet,
+	kSaturationAmount,
+	kClipperThreshold,
+	kOutputGain,
+	kPan,
+	kPanFreq,
+	kLimiterThresh,
+	kCompIsParallel,
+	kEqBypass,
+	kCompBypass,
+	kOutputBypass,
+	kBypass,
+	kSaturationHarmonics,
+	kEqHpOrder,
+	kEqLpOrder,
+	kTestParam1,
+	kTestParam2,
+	kTestParam3,
+	kTestParam4,
+	kTestParam5,
+	kInputDrive,
+	kAgc,
+	kCompPeakSidechainFilterFreq,
+	kDeesserFreq,
+	kDeesserQ,
+	kDeesserThresh,
+	kDeesserRatio,
+	kDeesserAttack,
+	kDeesserRelease,
+	kDeesserMakeup,
+	kCompPeakKneeWidthDb,
+	kCompRmsKneeWidthDb,
+	kInputBypass,
+	kCompPeakIsExtSc,
+	kCompRmsIsExrSc,
+	kSaturationSkew,
+	kNumParams
 };
 
-															// All possible controls listed here
+// All possible controls listed here
 enum Knobs {
 	SslBlue = 1,
 	SslGreen,
@@ -167,7 +167,7 @@ enum Knobs {
 	kNumKnobs
 };
 
-															// All parameters possible data types listed here
+// All parameters possible data types listed here
 enum Type {
 	typeDouble = 1,
 	typeBool,
@@ -176,7 +176,7 @@ enum Type {
 	kNumType
 };
 
-															// Struct object containing possible parameters properties
+// Struct object containing possible parameters properties
 typedef struct {
 	const char* name;				// Name of parameter displayed in host
 	const char* shortName;			// Short name for GUI display
@@ -199,11 +199,11 @@ typedef struct {
 } structParameterProperties;
 
 
-															/* 
-															Actual properties struct.
-															Keep in order of the above listet parameters.
-															These are constants.
-															*/
+/*
+Actual properties struct.
+Keep in order of the above listet parameters.
+These are constants.
+*/
 const structParameterProperties parameterProperties[kNumParams] = {
 	//{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
 	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Input Gain is applied before everything else" },
@@ -280,7 +280,7 @@ const structParameterProperties parameterProperties[kNumParams] = {
 ##########################################################*/
 
 SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
-  :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo),
+	: IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo),
 	mInputPeakMeterValue1(0.),
 	mInputPeakMeterValue2(0.),
 	mRmsGrMeterValue(0.),
@@ -301,19 +301,19 @@ SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
 	mOutputVuMeterSos1(0.),
 	mOutputVuMeterSos2(0.)
 {
-  TRACE;
+	TRACE;
 
 
-														  /*
-														  First we call the parameter initialization function. We might want the presets and graphics created after parameter initialization.
-														  We call methods of the Reset() function just not to have them typed here, because they have to be initialized on plugins start
-														  For example the filters and dynamic processing classes
-														  */
-  CreateParams();
-  CreatePresets();
-  CreateGraphics();
-  InitGUI();
-  Reset();
+	/*
+	First we call the parameter initialization function. We might want the presets and graphics created after parameter initialization.
+	We call methods of the Reset() function just not to have them typed here, because they have to be initialized on plugins start
+	For example the filters and dynamic processing classes
+	*/
+	CreateParams();
+	CreatePresets();
+	CreateGraphics();
+	InitGUI();
+	Reset();
 }
 
 /*##########################################################
@@ -326,7 +326,7 @@ void SRChannel::CreateParams() {
 		IParam* param = GetParam(i);												// ... for which we temporally create a pointer "param"
 		const structParameterProperties &properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
 		/*
-		switch (i) {																// this is the old 
+		switch (i) {																// this is the old
 				// Enum Parameters:
 			case mOsc1Waveform:
 			case mOsc2Waveform:
@@ -352,51 +352,51 @@ void SRChannel::CreateParams() {
 				break;
 			*/
 
-		switch(properties.Type) {							// each type of parameter needs another initialization method
+		switch (properties.Type) {							// each type of parameter needs another initialization method
 
-			case typeBool:									// Create parameters of type boolean.
-				param->InitBool(
-					properties.name,
-					bool(properties.defaultVal),
-					properties.label,
-					properties.group
-				);
-				break;
+		case typeBool:									// Create parameters of type boolean.
+			param->InitBool(
+				properties.name,
+				bool(properties.defaultVal),
+				properties.label,
+				properties.group
+			);
+			break;
 
-			case typeDouble:								// Create parameters of type double.
-				param->InitDouble(
-					properties.name,
-					properties.defaultVal,
+		case typeDouble:								// Create parameters of type double.
+			param->InitDouble(
+				properties.name,
+				properties.defaultVal,
+				properties.minVal,
+				properties.maxVal,
+				properties.stepValue,
+				properties.label,
+				properties.group,
+				SRPlugins::SRHelpers::SetShapeCentered(						// We calculate the controls shape.
 					properties.minVal,
 					properties.maxVal,
-					properties.stepValue,
-					properties.label,
-					properties.group, 
-					SRPlugins::SRHelpers::SetShapeCentered(						// We calculate the controls shape.
-						properties.minVal,
-						properties.maxVal,
-						properties.centerVal,
-						properties.centerPoint
-					)
-				);
+					properties.centerVal,
+					properties.centerPoint
+				)
+			);
 
-				break;
+			break;
 
-			case typeInt:
-				param->InitInt(
-					properties.name,
-					int(properties.defaultVal),
-					int(properties.minVal),
-					int(properties.maxVal),
-					properties.label,
-					properties.group
-				);
-				break;
+		case typeInt:
+			param->InitInt(
+				properties.name,
+				int(properties.defaultVal),
+				int(properties.minVal),
+				int(properties.maxVal),
+				properties.label,
+				properties.group
+			);
+			break;
 
-			default:										// Just in case there are paramters of other types.
-				break;
+		default:										// Just in case there are paramters of other types.
+			break;
 		}
-		
+
 		OnParamChange(i);									// Run OnParamChange() once for each parameter to initialize member variables and so on.
 
 	}
@@ -404,8 +404,8 @@ void SRChannel::CreateParams() {
 
 
 void SRChannel::CreatePresets() {
-															// These have to be created when Parameters are complete, so work in progress.
-															// Following are original procedures to make default presets
+	// These have to be created when Parameters are complete, so work in progress.
+	// Following are original procedures to make default presets
 //	MakeDefaultPreset((char *) "Full Reset", kNumPrograms);
 //	MakePreset("Default", kNumPrograms);
 															// Here's the beginning of the real stuff.
@@ -422,19 +422,19 @@ void SRChannel::GrayOutControls()
 			bool grayout;
 
 			(mBypass == 1 && parameterProperties[i].group != "Global") ? grayout = true
-			: (mInputBypass == 1 && parameterProperties[i].group == "Input") ? grayout = true
-			: (mCompBypass == 1 && (parameterProperties[i].group == "Compressor" || parameterProperties[i].group == "Deesser")) ? grayout = true
-			: (mEqBypass == 1 && parameterProperties[i].group == "EQ") ? grayout = true
-			: (mOutputBypass == 1 && parameterProperties[i].group == "Output") ? grayout = true
-			: (mCompIsParallel == 0 && i == kCompPeakRmsRatio) ? grayout = true
-			: (i == kTestParam1 
-				|| i == kTestParam2 
-				|| i == kTestParam3 
-				|| i == kTestParam4 
-				|| i == kTestParam5 
-				|| i == kEqLpOrder 
-				|| i == kSaturationSkew ) ? grayout = true
-			: grayout = false;
+				: (mInputBypass == 1 && parameterProperties[i].group == "Input") ? grayout = true
+				: (mCompBypass == 1 && (parameterProperties[i].group == "Compressor" || parameterProperties[i].group == "Deesser")) ? grayout = true
+				: (mEqBypass == 1 && parameterProperties[i].group == "EQ") ? grayout = true
+				: (mOutputBypass == 1 && parameterProperties[i].group == "Output") ? grayout = true
+				: (mCompIsParallel == 0 && i == kCompPeakRmsRatio) ? grayout = true
+				: (i == kTestParam1
+					|| i == kTestParam2
+					|| i == kTestParam3
+					|| i == kTestParam4
+					|| i == kTestParam5
+					|| i == kEqLpOrder
+					|| i == kSaturationSkew) ? grayout = true
+				: grayout = false;
 
 			GetGUI()->GrayOutControl(i, grayout);
 		}
@@ -453,7 +453,7 @@ void SRChannel::CreateGraphics() {
 	IColor colorMeterFg = IColor(/*1*/ 50, 255, 120, 0);
 	IColor colorMeterBg = IColor(/*50*/0, 0, 0, 0);
 
-		// Text Properties
+	// Text Properties
 	IText textFg = IText(14, &colorFg, "", IText::kStyleNormal, IText::kAlignCenter, 0, IText::kQualityClearType);
 	IText textKnobRingMinProp = IText(14, &colorLabel, "Century Gothic", IText::kStyleNormal, IText::kAlignFar, 0, IText::kQualityClearType);
 	IText textKnobRingMaxProp = IText(14, &colorLabel, "Century Gothic", IText::kStyleNormal, IText::kAlignNear, 0, IText::kQualityClearType);
@@ -470,7 +470,7 @@ void SRChannel::CreateGraphics() {
 	IBitmap bitmapLogo = pGraphics->LoadIBitmap(LOGO_ID, LOGO_FN);
 	pGraphics->AttachControl(new IBitmapControl(this, kWidth - 300, 0, &bitmapLogo));
 	pGraphics->AttachControl(new ITextControl(this, IRECT(kWidth - 300, 0, kWidth, 20), &textPresetLabelProp, "v." VST3_VER_STR));
-	
+
 	// Background Shadowing
 	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 0 - 32, bitmapLogo.H, kControlX + kScaleX * 4 - 8, kHeight), &colorBgShadow)); // Input Stage
 	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 5 - 32, bitmapLogo.H, kControlX + kScaleX * 9 - 8, kHeight), &colorBgShadow)); // EQ Section
@@ -483,40 +483,40 @@ void SRChannel::CreateGraphics() {
 
 	// Meters
 		// Peak and GR
-		IRECT meter = IRECT(kWidth - 60, kControlY, kWidth, kHeight);
-		cInputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 59, bitmapLogo.H, kWidth - 51, kHeight), colorMeterBg, colorMeterFg));
-		cInputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 49, bitmapLogo.H, kWidth - 41, kHeight), colorMeterBg, colorMeterFg));
-		cRmsGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
-		cPeakGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
-		cDeesserMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
-		cOuputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
-		cOutputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
-		cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
-		cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
+	IRECT meter = IRECT(kWidth - 60, kControlY, kWidth, kHeight);
+	cInputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 59, bitmapLogo.H, kWidth - 51, kHeight), colorMeterBg, colorMeterFg));
+	cInputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 49, bitmapLogo.H, kWidth - 41, kHeight), colorMeterBg, colorMeterFg));
+	cRmsGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
+	cPeakGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
+	cDeesserMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
+	cOuputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
+	cOutputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
+	cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
+	cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
 
 
-		// Peak Meter Labels
-		for (int measureDb = 0; measureDb <= 20; measureDb++) {
-			std::string measureStr = std::to_string(-measureDb * 3);
-			const char *measureChar = measureStr.c_str();
-			pGraphics->AttachControl(new ITextControl(this, 
-				IRECT(
-					kWidth - 60, 
-					int(bitmapLogo.H + measureDb * .05 * (kHeight - bitmapLogo.H) - 7), 
-					kWidth, 
-					int(bitmapLogo.H + measureDb * .05 * (kHeight - bitmapLogo.H) + 7)
-				), 
-				&textKnobRingCtrProp, 
-				measureChar));
-		}
+	// Peak Meter Labels
+	for (int measureDb = 0; measureDb <= 20; measureDb++) {
+		std::string measureStr = std::to_string(-measureDb * 3);
+		const char *measureChar = measureStr.c_str();
+		pGraphics->AttachControl(new ITextControl(this,
+			IRECT(
+				kWidth - 60,
+				int(bitmapLogo.H + measureDb * .05 * (kHeight - bitmapLogo.H) - 7),
+				kWidth,
+				int(bitmapLogo.H + measureDb * .05 * (kHeight - bitmapLogo.H) + 7)
+			),
+			&textKnobRingCtrProp,
+			measureChar));
+	}
 
-		// Biquad Frequency Response
-		//cFreqRespGraph = pGraphics->AttachControl(new SRControls::IFreqRespGraph(this, IRECT(kControlX + kScaleX * 15 - 32, kControlY + kScaleY * 8, kControlX + kScaleX * 19 - 8, kHeight), meterFreqRespValues, 64));
-
-
+	// Biquad Frequency Response
+	//cFreqRespGraph = pGraphics->AttachControl(new SRControls::IFreqRespGraph(this, IRECT(kControlX + kScaleX * 15 - 32, kControlY + kScaleY * 8, kControlX + kScaleX * 19 - 8, kHeight), meterFreqRespValues, 64));
 
 
-	// Load bitmamps
+
+
+// Load bitmamps
 	IBitmap knobSslBlue = pGraphics->LoadIBitmap(BLUEKNOB_ID, BLUEKNOB_FN, kSslKnobFrames);
 	IBitmap knobSslGreen = pGraphics->LoadIBitmap(GREENKNOB_ID, GREENKNOB_FN, kSslKnobFrames);
 	IBitmap knobSslRed = pGraphics->LoadIBitmap(REDKNOB_ID, REDKNOB_FN, kSslKnobFrames);
@@ -534,7 +534,7 @@ void SRChannel::CreateGraphics() {
 	for (int i = 0; i < kNumParams; i++) {
 		const structParameterProperties& properties = parameterProperties[i];
 		IBitmap *knob;									// We're pointing at the type of knob we want to add
-		
+
 		switch (properties.Knobs) {						// "knob" is gonna be a pointer to IBitmap
 		case SslBlue: knob = &knobSslBlue; break;
 		case SslGreen: knob = &knobSslGreen; break;
@@ -554,20 +554,20 @@ void SRChannel::CreateGraphics() {
 		int knobheight = knob->frameHeight();
 
 		switch (properties.Type) {						// Testing for type of parameter, bools get buttons, doubles get knobs a.s.o.a.s.f.
-	
+
 		case typeBool:
 			pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 32, properties.y + 0, properties.x + 64, properties.y + 16), &textKnobRingMaxProp, properties.labelMax));
 			pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 32, properties.y + 16, properties.x + 64, properties.y + 32), &textKnobRingMaxProp, properties.labelMin));
-			
-				switch (i)
-				{
-				case kAgc:
-					cControlMatrix.at(i) = pGraphics->AttachControl(new IContactControl(this, properties.x, properties.y, i, knob));
-					break;
-				default:
-					cControlMatrix.at(i) = pGraphics->AttachControl(new ISwitchControl(this, properties.x, properties.y, i, knob));
-					break;
-				}
+
+			switch (i)
+			{
+			case kAgc:
+				cControlMatrix.at(i) = pGraphics->AttachControl(new IContactControl(this, properties.x, properties.y, i, knob));
+				break;
+			default:
+				cControlMatrix.at(i) = pGraphics->AttachControl(new ISwitchControl(this, properties.x, properties.y, i, knob));
+				break;
+			}
 			break;
 
 		case typeDouble:
@@ -600,28 +600,28 @@ void SRChannel::CreateGraphics() {
 					properties.x + int(.15 * knobwidth),
 					properties.y + knobheight + 2
 				), &textKnobRingMinProp, properties.labelMin));
-														// Label for maximum value
+				// Label for maximum value
 				pGraphics->AttachControl(new ITextControl(this, IRECT(
 					properties.x + int(.85 * knobwidth),
 					properties.y + knobheight - 12,
 					properties.x + knobwidth,
 					properties.y + knobheight + 2
 				), &textKnobRingMaxProp, properties.labelMax));
-														// Label for center value
+				// Label for center value
 				pGraphics->AttachControl(new ITextControl(this, IRECT(
 					properties.x + int(knobwidth * .5) - 16,
 					properties.y - 14,
 					properties.x + int(knobwidth * .5) + 16,
 					properties.y
 				), &textKnobRingCtrProp, properties.labelCtr));
-														// Label for short parameter name
+				// Label for short parameter name
 				pGraphics->AttachControl(new ITextControl(this, IRECT(
 					properties.x,
 					properties.y - 10,
 					properties.x + int(.15 * knobwidth),
 					properties.y + 6
 				), &textKnobLabelProp, properties.shortName));
-														// Actual rotary control
+				// Actual rotary control
 				cControlMatrix.at(i) = pGraphics->AttachControl(new SRPlugins::SRControls::IKnobMultiControlText(this, IRECT(
 					properties.x,
 					properties.y,
@@ -633,7 +633,7 @@ void SRChannel::CreateGraphics() {
 		}
 	}
 	AttachGraphics(pGraphics);
-														// Gray out controls that don't work by now.
+	// Gray out controls that don't work by now.
 }
 
 
@@ -661,8 +661,9 @@ void SRChannel::InitGUI() {
 void SRChannel::InitGain()
 {
 	mSampleRate = GetSampleRate();
-	fInputGain.initGain(mInputGain, mInputGain, double(mSampleRate)/10.);
-	fOutputGain.initGain(mOutputGain, mOutputGain, double(mSampleRate) / 10.);
+	fInputGain.initGain(mInputGain, mInputGain, double(mSampleRate) / 10., false);
+	fOutputGain.initGain(mOutputGain, mOutputGain, double(mSampleRate) / 10., false);
+	fPan.initPan(SRPlugins::SRGain::typeSinusodial, mPan, true);
 }
 
 void SRChannel::InitBiquad() {
@@ -679,8 +680,8 @@ void SRChannel::InitBiquad() {
 	fEqHpFilter9L.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqHpFilter10L.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqLpFilter1L.setFilter(SRPlugins::SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
-//	fEqHpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
-//	fEqLpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
+	//	fEqHpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
+	//	fEqLpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
 	fEqHfFilterL.setFilter(SRPlugins::SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
 	fEqHmfFilterL.setFilter(SRPlugins::SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
 	fEqLmfFilterL.setFilter(SRPlugins::SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
@@ -706,8 +707,8 @@ void SRChannel::InitBiquad() {
 	fEqHpFilter9R.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqHpFilter10R.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqLpFilter1R.setFilter(SRPlugins::SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
-//	fEqHpFilter1R.setFilter(iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
-//	fEqLpFilter1R.setFilter(iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
+	//	fEqHpFilter1R.setFilter(iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
+	//	fEqLpFilter1R.setFilter(iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
 	fEqHfFilterR.setFilter(SRPlugins::SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
 	fEqHmfFilterR.setFilter(SRPlugins::SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
 	fEqLmfFilterR.setFilter(SRPlugins::SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
@@ -855,7 +856,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				//*out1 *= mInputGain;
 				//*out2 *= mInputGain;
 			}
-				fInputGain.process(*out1, *out2);
+			fInputGain.process(*out1, *out2);
 
 			// Input Meter
 			mInputPeakMeterValue1 = IPMAX(mInputPeakMeterValue1, fabs(*out1));
@@ -866,8 +867,8 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 			//circularBuffer[2][circularBufferPointer] = *out2;
 			circularBufferInL[circularBufferPointer] = *out1;
 			circularBufferInR[circularBufferPointer] = *out2;
-			
-			
+
+
 			if (mInputBypass != 1) {
 
 				//// Upsample
@@ -926,17 +927,17 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				if (mEqLpFreq < 22000.0) { *out1 = fEqLpFilter1L.process(*out1); *out2 = fEqLpFilter1R.process(*out2); }
 				// Parametric EQ
 				if (mEqLfGain != 0.0) { *out1 = fEqLfFilterL.process(*out1); *out2 = fEqLfFilterR.process(*out2); }
-				if (mEqLmfGain != 0.0) { *out1 = fEqLmfFilterL.process(*out1); *out2 = fEqLmfFilterR.process(*out2);	}
+				if (mEqLmfGain != 0.0) { *out1 = fEqLmfFilterL.process(*out1); *out2 = fEqLmfFilterR.process(*out2); }
 				if (mEqHmfGain != 0.0) { *out1 = fEqHmfFilterL.process(*out1); *out2 = fEqHmfFilterR.process(*out2); }
 				if (mEqHfGain != 0.0) { *out1 = fEqHfFilterL.process(*out1); *out2 = fEqHfFilterR.process(*out2); }
 			}
 
 			if (mCompBypass != 1) {
-			// Deesser
-			fDeesser.process(*out1, *out2);
-			
+				// Deesser
+				fDeesser.process(*out1, *out2);
 
-			//	 Simple Compressor
+
+				//	 Simple Compressor
 				double vCompDry1 = *out1;
 				double vCompDry2 = *out2;
 
@@ -984,8 +985,8 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 			// Pan
 			if (mPan != .5) {
 				vSafePanLowSignal1 = *out1;
-				vSafePanLowSignal2 = *out2;
 				vSafePanHighSignal1 = *out1;
+				vSafePanLowSignal2 = *out2;
 				vSafePanHighSignal2 = *out2;
 
 				vSafePanLowSignal1 = fSafePanLpL.process(vSafePanLowSignal1);
@@ -995,14 +996,10 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 				//				*out1 = -vSafePanHighSignal1 * cos(mPan * (halfpi)) + vSafePanLowSignal1;
 				//				*out2 = -vSafePanHighSignal2 * sin(mPan * (halfpi)) + vSafePanLowSignal2;
-				if (mPan < .5) {
-					*out1 = vSafePanHighSignal1 - vSafePanLowSignal1;
-					*out2 = vSafePanHighSignal2 * sqrt(mPan) * sqrt(2.) - vSafePanLowSignal2;
-				}
-				else {
-					*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * sqrt(2.) - vSafePanLowSignal1;
-					*out2 = vSafePanHighSignal2 - vSafePanLowSignal2;
-				}
+				fPan.process(vSafePanHighSignal1, vSafePanHighSignal2);
+				*out1 = vSafePanHighSignal1 - vSafePanLowSignal1;
+				*out2 = vSafePanHighSignal2 - vSafePanLowSignal2;
+
 				//*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * 1.41 - vSafePanLowSignal1;
 				//*out2 = vSafePanHighSignal2 * sqrt(mPan) * 1.41 - vSafePanLowSignal2;
 			}
@@ -1011,12 +1008,12 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 			if (mOutputBypass != 1) {
 				// Clipper
-				
+
 				if (mClipperThreshold < 1.) {
 					*out1 = (fmin(fabs(*out1), mClipperThreshold) / sqrt(mClipperThreshold)) * (fabs(*out1) / *out1);
 					*out2 = (fmin(fabs(*out2), mClipperThreshold) / sqrt(mClipperThreshold)) * (fabs(*out2) / *out2);
 				}
-				
+
 
 				// Limiter
 				if (mLimiterThresh != 10.) {
@@ -1054,7 +1051,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 				//*out1 *= mOutputGain;
 				//*out2 *= mOutputGain;
 			}
-				fOutputGain.process(*out1, *out2);
+			fOutputGain.process(*out1, *out2);
 
 			*out1 = fDcBlockerL.process(*out1);
 			*out2 = fDcBlockerR.process(*out2);
@@ -1063,12 +1060,12 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 		}
 
-				// Output Meter +  GR Meter
+		// Output Meter +  GR Meter
 
 
 		mOutputPeakMeterValue1 = IPMAX(mOutputPeakMeterValue1, fabs(*out1));
 		mOutputPeakMeterValue2 = IPMAX(mOutputPeakMeterValue2, fabs(*out2));
-		
+
 
 		double limitedOut1 = (*out1 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out1;
 		double limitedOut2 = (*out2 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out2;
@@ -1085,7 +1082,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 	// Begin Processing per Framesize
 
-    mInputPeakMeterTimeConst1 = (mInputPeakMeterValue1 < mInputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
+	mInputPeakMeterTimeConst1 = (mInputPeakMeterValue1 < mInputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
 	mInputPeakMeterTimeConst2 = (mInputPeakMeterValue2 < mInputPeakMeterPreviousValue2 ? METER_DECAY : METER_ATTACK);
 	mInputPeakMeterValue1 = mInputPeakMeterValue1 * mInputPeakMeterTimeConst1 + mInputPeakMeterPreviousValue1 * (1.0 - mInputPeakMeterTimeConst1);
 	mInputPeakMeterValue2 = mInputPeakMeterValue2 * mInputPeakMeterTimeConst2 + mInputPeakMeterPreviousValue2 * (1.0 - mInputPeakMeterTimeConst2);
@@ -1171,397 +1168,397 @@ void SRChannel::Reset()
 
 void SRChannel::OnParamChange(int paramIdx)
 {
-  IMutexLock lock(this);
-  mSampleRate = GetSampleRate();
+	IMutexLock lock(this);
+	mSampleRate = GetSampleRate();
 
-  switch (paramIdx)
-  {
-	  
-	  // INPUT AND OUTPUT STAGE
+	switch (paramIdx)
+	{
 
-  case kInputGain: 
-	  mInputGain = DBToAmp(GetParam(paramIdx)->Value()); 
-	  fInputGain.setGain(mInputGain); 
-	  break;
-  case kOutputGain: 
-	  mOutputGain = DBToAmp(GetParam(paramIdx)->Value()); 
-	  fOutputGain.setGain(mOutputGain); 
-	  break;
+		// INPUT AND OUTPUT STAGE
 
-  case kInputDrive: 
-	  mInputDrive = GetParam(paramIdx)->Value(); 
-	  fInputSaturation.setDrive(mInputDrive);
-	  break;
-  case kSaturationAmount:
-	  mSaturationAmount = GetParam(paramIdx)->Value() / 100.;
-	  fInputSaturation.setAmount(mSaturationAmount);
-	  //mSatLfGain = (1 - mSaturationAmount) * 3.;		 fSatLfFilterL.setPeakGain(mSatLfGain);	  fSatLfFilterR.setPeakGain(mSatLfGain);
-	  //mSatMfGain = (1 - mSaturationAmount) * -3.; 	 fSatMfFilterL.setPeakGain(mSatMfGain);	  fSatMfFilterR.setPeakGain(mSatMfGain);
-	  //mSatHfGain = (1 - mSaturationAmount) * 5.; 	 fSatHfFilterL.setPeakGain(mSatHfGain);	  fSatHfFilterR.setPeakGain(mSatHfGain);
-	  //mSatHpFreq = (1 - mSaturationAmount) * 30.;	fSatHpFilterL.setFc(mSatHpFreq / mSampleRate); fSatHpFilterR.setFc(mSatHpFreq / mSampleRate);
-	  //mSatLpFreq = 22000 - (1 - mSaturationAmount) * 10000.;	fSatLpFilterL.setFc(mSatLpFreq / mSampleRate); fSatLpFilterR.setFc(mSatLpFreq / mSampleRate);
-	  break;
-  case kSaturationHarmonics: 
-	  mSaturationHarmonics = GetParam(paramIdx)->Value() / 100.;
-	  fInputSaturation.setHarmonics(mSaturationHarmonics);
-	  break;
-  case kSaturationSkew:
-	  mSaturationSkew = GetParam(paramIdx)->Value() * 0.05;
-	  fInputSaturation.setSkew(mSaturationSkew);
-	  break;
-  case kClipperThreshold: mClipperThreshold = 1. - GetParam(paramIdx)->Value() / 100.; break;
-  case kLimiterThresh:
-	  mLimiterThresh = GetParam(paramIdx)->Value();
-	  GetParam(paramIdx)->SetDisplayText(10, "Off");
-	  fLimiter.setThresh(mLimiterThresh);
-	  break;
-  case kPan: mPan = (GetParam(paramIdx)->Value() + 100) / 200; break;
-  case kPanFreq:
-	  mSafePanFreq = GetParam(paramIdx)->Value();
-	  fSafePanHpL.setFc(mSafePanFreq / mSampleRate);
-	  fSafePanHpR.setFc(mSafePanFreq / mSampleRate);
-	  fSafePanLpL.setFc(mSafePanFreq / mSampleRate);
-	  fSafePanLpR.setFc(mSafePanFreq / mSampleRate);
-	  break;
+	case kInputGain:
+		mInputGain = DBToAmp(GetParam(paramIdx)->Value());
+		fInputGain.setGain(mInputGain);
+		break;
+	case kOutputGain:
+		mOutputGain = DBToAmp(GetParam(paramIdx)->Value());
+		fOutputGain.setGain(mOutputGain);
+		break;
 
-	  // FILTER
+	case kInputDrive:
+		mInputDrive = GetParam(paramIdx)->Value();
+		fInputSaturation.setDrive(mInputDrive);
+		break;
+	case kSaturationAmount:
+		mSaturationAmount = GetParam(paramIdx)->Value() / 100.;
+		fInputSaturation.setAmount(mSaturationAmount);
+		//mSatLfGain = (1 - mSaturationAmount) * 3.;		 fSatLfFilterL.setPeakGain(mSatLfGain);	  fSatLfFilterR.setPeakGain(mSatLfGain);
+		//mSatMfGain = (1 - mSaturationAmount) * -3.; 	 fSatMfFilterL.setPeakGain(mSatMfGain);	  fSatMfFilterR.setPeakGain(mSatMfGain);
+		//mSatHfGain = (1 - mSaturationAmount) * 5.; 	 fSatHfFilterL.setPeakGain(mSatHfGain);	  fSatHfFilterR.setPeakGain(mSatHfGain);
+		//mSatHpFreq = (1 - mSaturationAmount) * 30.;	fSatHpFilterL.setFc(mSatHpFreq / mSampleRate); fSatHpFilterR.setFc(mSatHpFreq / mSampleRate);
+		//mSatLpFreq = 22000 - (1 - mSaturationAmount) * 10000.;	fSatLpFilterL.setFc(mSatLpFreq / mSampleRate); fSatLpFilterR.setFc(mSatLpFreq / mSampleRate);
+		break;
+	case kSaturationHarmonics:
+		mSaturationHarmonics = GetParam(paramIdx)->Value() / 100.;
+		fInputSaturation.setHarmonics(mSaturationHarmonics);
+		break;
+	case kSaturationSkew:
+		mSaturationSkew = GetParam(paramIdx)->Value() * 0.05;
+		fInputSaturation.setSkew(mSaturationSkew);
+		break;
+	case kClipperThreshold: mClipperThreshold = 1. - GetParam(paramIdx)->Value() / 100.; break;
+	case kLimiterThresh:
+		mLimiterThresh = GetParam(paramIdx)->Value();
+		GetParam(paramIdx)->SetDisplayText(10, "Off");
+		fLimiter.setThresh(mLimiterThresh);
+		break;
+	case kPan: mPan = (GetParam(paramIdx)->Value() + 100) / 200; fPan.setPanPosition(mPan); break;
+	case kPanFreq:
+		mSafePanFreq = GetParam(paramIdx)->Value();
+		fSafePanHpL.setFc(mSafePanFreq / mSampleRate);
+		fSafePanHpR.setFc(mSafePanFreq / mSampleRate);
+		fSafePanLpL.setFc(mSafePanFreq / mSampleRate);
+		fSafePanLpR.setFc(mSafePanFreq / mSampleRate);
+		break;
 
-  case kEqHpFreq:
-	  mEqHpFreq = GetParam(paramIdx)->Value();
-	  if (mEqHpOrder == 1 || mEqHpOrder == 3) {
-		  fEqHpFilterOnepoleL.setFc(mEqHpFreq / mSampleRate); fEqHpFilterOnepoleR.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 2) {
-		  fEqHpFilter1L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter1R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 4) {
-		  fEqHpFilter2L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter2R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 5) {
-		  fEqHpFilter3L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter3R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 6) {
-		  fEqHpFilter4L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter4R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 7) {
-		  fEqHpFilter5L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter5R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 8) {
-		  fEqHpFilter6L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter6R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  if (mEqHpOrder >= 9) {
-		  fEqHpFilter7L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter7R.setFc(mEqHpFreq / mSampleRate);
-		  fEqHpFilter8L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter8R.setFc(mEqHpFreq / mSampleRate);
-		  fEqHpFilter9L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter9R.setFc(mEqHpFreq / mSampleRate);
-		  fEqHpFilter10L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter10R.setFc(mEqHpFreq / mSampleRate);
-	  }
-	  GetParam(paramIdx)->SetDisplayText(16, "Off");
-	  break;
+		// FILTER
 
-  case kEqHpOrder:
-	  GetParam(paramIdx)->SetDisplayText(1, "6");
-	  GetParam(paramIdx)->SetDisplayText(2, "12");
-	  GetParam(paramIdx)->SetDisplayText(3, "18");
-	  GetParam(paramIdx)->SetDisplayText(4, "24");
-	  GetParam(paramIdx)->SetDisplayText(5, "36");
-	  GetParam(paramIdx)->SetDisplayText(6, "48");
-	  GetParam(paramIdx)->SetDisplayText(7, "60");
-	  GetParam(paramIdx)->SetDisplayText(8, "72");
-	  GetParam(paramIdx)->SetDisplayText(9, "120");
+	case kEqHpFreq:
+		mEqHpFreq = GetParam(paramIdx)->Value();
+		if (mEqHpOrder == 1 || mEqHpOrder == 3) {
+			fEqHpFilterOnepoleL.setFc(mEqHpFreq / mSampleRate); fEqHpFilterOnepoleR.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 2) {
+			fEqHpFilter1L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter1R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 4) {
+			fEqHpFilter2L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter2R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 5) {
+			fEqHpFilter3L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter3R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 6) {
+			fEqHpFilter4L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter4R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 7) {
+			fEqHpFilter5L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter5R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 8) {
+			fEqHpFilter6L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter6R.setFc(mEqHpFreq / mSampleRate);
+		}
+		if (mEqHpOrder >= 9) {
+			fEqHpFilter7L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter7R.setFc(mEqHpFreq / mSampleRate);
+			fEqHpFilter8L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter8R.setFc(mEqHpFreq / mSampleRate);
+			fEqHpFilter9L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter9R.setFc(mEqHpFreq / mSampleRate);
+			fEqHpFilter10L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter10R.setFc(mEqHpFreq / mSampleRate);
+		}
+		GetParam(paramIdx)->SetDisplayText(16, "Off");
+		break;
 
-	  mEqHpOrder = int(GetParam(paramIdx)->Value());
-	  switch (mEqHpOrder) {
-	  case 1:									// 1st order, 6 dB/Oct
-		  break;
-	  case 2:
-		  fEqHpFilter1L.setQ(mEqPassQ_O2_F1);	// 2nd order, 12 dB/Oct
-		  fEqHpFilter1R.setQ(mEqPassQ_O2_F1);
-		  break;
-	  case 3:									// 3rd order, 18 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O3_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O3_F1);
-		  break;
-	  case 4:									// 4th order, 24 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O4_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O4_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O4_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O4_F2);
-		  break;
-	  case 5:									// 6th order, 36 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O6_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O6_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O6_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O6_F2);
-		  fEqHpFilter3L.setQ(mEqPassQ_O6_F3);
-		  fEqHpFilter3R.setQ(mEqPassQ_O6_F3);
-		  break;
-	  case 6:									// 8th order, 48 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O8_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O8_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O8_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O8_F2);
-		  fEqHpFilter3L.setQ(mEqPassQ_O8_F3);
-		  fEqHpFilter3R.setQ(mEqPassQ_O8_F3);
-		  fEqHpFilter4L.setQ(mEqPassQ_O8_F4);
-		  fEqHpFilter4R.setQ(mEqPassQ_O8_F4);
-		  break;
-	  case 7:									// 10th order, 48 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O10_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O10_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O10_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O10_F2);
-		  fEqHpFilter3L.setQ(mEqPassQ_O10_F3);
-		  fEqHpFilter3R.setQ(mEqPassQ_O10_F3);
-		  fEqHpFilter4L.setQ(mEqPassQ_O10_F4);
-		  fEqHpFilter4R.setQ(mEqPassQ_O10_F4);
-		  fEqHpFilter5L.setQ(mEqPassQ_O10_F5);
-		  fEqHpFilter5R.setQ(mEqPassQ_O10_F5);
-		  break;
-	  case 8:									// 12th order, 72 db/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O12_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O12_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O12_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O12_F2);
-		  fEqHpFilter3L.setQ(mEqPassQ_O12_F3);
-		  fEqHpFilter3R.setQ(mEqPassQ_O12_F3);
-		  fEqHpFilter4L.setQ(mEqPassQ_O12_F4);
-		  fEqHpFilter4R.setQ(mEqPassQ_O12_F4);
-		  fEqHpFilter5L.setQ(mEqPassQ_O12_F5);
-		  fEqHpFilter5R.setQ(mEqPassQ_O12_F5);
-		  fEqHpFilter6L.setQ(mEqPassQ_O12_F6);
-		  fEqHpFilter6R.setQ(mEqPassQ_O12_F6);
-		  break;
-	  case 9:									// 20th order, 120 dB/Oct
-		  fEqHpFilter1L.setQ(mEqPassQ_O20_F1);
-		  fEqHpFilter1R.setQ(mEqPassQ_O20_F1);
-		  fEqHpFilter2L.setQ(mEqPassQ_O20_F2);
-		  fEqHpFilter2R.setQ(mEqPassQ_O20_F2);
-		  fEqHpFilter3L.setQ(mEqPassQ_O20_F3);
-		  fEqHpFilter3R.setQ(mEqPassQ_O20_F3);
-		  fEqHpFilter4L.setQ(mEqPassQ_O20_F4);
-		  fEqHpFilter4R.setQ(mEqPassQ_O20_F4);
-		  fEqHpFilter5L.setQ(mEqPassQ_O20_F5);
-		  fEqHpFilter5R.setQ(mEqPassQ_O20_F5);
-		  fEqHpFilter6L.setQ(mEqPassQ_O20_F6);
-		  fEqHpFilter6R.setQ(mEqPassQ_O20_F6);
-		  fEqHpFilter7L.setQ(mEqPassQ_O20_F7);
-		  fEqHpFilter7R.setQ(mEqPassQ_O20_F7);
-		  fEqHpFilter8L.setQ(mEqPassQ_O20_F8);
-		  fEqHpFilter8R.setQ(mEqPassQ_O20_F8);
-		  fEqHpFilter9L.setQ(mEqPassQ_O20_F9);
-		  fEqHpFilter9R.setQ(mEqPassQ_O20_F9);
-		  fEqHpFilter10L.setQ(mEqPassQ_O20_F10);
-		  fEqHpFilter10R.setQ(mEqPassQ_O20_F10);
-		  break;
-	  default:
-		  break;
-	  }
-	  OnParamChange(kEqHpFreq);
-	  break;
+	case kEqHpOrder:
+		GetParam(paramIdx)->SetDisplayText(1, "6");
+		GetParam(paramIdx)->SetDisplayText(2, "12");
+		GetParam(paramIdx)->SetDisplayText(3, "18");
+		GetParam(paramIdx)->SetDisplayText(4, "24");
+		GetParam(paramIdx)->SetDisplayText(5, "36");
+		GetParam(paramIdx)->SetDisplayText(6, "48");
+		GetParam(paramIdx)->SetDisplayText(7, "60");
+		GetParam(paramIdx)->SetDisplayText(8, "72");
+		GetParam(paramIdx)->SetDisplayText(9, "120");
 
-  case kEqLpOrder:
-	  GetParam(paramIdx)->SetDisplayText(1, "6");
-	  GetParam(paramIdx)->SetDisplayText(2, "12");
-	  GetParam(paramIdx)->SetDisplayText(3, "18");
-	  GetParam(paramIdx)->SetDisplayText(4, "24");
-	  GetParam(paramIdx)->SetDisplayText(5, "36");
-	  GetParam(paramIdx)->SetDisplayText(6, "48");
-	  GetParam(paramIdx)->SetDisplayText(7, "60");
-	  GetParam(paramIdx)->SetDisplayText(8, "72");
-	  GetParam(paramIdx)->SetDisplayText(9, "120");
-	  break;
+		mEqHpOrder = int(GetParam(paramIdx)->Value());
+		switch (mEqHpOrder) {
+		case 1:									// 1st order, 6 dB/Oct
+			break;
+		case 2:
+			fEqHpFilter1L.setQ(mEqPassQ_O2_F1);	// 2nd order, 12 dB/Oct
+			fEqHpFilter1R.setQ(mEqPassQ_O2_F1);
+			break;
+		case 3:									// 3rd order, 18 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O3_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O3_F1);
+			break;
+		case 4:									// 4th order, 24 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O4_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O4_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O4_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O4_F2);
+			break;
+		case 5:									// 6th order, 36 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O6_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O6_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O6_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O6_F2);
+			fEqHpFilter3L.setQ(mEqPassQ_O6_F3);
+			fEqHpFilter3R.setQ(mEqPassQ_O6_F3);
+			break;
+		case 6:									// 8th order, 48 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O8_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O8_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O8_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O8_F2);
+			fEqHpFilter3L.setQ(mEqPassQ_O8_F3);
+			fEqHpFilter3R.setQ(mEqPassQ_O8_F3);
+			fEqHpFilter4L.setQ(mEqPassQ_O8_F4);
+			fEqHpFilter4R.setQ(mEqPassQ_O8_F4);
+			break;
+		case 7:									// 10th order, 48 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O10_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O10_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O10_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O10_F2);
+			fEqHpFilter3L.setQ(mEqPassQ_O10_F3);
+			fEqHpFilter3R.setQ(mEqPassQ_O10_F3);
+			fEqHpFilter4L.setQ(mEqPassQ_O10_F4);
+			fEqHpFilter4R.setQ(mEqPassQ_O10_F4);
+			fEqHpFilter5L.setQ(mEqPassQ_O10_F5);
+			fEqHpFilter5R.setQ(mEqPassQ_O10_F5);
+			break;
+		case 8:									// 12th order, 72 db/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O12_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O12_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O12_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O12_F2);
+			fEqHpFilter3L.setQ(mEqPassQ_O12_F3);
+			fEqHpFilter3R.setQ(mEqPassQ_O12_F3);
+			fEqHpFilter4L.setQ(mEqPassQ_O12_F4);
+			fEqHpFilter4R.setQ(mEqPassQ_O12_F4);
+			fEqHpFilter5L.setQ(mEqPassQ_O12_F5);
+			fEqHpFilter5R.setQ(mEqPassQ_O12_F5);
+			fEqHpFilter6L.setQ(mEqPassQ_O12_F6);
+			fEqHpFilter6R.setQ(mEqPassQ_O12_F6);
+			break;
+		case 9:									// 20th order, 120 dB/Oct
+			fEqHpFilter1L.setQ(mEqPassQ_O20_F1);
+			fEqHpFilter1R.setQ(mEqPassQ_O20_F1);
+			fEqHpFilter2L.setQ(mEqPassQ_O20_F2);
+			fEqHpFilter2R.setQ(mEqPassQ_O20_F2);
+			fEqHpFilter3L.setQ(mEqPassQ_O20_F3);
+			fEqHpFilter3R.setQ(mEqPassQ_O20_F3);
+			fEqHpFilter4L.setQ(mEqPassQ_O20_F4);
+			fEqHpFilter4R.setQ(mEqPassQ_O20_F4);
+			fEqHpFilter5L.setQ(mEqPassQ_O20_F5);
+			fEqHpFilter5R.setQ(mEqPassQ_O20_F5);
+			fEqHpFilter6L.setQ(mEqPassQ_O20_F6);
+			fEqHpFilter6R.setQ(mEqPassQ_O20_F6);
+			fEqHpFilter7L.setQ(mEqPassQ_O20_F7);
+			fEqHpFilter7R.setQ(mEqPassQ_O20_F7);
+			fEqHpFilter8L.setQ(mEqPassQ_O20_F8);
+			fEqHpFilter8R.setQ(mEqPassQ_O20_F8);
+			fEqHpFilter9L.setQ(mEqPassQ_O20_F9);
+			fEqHpFilter9R.setQ(mEqPassQ_O20_F9);
+			fEqHpFilter10L.setQ(mEqPassQ_O20_F10);
+			fEqHpFilter10R.setQ(mEqPassQ_O20_F10);
+			break;
+		default:
+			break;
+		}
+		OnParamChange(kEqHpFreq);
+		break;
 
-  case kEqLpFreq:
-	  mEqLpFreq = GetParam(paramIdx)->Value();
-	  fEqLpFilter1L.setFc(mEqLpFreq / mSampleRate);
-	  fEqLpFilter1R.setFc(mEqLpFreq / mSampleRate);
-	  GetParam(paramIdx)->SetDisplayText(22000, "Off");
-	  break;
+	case kEqLpOrder:
+		GetParam(paramIdx)->SetDisplayText(1, "6");
+		GetParam(paramIdx)->SetDisplayText(2, "12");
+		GetParam(paramIdx)->SetDisplayText(3, "18");
+		GetParam(paramIdx)->SetDisplayText(4, "24");
+		GetParam(paramIdx)->SetDisplayText(5, "36");
+		GetParam(paramIdx)->SetDisplayText(6, "48");
+		GetParam(paramIdx)->SetDisplayText(7, "60");
+		GetParam(paramIdx)->SetDisplayText(8, "72");
+		GetParam(paramIdx)->SetDisplayText(9, "120");
+		break;
 
-	  // EQUALIZER
+	case kEqLpFreq:
+		mEqLpFreq = GetParam(paramIdx)->Value();
+		fEqLpFilter1L.setFc(mEqLpFreq / mSampleRate);
+		fEqLpFilter1R.setFc(mEqLpFreq / mSampleRate);
+		GetParam(paramIdx)->SetDisplayText(22000, "Off");
+		break;
 
-  case kEqHfBell:
-	  mEqHfIsBell = GetParam(paramIdx)->Value();
-	  if (mEqHfIsBell == 1) {fEqHfFilterL.setType(SRPlugins::SRFilters::biquad_peak); fEqHfFilterR.setType(SRPlugins::SRFilters::biquad_peak);}
-	  else {fEqHfFilterL.setType(SRPlugins::SRFilters::biquad_highshelf); fEqHfFilterR.setType(SRPlugins::SRFilters::biquad_highshelf);}
-	  break;
+		// EQUALIZER
 
-  case kEqLfBell:
-	  mEqLfIsBell = GetParam(paramIdx)->Value();
-	  if (mEqLfIsBell == 1) {fEqLfFilterL.setType(SRPlugins::SRFilters::biquad_peak); fEqLfFilterR.setType(SRPlugins::SRFilters::biquad_peak);}
-	  else {fEqLfFilterL.setType(SRPlugins::SRFilters::biquad_lowshelf); fEqLfFilterR.setType(SRPlugins::SRFilters::biquad_lowshelf);}
-	  break;
+	case kEqHfBell:
+		mEqHfIsBell = GetParam(paramIdx)->Value();
+		if (mEqHfIsBell == 1) { fEqHfFilterL.setType(SRPlugins::SRFilters::biquad_peak); fEqHfFilterR.setType(SRPlugins::SRFilters::biquad_peak); }
+		else { fEqHfFilterL.setType(SRPlugins::SRFilters::biquad_highshelf); fEqHfFilterR.setType(SRPlugins::SRFilters::biquad_highshelf); }
+		break;
 
-  case kEqLfGain: mEqLfGain = GetParam(paramIdx)->Value(); fEqLfFilterL.setPeakGain(mEqLfGain); fEqLfFilterR.setPeakGain(mEqLfGain); break;
-  case kEqLfFreq: mEqLfFreq = GetParam(paramIdx)->Value(); fEqLfFilterL.setFc(mEqLfFreq / mSampleRate); fEqLfFilterR.setFc(mEqLfFreq / mSampleRate); break;
-  case kEqLfQ: mEqLfQ = GetParam(paramIdx)->Value(); fEqLfFilterL.setQ(mEqLfQ); fEqLfFilterR.setQ(mEqLfQ); break;
+	case kEqLfBell:
+		mEqLfIsBell = GetParam(paramIdx)->Value();
+		if (mEqLfIsBell == 1) { fEqLfFilterL.setType(SRPlugins::SRFilters::biquad_peak); fEqLfFilterR.setType(SRPlugins::SRFilters::biquad_peak); }
+		else { fEqLfFilterL.setType(SRPlugins::SRFilters::biquad_lowshelf); fEqLfFilterR.setType(SRPlugins::SRFilters::biquad_lowshelf); }
+		break;
 
-  case kEqLmfGain: mEqLmfGain = GetParam(paramIdx)->Value(); fEqLmfFilterL.setPeakGain(mEqLmfGain); fEqLmfFilterR.setPeakGain(mEqLmfGain); break;
-  case kEqLmfFreq: mEqLmfFreq = GetParam(paramIdx)->Value(); fEqLmfFilterL.setFc(mEqLmfFreq / mSampleRate); fEqLmfFilterR.setFc(mEqLmfFreq / mSampleRate); break;
-  case kEqLmfQ: mEqLmfQ = GetParam(paramIdx)->Value(); fEqLmfFilterL.setQ(mEqLmfQ); fEqLmfFilterR.setQ(mEqLmfQ); break;
+	case kEqLfGain: mEqLfGain = GetParam(paramIdx)->Value(); fEqLfFilterL.setPeakGain(mEqLfGain); fEqLfFilterR.setPeakGain(mEqLfGain); break;
+	case kEqLfFreq: mEqLfFreq = GetParam(paramIdx)->Value(); fEqLfFilterL.setFc(mEqLfFreq / mSampleRate); fEqLfFilterR.setFc(mEqLfFreq / mSampleRate); break;
+	case kEqLfQ: mEqLfQ = GetParam(paramIdx)->Value(); fEqLfFilterL.setQ(mEqLfQ); fEqLfFilterR.setQ(mEqLfQ); break;
 
-  case kEqHmfGain: mEqHmfGain = GetParam(paramIdx)->Value(); fEqHmfFilterL.setPeakGain(mEqHmfGain); fEqHmfFilterR.setPeakGain(mEqHmfGain); break;
-  case kEqHmfFreq: mEqHmfFreq = GetParam(paramIdx)->Value(); fEqHmfFilterL.setFc(mEqHmfFreq / mSampleRate); fEqHmfFilterR.setFc(mEqHmfFreq / mSampleRate); break;
-  case kEqHmfQ: mEqHmfQ = GetParam(paramIdx)->Value(); fEqHmfFilterL.setQ(mEqHmfQ); fEqHmfFilterR.setQ(mEqHmfQ); break;
+	case kEqLmfGain: mEqLmfGain = GetParam(paramIdx)->Value(); fEqLmfFilterL.setPeakGain(mEqLmfGain); fEqLmfFilterR.setPeakGain(mEqLmfGain); break;
+	case kEqLmfFreq: mEqLmfFreq = GetParam(paramIdx)->Value(); fEqLmfFilterL.setFc(mEqLmfFreq / mSampleRate); fEqLmfFilterR.setFc(mEqLmfFreq / mSampleRate); break;
+	case kEqLmfQ: mEqLmfQ = GetParam(paramIdx)->Value(); fEqLmfFilterL.setQ(mEqLmfQ); fEqLmfFilterR.setQ(mEqLmfQ); break;
 
-  case kEqHfGain: mEqHfGain = GetParam(paramIdx)->Value(); fEqHfFilterL.setPeakGain(mEqHfGain); fEqHfFilterR.setPeakGain(mEqHfGain); break; 
-  case kEqHfFreq: mEqHfFreq = GetParam(paramIdx)->Value(); fEqHfFilterL.setFc(mEqHfFreq / mSampleRate); fEqHfFilterR.setFc(mEqHfFreq / mSampleRate); break;
-  case kEqHfQ: mEqHfQ = GetParam(paramIdx)->Value(); fEqHfFilterL.setQ(mEqHfQ); fEqHfFilterR.setQ(mEqHfQ); break;
+	case kEqHmfGain: mEqHmfGain = GetParam(paramIdx)->Value(); fEqHmfFilterL.setPeakGain(mEqHmfGain); fEqHmfFilterR.setPeakGain(mEqHmfGain); break;
+	case kEqHmfFreq: mEqHmfFreq = GetParam(paramIdx)->Value(); fEqHmfFilterL.setFc(mEqHmfFreq / mSampleRate); fEqHmfFilterR.setFc(mEqHmfFreq / mSampleRate); break;
+	case kEqHmfQ: mEqHmfQ = GetParam(paramIdx)->Value(); fEqHmfFilterL.setQ(mEqHmfQ); fEqHmfFilterR.setQ(mEqHmfQ); break;
 
-	  // COMPRESSOR
+	case kEqHfGain: mEqHfGain = GetParam(paramIdx)->Value(); fEqHfFilterL.setPeakGain(mEqHfGain); fEqHfFilterR.setPeakGain(mEqHfGain); break;
+	case kEqHfFreq: mEqHfFreq = GetParam(paramIdx)->Value(); fEqHfFilterL.setFc(mEqHfFreq / mSampleRate); fEqHfFilterR.setFc(mEqHfFreq / mSampleRate); break;
+	case kEqHfQ: mEqHfQ = GetParam(paramIdx)->Value(); fEqHfFilterL.setQ(mEqHfQ); fEqHfFilterR.setQ(mEqHfQ); break;
 
-  case kCompIsParallel: 
-	  mCompIsParallel = GetParam(paramIdx)->Value();
-	  if (GetGUI()) {
-		  //(mCompIsParallel == 0) ? GetGUI()->GrayOutControl(kCompPeakRmsRatio, true) : GetGUI()->GrayOutControl(kCompPeakRmsRatio, false);
-		  GrayOutControls();
-	  }
-	  break;
+		// COMPRESSOR
 
-  case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
-  case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
+	case kCompIsParallel:
+		mCompIsParallel = GetParam(paramIdx)->Value();
+		if (GetGUI()) {
+			//(mCompIsParallel == 0) ? GetGUI()->GrayOutControl(kCompPeakRmsRatio, true) : GetGUI()->GrayOutControl(kCompPeakRmsRatio, false);
+			GrayOutControls();
+		}
+		break;
 
-  case kCompPeakRatio:
-	  mCompPeakRatio = (1. / GetParam(paramIdx)->Value());
-	  if (mCompPeakRatio <= 1./20.) {
-		  GetParam(paramIdx)->SetDisplayText(20, "inf");
-		  mCompPeakRatio = 0.;
-	  }
-	  fCompressorPeak.setRatio(mCompPeakRatio);
-	  mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
-	  break;
+	case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
+	case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
 
-	  // Thresh in dB !!
-  case kCompPeakThresh:
-	  mCompPeakThresh = GetParam(paramIdx)->Value();
-	  fCompressorPeak.setThresh(mCompPeakThresh);
-	  mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
-	  break;
+	case kCompPeakRatio:
+		mCompPeakRatio = (1. / GetParam(paramIdx)->Value());
+		if (mCompPeakRatio <= 1. / 20.) {
+			GetParam(paramIdx)->SetDisplayText(20, "inf");
+			mCompPeakRatio = 0.;
+		}
+		fCompressorPeak.setRatio(mCompPeakRatio);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		break;
 
-	  // Attack in ms
-  case kCompPeakAttack:
-	  mCompPeakAttack = GetParam(paramIdx)->Value();
-	  fCompressorPeak.setAttack(mCompPeakAttack);
-	  mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
-	  break;
+		// Thresh in dB !!
+	case kCompPeakThresh:
+		mCompPeakThresh = GetParam(paramIdx)->Value();
+		fCompressorPeak.setThresh(mCompPeakThresh);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		break;
 
-	  // Release in ms
-  case kCompPeakRelease:
-	  mCompPeakRelease = GetParam(paramIdx)->Value();
-	  fCompressorPeak.setRelease(mCompPeakRelease);
-	  mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
-	  break;
+		// Attack in ms
+	case kCompPeakAttack:
+		mCompPeakAttack = GetParam(paramIdx)->Value();
+		fCompressorPeak.setAttack(mCompPeakAttack);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		break;
 
-  case kCompPeakKneeWidthDb:
-	  mCompPeakKneeWidthDb = GetParam(paramIdx)->Value();
-	  fCompressorPeak.setKnee(mCompPeakKneeWidthDb);
-	  break;
+		// Release in ms
+	case kCompPeakRelease:
+		mCompPeakRelease = GetParam(paramIdx)->Value();
+		fCompressorPeak.setRelease(mCompPeakRelease);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		break;
 
-  case kCompPeakSidechainFilterFreq:
-	  mCompPeakSidechainFilterFreq = GetParam(paramIdx)->Value();
-	  fCompressorPeak.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate);
-	  GetParam(paramIdx)->SetDisplayText(16, "Off");
-	  break;
+	case kCompPeakKneeWidthDb:
+		mCompPeakKneeWidthDb = GetParam(paramIdx)->Value();
+		fCompressorPeak.setKnee(mCompPeakKneeWidthDb);
+		break;
 
-  case kCompRmsRatio:
-	  mCompRmsRatio = (1 / GetParam(paramIdx)->Value());
-	  fCompressorRms.setRatio(mCompRmsRatio);
-	  // Auto Makeup
-	  mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
-	  break;
+	case kCompPeakSidechainFilterFreq:
+		mCompPeakSidechainFilterFreq = GetParam(paramIdx)->Value();
+		fCompressorPeak.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate);
+		GetParam(paramIdx)->SetDisplayText(16, "Off");
+		break;
 
-	  // Thresh in dB !!
-  case kCompRmsThresh:
-	  mCompRmsThresh = GetParam(paramIdx)->Value();
-	  fCompressorRms.setThresh(mCompRmsThresh);
-	  // Auto Makeup
-	  mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
-	  break;
+	case kCompRmsRatio:
+		mCompRmsRatio = (1 / GetParam(paramIdx)->Value());
+		fCompressorRms.setRatio(mCompRmsRatio);
+		// Auto Makeup
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		break;
 
-	  // Attack in ms
-  case kCompRmsAttack:
-	  mCompRmsAttack = GetParam(paramIdx)->Value();
-	  fCompressorRms.setAttack(mCompRmsAttack);
-	  mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
-	  break;
+		// Thresh in dB !!
+	case kCompRmsThresh:
+		mCompRmsThresh = GetParam(paramIdx)->Value();
+		fCompressorRms.setThresh(mCompRmsThresh);
+		// Auto Makeup
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		break;
 
-	  // Release in ms
-  case kCompRmsRelease:
-	  mCompRmsRelease = GetParam(paramIdx)->Value();
-	  fCompressorRms.setRelease(mCompRmsRelease);
-	  mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
-	  break;
+		// Attack in ms
+	case kCompRmsAttack:
+		mCompRmsAttack = GetParam(paramIdx)->Value();
+		fCompressorRms.setAttack(mCompRmsAttack);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		break;
 
-  case kCompRmsKneeWidthDb:
-	  mCompRmsKneeWidthDb = GetParam(paramIdx)->Value();
-	  fCompressorRms.setKnee(mCompRmsKneeWidthDb);
-	  break;
+		// Release in ms
+	case kCompRmsRelease:
+		mCompRmsRelease = GetParam(paramIdx)->Value();
+		fCompressorRms.setRelease(mCompRmsRelease);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		break;
 
-  case kCompPeakRmsRatio:
-	  mCompPeakRmsRatio = GetParam(paramIdx)->Value() / 100;
-	  break;
+	case kCompRmsKneeWidthDb:
+		mCompRmsKneeWidthDb = GetParam(paramIdx)->Value();
+		fCompressorRms.setKnee(mCompRmsKneeWidthDb);
+		break;
 
-	  // RMS Makeup (db -> amp)
-  case kCompRmsMakeup: mCompRmsMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
-  case kCompPeakMakeup: mCompPeakMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
-  case kCompDryWet: mCompDryWet = GetParam(paramIdx)->Value() / 100; break;
-	  
-	  // GLOBAL BYPASS
-  case kEqBypass: mEqBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
-  case kCompBypass: mCompBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
-  case kInputBypass: mInputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
-  case kOutputBypass: mOutputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
-  case kBypass: mBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
+	case kCompPeakRmsRatio:
+		mCompPeakRmsRatio = GetParam(paramIdx)->Value() / 100;
+		break;
 
-	  // Automatic Gain Control
+		// RMS Makeup (db -> amp)
+	case kCompRmsMakeup: mCompRmsMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
+	case kCompPeakMakeup: mCompPeakMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
+	case kCompDryWet: mCompDryWet = GetParam(paramIdx)->Value() / 100; break;
 
-  case kAgc:
-	  if (circularBufferInL[circularBufferLenght-1]) {
-		  sumIn = 0.;
-		  sumOut = 0.;
-		  aveIn = 0.;
-		  aveOut = 0.;
-		  diffInOut = 0.;
-		  for (int i = 0; i <= circularBufferLenght-1; i++) {
-			  sumIn += fabs(circularBufferInL[i]) + fabs(circularBufferInR[i]);
-			  sumOut += fabs(circularBufferOutL[i]) + fabs(circularBufferOutR[i]);
-		  }
-		  aveIn = sumIn / (2. * (double(circularBufferLenght)));
-		  aveOut = sumOut / (2. * (double(circularBufferLenght)));
-		  diffInOut = sumIn / sumOut;
-		  if (GetGUI()) {
-			  if (diffInOut > 4.) {
-				  GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(4.), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
-			  }
-			  else if (diffInOut < .125) {
-				  GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(.125), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
-			  }
-			  else {
-				  GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(diffInOut), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
-			  }
-		  }
-	  }
-	  break;
+		// GLOBAL BYPASS
+	case kEqBypass: mEqBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
+	case kCompBypass: mCompBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
+	case kInputBypass: mInputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
+	case kOutputBypass: mOutputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
+	case kBypass: mBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 
-	  // Deesser
+		// Automatic Gain Control
 
-  case kDeesserFreq: mDeesserFreq = GetParam(paramIdx)->Value(); fDeesser.setFrequency(mDeesserFreq / mSampleRate); break;
-  case kDeesserQ: mDeesserQ = GetParam(paramIdx)->Value(); fDeesser.setQ(mDeesserQ); break;
-  case kDeesserThresh: mDeesserThresh = GetParam(paramIdx)->Value(); fDeesser.setThresh(mDeesserThresh); break;
-  case kDeesserRatio: mDeesserRatio = (1. / GetParam(paramIdx)->Value()); fDeesser.setRatio(mDeesserRatio); break;
-  case kDeesserAttack: mDeesserAttack = GetParam(paramIdx)->Value(); fDeesser.setAttack(mDeesserAttack); break;
-  case kDeesserRelease: mDeesserRelease= GetParam(paramIdx)->Value(); fDeesser.setRelease(mDeesserRelease); break;
-  case kDeesserMakeup: mDeesserMakeup= DBToAmp(GetParam(paramIdx)->Value()); break;
-	  
-	  // TEST PARAMS
+	case kAgc:
+		if (circularBufferInL[circularBufferLenght - 1]) {
+			sumIn = 0.;
+			sumOut = 0.;
+			aveIn = 0.;
+			aveOut = 0.;
+			diffInOut = 0.;
+			for (int i = 0; i <= circularBufferLenght - 1; i++) {
+				sumIn += fabs(circularBufferInL[i]) + fabs(circularBufferInR[i]);
+				sumOut += fabs(circularBufferOutL[i]) + fabs(circularBufferOutR[i]);
+			}
+			aveIn = sumIn / (2. * (double(circularBufferLenght)));
+			aveOut = sumOut / (2. * (double(circularBufferLenght)));
+			diffInOut = sumIn / sumOut;
+			if (GetGUI()) {
+				if (diffInOut > 4.) {
+					GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(4.), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
+				}
+				else if (diffInOut < .125) {
+					GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(.125), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
+				}
+				else {
+					GetGUI()->SetParameterFromGUI(kOutputGain, ToNormalizedParam(AmpToDB(diffInOut), GetParam(kOutputGain)->GetMin(), GetParam(kOutputGain)->GetMax(), GetParam(kOutputGain)->GetShape()));
+				}
+			}
+		}
+		break;
 
-  case kTestParam1: mTestParam1 = GetParam(paramIdx)->Value(); break;
-  case kTestParam2: mTestParam2 = GetParam(paramIdx)->Value(); break;
-  case kTestParam3: mTestParam3 = GetParam(paramIdx)->Value(); break;
-  case kTestParam4: mTestParam4 = GetParam(paramIdx)->Value(); break;
-  case kTestParam5: mTestParam5 = GetParam(paramIdx)->Value(); break;
+		// Deesser
 
-  default: break;
-  }
+	case kDeesserFreq: mDeesserFreq = GetParam(paramIdx)->Value(); fDeesser.setFrequency(mDeesserFreq / mSampleRate); break;
+	case kDeesserQ: mDeesserQ = GetParam(paramIdx)->Value(); fDeesser.setQ(mDeesserQ); break;
+	case kDeesserThresh: mDeesserThresh = GetParam(paramIdx)->Value(); fDeesser.setThresh(mDeesserThresh); break;
+	case kDeesserRatio: mDeesserRatio = (1. / GetParam(paramIdx)->Value()); fDeesser.setRatio(mDeesserRatio); break;
+	case kDeesserAttack: mDeesserAttack = GetParam(paramIdx)->Value(); fDeesser.setAttack(mDeesserAttack); break;
+	case kDeesserRelease: mDeesserRelease = GetParam(paramIdx)->Value(); fDeesser.setRelease(mDeesserRelease); break;
+	case kDeesserMakeup: mDeesserMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
+
+		// TEST PARAMS
+
+	case kTestParam1: mTestParam1 = GetParam(paramIdx)->Value(); break;
+	case kTestParam2: mTestParam2 = GetParam(paramIdx)->Value(); break;
+	case kTestParam3: mTestParam3 = GetParam(paramIdx)->Value(); break;
+	case kTestParam4: mTestParam4 = GetParam(paramIdx)->Value(); break;
+	case kTestParam5: mTestParam5 = GetParam(paramIdx)->Value(); break;
+
+	default: break;
+	}
 
 }

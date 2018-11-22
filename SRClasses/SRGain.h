@@ -41,7 +41,7 @@ namespace SRPlugins
 		{
 		public:
 			SRGain();
-			SRGain(double pGain1, double pGain2, double pRampNumSamples);
+			SRGain(double pGain1, double pGain2, double pRampNumSamples, bool pBypassed);
 			~SRGain();
 
 			void setGain(double pGainLin);
@@ -49,22 +49,25 @@ namespace SRPlugins
 			void setGainDb(double pGainDb);
 			void setGainDb(double pGainDb1, double pGainDb2);
 			void setRamp(double pRampNumSamples);
+			void setBypassed(bool pBypassed);
 			double getGain() { return mGainLin1 * 0.5 + mGainLin2 * 0.5; }
 			double getGainDb() { return SRPlugins::SRHelpers::AmpToDB(mGainLin1 * 0.5 + mGainLin2 * 0.5); }
+			bool getBypassed() { return mBypassed; }
 
 
-			void initGain(double pGainLin1, double pGainLin2, double pRampNumSamples);
-			void initGainDb(double pGainDb1, double pGainDb2, double pRampNumSamples);
+			void initGain(double pGainLin1, double pGainLin2, double pRampNumSamples, bool pBypassed);
+			void initGainDb(double pGainDb1, double pGainDb2, double pRampNumSamples, bool pBypassed);
 
-			// void process(double &in);				// for mono
+			// void process(double &in);			// for mono
 			void process(double &in1, double &in2); // for stereo
 
 		protected:
 			void calcGain(void);
 
-			double mGainLin1;
-			double mGainLin2; // Enter normalized gain >= 0.0 (1.0 = unity)
-			double mRampNumSamples;
+			double mGainLin1; // Enter normalized gain >= 0.0 (1.0 = unity)
+			double mGainLin2; // Enter normalized gain of second channel >= 0.0 (1.0 = unity)
+			double mRampNumSamples; // Enter lenght of gain ramp in samples
+			bool mBypassed; // bool is gain bypassed
 
 			double currentGain1, currentGain2, targetGain1, targetGain2, stepGain1, stepGain2;
 		};
@@ -73,23 +76,28 @@ namespace SRPlugins
 
 		inline void SRGain::process(double &in1, double &in2)
 		{
-			if (stepGain1 != 0.0) {
-				currentGain1 += stepGain1;
-				if ((stepGain1 > 0.0 && currentGain1 > targetGain1) || (stepGain1 < 0.0 && currentGain1 < targetGain1)) {
-					currentGain1 = targetGain1;
-					stepGain1 = 0.0;
+			if (currentGain1 != 1.0 && stepGain1 != 0.0 && mBypassed == false) {
+				if (stepGain1 != 0.0) {
+					currentGain1 += stepGain1;
+					if ((stepGain1 > 0.0 && currentGain1 > targetGain1) || (stepGain1 < 0.0 && currentGain1 < targetGain1)) {
+						currentGain1 = targetGain1;
+						stepGain1 = 0.0;
+					}
 				}
-			}
-			if (stepGain2 != 0.0) {
-				currentGain2 += stepGain2;
-				if ((stepGain2 > 0.0 && currentGain2 > targetGain2) || (stepGain2 < 0.0 && currentGain2 < targetGain2)) {
-					currentGain2 = targetGain2;
-					stepGain2 = 0.0;
-				}
+				in1 *= currentGain1;
 			}
 
-			in1 *= currentGain1;
-			in2 *= currentGain2;
+			if (currentGain1 != 1.0 && stepGain1 != 0.0 && mBypassed == false) {
+				if (stepGain2 != 0.0) {
+					currentGain2 += stepGain2;
+					if ((stepGain2 > 0.0 && currentGain2 > targetGain2) || (stepGain2 < 0.0 && currentGain2 < targetGain2)) {
+						currentGain2 = targetGain2;
+						stepGain2 = 0.0;
+					}
+				}
+				in2 *= currentGain2;
+			}
+
 		}
 
 
@@ -128,14 +136,14 @@ namespace SRPlugins
 			bool mLinearMiddlePosition;
 
 			double gain1, gain2;
+			SRGain panSmoother;
 		};
 
 		inline void SRPan::process(double &in1, double &in2)
 		{
 			if (mPanNormalized != 0.5)
 			{
-				in1 *= gain1;
-				in2 *= gain2;
+				panSmoother.process(in1, in2);
 			}
 		}
 
