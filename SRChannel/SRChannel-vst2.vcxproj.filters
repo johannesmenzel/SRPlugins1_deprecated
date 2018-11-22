@@ -20,6 +20,9 @@
     <ClCompile Include="..\SRClasses\SRSaturation.cpp">
       <Filter>SRClasses</Filter>
     </ClCompile>
+    <ClCompile Include="..\SRClasses\SRGain.cpp">
+      <Filter>SRClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SRChannel.h" />
@@ -40,6 +43,9 @@
       <Filter>SRClasses</Filter>
     </ClInclude>
     <ClInclude Include="..\SRClasses\SRSaturation.h">
+      <Filter>SRClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SRClasses\SRGain.h">
       <Filter>SRClasses</Filter>
     </ClInclude>
   </ItemGroup>

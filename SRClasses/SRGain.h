@@ -29,80 +29,117 @@
 
 // #include this and that
 #include "SRHelpers.h" // optional
+#include <cassert>
 
 namespace SRPlugins
 {
-namespace SRGain
-{
-
-// If type definitions of type int needed:
-enum
-{
-	typeLinear = 0,
-	typeSquareroot,
-	typeSinusodial,
-	typeTanh,
-	numTypes
-	// ...
-};
-
-class SRPan
-{
-  public:
-	// constructor
-	SRPan();
-	// class initializer
-	SRPan(
-		int pType,
-		double pPanNormalized,
-		bool pLinearMiddlePosition);
-	// destructor
-	~SRPan(); // destructor
-
-	// public functions that need to be accessed from outside
-	void setType(int pType);
-	void setLinearMiddlePosition(bool pLinearMiddlePosition);
-	void setPanPosition(double pPanNormalized); // create these for every member
-	void getPanPosition() { return mPanNormalized; }
-
-	void setPan(
-		int pType,
-		double pPanNormalized,
-		bool pLinearMiddlePosition);
-	// inline process functions, if needed
-	// void process(double &in);				// for mono
-	void process(double &in1, double &in2); // for stereo
-
-  protected:
-	// Protected functions that do internal calculations and that are called from other funcions
-	void calcPan(void);
-
-	// Internal member and internal variables
-	int mType;
-	// member variables
-	double mPanNormalized; // Enter normalized pan between 0.0 (left) and 1.0 (right)
-	bool mLinearMiddlePosition;
-	// internal variables
-	double gain1, gain2;
-	// double prev[2];
-	// double dry[2];
-}; // end of class
-
-// inline void SRPan::process(double &in)
-// {
-// 	process()
-// }
-
-inline void SRPan::process(double &in1, double &in2)
-{
-	if (mPanNormalized != 0.5)
+	namespace SRGain
 	{
-		in1 *= gain1;
-		in2 *= gain2;
-	}
-}
 
-} // namespace SRGain
+
+		class SRGain
+		{
+		public:
+			SRGain();
+			SRGain(double pGain1, double pGain2, double pRampNumSamples);
+			~SRGain();
+
+			void setGain(double pGainLin);
+			void setGain(double pGainLin1, double pGainLin2);
+			void setGainDb(double pGainDb);
+			void setGainDb(double pGainDb1, double pGainDb2);
+			void setRamp(double pRampNumSamples);
+			double getGain() { return mGainLin1 * 0.5 + mGainLin2 * 0.5; }
+			double getGainDb() { return SRPlugins::SRHelpers::AmpToDB(mGainLin1 * 0.5 + mGainLin2 * 0.5); }
+
+
+			void initGain(double pGainLin1, double pGainLin2, double pRampNumSamples);
+			void initGainDb(double pGainDb1, double pGainDb2, double pRampNumSamples);
+
+			// void process(double &in);				// for mono
+			void process(double &in1, double &in2); // for stereo
+
+		protected:
+			void calcGain(void);
+
+			double mGainLin1;
+			double mGainLin2; // Enter normalized gain >= 0.0 (1.0 = unity)
+			double mRampNumSamples;
+
+			double currentGain1, currentGain2, targetGain1, targetGain2, stepGain1, stepGain2;
+		};
+
+
+
+		inline void SRGain::process(double &in1, double &in2)
+		{
+			if (stepGain1 != 0.0) {
+				currentGain1 += stepGain1;
+				if ((stepGain1 > 0.0 && currentGain1 > targetGain1) || (stepGain1 < 0.0 && currentGain1 < targetGain1)) {
+					currentGain1 = targetGain1;
+					stepGain1 = 0.0;
+				}
+			}
+			if (stepGain2 != 0.0) {
+				currentGain2 += stepGain2;
+				if ((stepGain2 > 0.0 && currentGain2 > targetGain2) || (stepGain2 < 0.0 && currentGain2 < targetGain2)) {
+					currentGain2 = targetGain2;
+					stepGain2 = 0.0;
+				}
+			}
+
+			in1 *= currentGain1;
+			in2 *= currentGain2;
+		}
+
+
+		// If type definitions of type int needed:
+		enum
+		{
+			typeLinear = 0,
+			typeSquareroot,
+			typeSinusodial,
+			typeTanh,
+			numTypes
+			// ...
+		};
+
+		class SRPan
+		{
+		public:
+			SRPan();
+			SRPan(int pType, double pPanNormalized, bool pLinearMiddlePosition);
+			~SRPan();
+
+			void setType(int pType);
+			void setLinearMiddlePosition(bool pLinearMiddlePosition);
+			void setPanPosition(double pPanNormalized); // create these for every member
+			double getPanPosition() { return mPanNormalized; }
+
+			void initPan(int pType, double pPanNormalized, bool pLinearMiddlePosition);
+			// void process(double &in);				// for mono
+			void process(double &in1, double &in2); // for stereo
+
+		protected:
+			void calcPan(void);
+
+			int mType;
+			double mPanNormalized; // Enter normalized pan between 0.0 (left) and 1.0 (right)
+			bool mLinearMiddlePosition;
+
+			double gain1, gain2;
+		};
+
+		inline void SRPan::process(double &in1, double &in2)
+		{
+			if (mPanNormalized != 0.5)
+			{
+				in1 *= gain1;
+				in2 *= gain2;
+			}
+		}
+
+	} // namespace SRGain
 } // namespace SRPlugins
 
 #endif // SRGain_h

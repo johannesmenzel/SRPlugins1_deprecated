@@ -10,6 +10,7 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 #define __SRCHANNEL__
 
 #include "IPlug_include_in_plug_hdr.h"
+#include "../SRClasses/SRGain.h"
 #include "../SRClasses/SRFilters.h"
 //#include "../SRClasses/SROnePole.h"
 //#include "../SRClasses/SimpleHeader.h"
@@ -128,6 +129,7 @@ const int circularBufferLenght = 65536;
 			CreateParams(),
 			CreateGraphics(),
 			InitGUI(),
+			InitGain(),
 			InitBiquad(),
 			InitCompPeak(),
 			InitCompRms(),
@@ -141,7 +143,10 @@ const int circularBufferLenght = 65536;
 		//CalculateFreqResp(),
 
 	// FILTERS
-	// Spectral Filters
+		// Gain Filters
+		SRPlugins::SRGain::SRGain fInputGain, fOutputGain;
+
+		// Spectral Filters
 		SRPlugins::SRFilters::SRFiltersTwoPole fEqHpFilter1L, fEqHpFilter2L, fEqHpFilter3L, fEqHpFilter4L, fEqHpFilter5L, fEqHpFilter6L, fEqHpFilter7L, fEqHpFilter8L, fEqHpFilter9L, fEqHpFilter10L,
 			fEqLpFilter1L,
 			fEqLfFilterL, fEqLmfFilterL, fEqHmfFilterL, fEqHfFilterL,

@@ -413,6 +413,8 @@ void SRChannel::CreatePresets() {
 	//MakePresetFromNamedParams("Kick", kInputGain, 0.0, kEqHpFreq, kEqLpFreq, kEqHfGain, kEqHfFreq, kEqHfQ, kEqHfBell, kEqHmfGain, kEqHmfFreq, kEqHmfQ, kEqLmfGain, kEqLmfFreq, kEqLmfQ, kEqLfGain, kEqLfFreq, kEqLfQ, kEqLfBell, kCompRmsThresh, kCompRmsRatio, kCompRmsAttack, kCompRmsRelease, kCompRmsMakeup, kCompPeakThresh, kCompPeakRatio, kCompPeakAttack, kCompPeakRelease, kCompPeakMakeup, kCompPeakRmsRatio, kCompDryWet, kSaturationAmount, kClipperThreshold, kOutputGain, kPan, kPanFreq, kLimiterThresh, kCompIsParallel, kEqBypass, kCompBypass, kOutputBypass, kBypass, kSaturationHarmonics, kEqHpOrder, kEqLpOrder, kTestParam1, kTestParam2, kTestParam3, kTestParam4, kTestParam5, kInputDrive, kAgc, kCompPeakSidechainFilterFreq, kDeesserBottomFreq, kDeesserTopFreq, kDeesserThresh, kDeesserRatio, kDeesserAttack, kDeesserRelease, kDeesserMakeup, kCompPeakKneeWidthDb, kCompRmsKneeWidthDb, kInputBypass, kCompPeakIsExtSc, kCompRmsIsExrSc, kSaturationSkew);
 }
 
+
+
 void SRChannel::GrayOutControls()
 {
 	if (GetGUI()) {
@@ -656,6 +658,13 @@ void SRChannel::InitGUI() {
 	}
 }
 
+void SRChannel::InitGain()
+{
+	mSampleRate = GetSampleRate();
+	fInputGain.initGain(mInputGain, mInputGain, double(mSampleRate)/10.);
+	fOutputGain.initGain(mOutputGain, mOutputGain, double(mSampleRate) / 10.);
+}
+
 void SRChannel::InitBiquad() {
 	mSampleRate = GetSampleRate();
 	fEqHpFilterOnepoleL.setFc(mEqHpFreq);
@@ -831,7 +840,6 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	// Begin Processing per Frame
 
 	for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2) {
-
 		if (mBypass == 1) {
 			*out1 = *in1;
 			*out2 = *in2;
@@ -844,9 +852,10 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 			// Input Gain
 			if (mInputGain != 1.) {
-				*out1 *= mInputGain;
-				*out2 *= mInputGain;
+				//*out1 *= mInputGain;
+				//*out2 *= mInputGain;
 			}
+				fInputGain.process(*out1, *out2);
 
 			// Input Meter
 			mInputPeakMeterValue1 = IPMAX(mInputPeakMeterValue1, fabs(*out1));
@@ -1042,9 +1051,10 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 			// Output Gain
 			if (mOutputGain != 1.) {
-				*out1 *= mOutputGain;
-				*out2 *= mOutputGain;
+				//*out1 *= mOutputGain;
+				//*out2 *= mOutputGain;
 			}
+				fOutputGain.process(*out1, *out2);
 
 			*out1 = fDcBlockerL.process(*out1);
 			*out2 = fDcBlockerR.process(*out2);
@@ -1143,6 +1153,7 @@ void SRChannel::Reset()
 	IMutexLock lock(this);
 
 	mSampleRate = GetSampleRate();
+	InitGain();
 	InitBiquad();
 	InitSafePan();
 	InitCompPeak();
@@ -1168,9 +1179,14 @@ void SRChannel::OnParamChange(int paramIdx)
 	  
 	  // INPUT AND OUTPUT STAGE
 
-  case kInputGain: mInputGain = DBToAmp(GetParam(paramIdx)->Value()); break;
-  //case kInputDrive: mInputDrive = DBToAmp(GetParam(paramIdx)->Value()); break;
-  case kOutputGain: mOutputGain = DBToAmp(GetParam(paramIdx)->Value()); break;
+  case kInputGain: 
+	  mInputGain = DBToAmp(GetParam(paramIdx)->Value()); 
+	  fInputGain.setGain(mInputGain); 
+	  break;
+  case kOutputGain: 
+	  mOutputGain = DBToAmp(GetParam(paramIdx)->Value()); 
+	  fOutputGain.setGain(mOutputGain); 
+	  break;
 
   case kInputDrive: 
 	  mInputDrive = GetParam(paramIdx)->Value(); 
