@@ -1,4 +1,4 @@
-//  SRGenericClass.h
+//  SRGain.h
 
 // Implementation:
 //   Note that you might need a class for each channel
@@ -7,9 +7,9 @@
 // Header:
 //   private:
 //     Impementation as object:
-//       SRGenericClass name;
+//       SRPan name;
 //     Implementation as pointer:
-//       SRGenericClass *name = new SRGenericClass();
+//       SRPan *name = new SRPan();
 //
 // Class: Constructor, Reset()
 //     Implementation as object:
@@ -24,86 +24,85 @@
 //     Implementation as pointer:
 //       *out1 = name->process(*in1);
 
-#ifndef SRGenericClass_h
-#define SRGenericClass_h
+#ifndef SRGain_h
+#define SRGain_h
 
 // #include this and that
 #include "SRHelpers.h" // optional
 
 namespace SRPlugins
 {
-namespace SRGenericClassNamespace
+namespace SRGain
 {
 
 // If type definitions of type int needed:
 enum
 {
-	typeOne = 0,
+	typeLinear = 0,
+	typeSquareroot,
+	typeSinusodial,
+	typeTanh,
 	numTypes
 	// ...
 };
 
-class SRGenericClass
+class SRPan
 {
   public:
 	// constructor
-	SRGenericClass();
+	SRPan();
 	// class initializer
-	SRGenericClass(
+	SRPan(
 		int pType,
-		double pVar);
+		double pPanNormalized,
+		bool pLinearMiddlePosition);
 	// destructor
-	~SRGenericClass(); // destructor
+	~SRPan(); // destructor
 
 	// public functions that need to be accessed from outside
 	void setType(int pType);
-	void setVar(double pVar); // create these for every member
-	void getVar() { return mVar; }
+	void setLinearMiddlePosition(bool pLinearMiddlePosition);
+	void setPanPosition(double pPanNormalized); // create these for every member
+	void getPanPosition() { return mPanNormalized; }
 
-	void setClass(
+	void setPan(
 		int pType,
-		double pVar);
+		double pPanNormalized,
+		bool pLinearMiddlePosition);
 	// inline process functions, if needed
-	void process(double &in);				// for mono
+	// void process(double &in);				// for mono
 	void process(double &in1, double &in2); // for stereo
 
   protected:
 	// Protected functions that do internal calculations and that are called from other funcions
-	void calcClass(void);
+	void calcPan(void);
 
 	// Internal member and internal variables
 	int mType;
 	// member variables
-	double mVar;
+	double mPanNormalized; // Enter normalized pan between 0.0 (left) and 1.0 (right)
+	bool mLinearMiddlePosition;
 	// internal variables
-	double prev[2];
-	double dry[2];
+	double gain1, gain2;
+	// double prev[2];
+	// double dry[2];
 }; // end of class
 
-inline void SRGenericClass::process(double &in)
+// inline void SRPan::process(double &in)
+// {
+// 	process()
+// }
+
+inline void SRPan::process(double &in1, double &in2)
 {
-	// create dry samples
-	dry[0] = in;
-
-	// process
-	// ...
-
-	prev[0] = dry[0];
+	if (mPanNormalized != 0.5)
+	{
+		in1 *= gain1;
+		in2 *= gain2;
+	}
 }
 
-inline void SRGenericClass::process(double &in1, double &in2)
-{
-	// create dry samples
-	dry[0] = in1;
-	dry[1] = in2;
-
-	// process
-	// ...
-
-	prev[0] = dry[0];
-	prev[1] = dry[1];
-}
-
-} // namespace SRGenericClassNamespace
+} // namespace SRGain
 } // namespace SRPlugins
-#endif // SRGenericClass_h
+
+#endif // SRGain_h
