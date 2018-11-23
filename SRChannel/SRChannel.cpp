@@ -3,22 +3,8 @@
 #include "IControl.h"
 #include "resource.h"
 #include "denormal.h"
-//#include "../SRClasses/SRControls.h"
-//#include "../SRClasses/SRHelpers.h"
-//#include "../SRClasses/SimpleComp.h"
-//#include "../SRClasses/SRDynamics.h"
-//#include <string>
-//#define _USE_MATH_DEFINES
-//#include <math.h>
-//#define _USE_MATH_DEFINES
-//#include <cmath>
-//#include <algorithm>
-//#include "lice.h"
-
-
 
 const int kNumPrograms = 1;									// Here you find the total number of presets defined
-//const double METER_ATTACK = 1., METER_DECAY = 0.001;			// This is the global attack and release constants for meters
 const double METER_ATTACK = .6, METER_DECAY = .05;			// This is the global attack and release constants for meters
 const double halfpi = PI / 2;								// Half pi defined
 const double dcoff = 1e-15;									// amount of DC offset added and subtracted respectivly at the beginning and the end of DoubleReplacing loop
@@ -28,22 +14,13 @@ const double stQ = mEqPassQ_O2_F1;
 const double mEqPassQ_O3_F1 = 1.;
 const double mEqPassQ_O4_F1 = 0.54119610;
 const double mEqPassQ_O4_F2 = 1.3065630;
-//const double mEqPassQ_O5_F1 = 1.;
-//const double mEqPassQ_O5_F2 = 1.;
 const double mEqPassQ_O6_F1 = 0.51763809;
 const double mEqPassQ_O6_F2 = 0.70710678;
 const double mEqPassQ_O6_F3 = 1.9318517;
-//const double mEqPassQ_O7_F1 = 1.;
-//const double mEqPassQ_O7_F2 = 1.;
-//const double mEqPassQ_O7_F3 = 1.;
 const double mEqPassQ_O8_F1 = 0.50979558;
 const double mEqPassQ_O8_F2 = 0.60134489;
 const double mEqPassQ_O8_F3 = 0.89997622;
 const double mEqPassQ_O8_F4 = 2.5629154;
-//const double mEqPassQ_O9_F1 = 1.;
-//const double mEqPassQ_O9_F2 = 1.;
-//const double mEqPassQ_O9_F3 = 1.;
-//const double mEqPassQ_O9_F4 = 1.;
 const double mEqPassQ_O10_F1 = 0.50623256;
 const double mEqPassQ_O10_F2 = 0.56116312;
 const double mEqPassQ_O10_F3 = 0.70710678;
@@ -72,11 +49,8 @@ Hannes: LAYOUT
 enum ELayout
 {
 	kWidth = GUI_WIDTH, kHeight = GUI_HEIGHT,				// Size of plugin
-	//kScaleX = kWidth / 23,									// Horizontal spacing of controls
 	kScaleX = 50,											// Horizontal spacing of controls
-	//kScaleY = kHeight / 17,									// Vertical spacing of controls
 	kScaleY = 38,
-	//kControlX = kScaleX,									// Horizontal position of the most upper left control
 	kControlX = 25,											// Horizontal position of the most upper left control
 	kControlY = 100,										// Vertical position of the most upper left control
 	kSslKnobFrames = 128,									// Number of frames of the knob images
@@ -149,6 +123,7 @@ enum EParams
 	kCompPeakIsExtSc,
 	kCompRmsIsExrSc,
 	kSaturationSkew,
+	kIsPanMonoLow,
 	kNumParams
 };
 
@@ -173,7 +148,7 @@ enum Type {
 	typeBool,
 	typeInt,
 	typeEnum,
-	kNumType
+	kNumDataType
 };
 
 // Struct object containing possible parameters properties
@@ -205,73 +180,73 @@ Keep in order of the above listet parameters.
 These are constants.
 */
 const structParameterProperties parameterProperties[kNumParams] = {
-	//{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
-	{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Input Gain is applied before everything else" },
-	{ "Highpass Freq",	"HP",	16.,	16.,	350.,	1.,		120.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 4,		kControlY + kScaleY * 1,		"16", "350", "120",		"Frequency of the High Pass Filter, turn down to deactivate" },
-	{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k",		"Set the frequency of the Low Pass Filter, turn up to deactivate" },
-	{ "HF Gain",		"HF",	0.,		-12.,	12.,	.1,		0.,		.5,		"dB",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 4,		kControlY + kScaleY * 3,		"-12", "12", "0",		"Gain of the high frequency band" },
-	{ "HF Freq",		"FQ",	8000.,	1500.,	16000.,	1.,		8000.,	.5,		"Hz",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 6,		kControlY + kScaleY * 4,		"1.5k", "16k", "8k",	"Frequency of the high frequency band" },
-	{ "HF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"W", "N", "",			"Set the Q value of the high frequency band" },
-	{ "Hf Bell",		"Bell",	0,		0,		1,		1,		0.5,	.5,		"",		"EQ",		typeBool,	Button,		kControlX + kScaleX * 6,		kControlY + kScaleY * 3,		"SLF", "BLL", "",		"Switches the high frequency band between bell and shelf" },
-	{ "HMF Gain",		"HMF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 4,		kControlY + kScaleY * 5,		"-12", "12", "0",		"Gain of the upper mid frequency band" },
-	{ "HMF Freq",		"FQ",	3000.,	600.,	7000.,	1.,		3000.,	.5,		"Hz",	"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 6,		kControlY + kScaleY * 6,		"600", "7k", "3k",		"Frequency of the upper mid frequency band" },
-	{ "HMF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 4,		kControlY + kScaleY * 7,		"W", "N", "",			"Set the Q value of the upper mid frequency band" },
-	{ "LMF Gain",		"LMF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 4,		kControlY + kScaleY * 9,		"-12", "12", "0",		"Gain of the lower mid frequency band" },
-	{ "LMF Freq",		"FQ",	1000.,	200.,	2500.,	1.,		1000.,	.5,		"Hz",	"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 6,		kControlY + kScaleY * 10,		"200", "2.5k", "1k",	"Frequency of the lower mid frequency band" },
-	{ "LMF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 4,		kControlY + kScaleY * 11,		"W", "N", "",			"Set the Q value of the lower mid frequency band" },
-	{ "LF Gain",		"LF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 4,		kControlY + kScaleY * 13,		"-12", "12", "0",		"Gain of the low frequency band" },
-	{ "LF Freq",		"FQ",	200.,	30.,	450.,	1.,		200.,	.5,		"Hz",	"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 6,		kControlY + kScaleY * 12,		"30", "450", "200",		"Set the frequency of the low frequency band" },
-	{ "LF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"W", "N", "",			"Set the Q value of the low frequency band" },
-	{ "Lf Bell",		"Bell",	0,		0,		1,		0.1,	0.5,	.5,		"",		"EQ",		typeBool,	Button,		kControlX + kScaleX * 6,		kControlY + kScaleY * 14,		"SLF", "BLL", "",		"Switches the low frequency band between bell and shelf" },
-	{ "RMS Thresh",		"THR",	0.,		-40.,	0.,		0.1,	-20.,	.5,		"dB",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 0,		"-40", "0", "-20",		"Threshold of RMS Compressor" },
-	{ "RMS Ratio",		"RAT",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 1,		".5:1", "20:1", "3:1",	"Ratio of RMS Compressor" },
-	{ "RMS Attack",		"ATT",	20.,	10.,	200.,	0.01,	20.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 2,		"10", "200", "20",		"Attack of RMS Compressor" },
-	{ "RMS Release",	"REL",	200.,	100.,	5000.,	1.,		200.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 3,		"100", "5k", "200",		"Release of RMS Compressor" },
-	{ "RMS Makeup",		"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"0", "40", "10",		"Makeup gain of RMS Compressor" },
-	{ "Peak Thresh",	"THR",	0.,		-40.,	0.,		0.1,	-20.,	.5,		"dB",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 8,		"-40", "0", "-20",		"Threshold of Peak Compressor" },
-	{ "Peak Ratio",		"RAT",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 9,		".5:1", "20:1", "3:1",	"Ratio of Peak Compressor" },
-	{ "Peak Attack",	"ATT",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 10,		"0.01", "200", "20",	"Attack of Peak Compressor" },
-	{ "Peak Release",	"REL",	200.,	1.,		2000.,	0.01,	200.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 11,		"1", "2k", "200",		"Release of Peak Compressor" },
-	{ "Peak Makeup",	"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"0", "40", "10",		"Makeup Gain of Peak Compressor" },
-	{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50",		"Mix the signal of the RMS and Peak Compressor" },
-	{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50",		"Do parallel compression by dialing in the uncompressed signal" },
-	{ "Sat Amount",		"AMT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of Saturation" },
-	{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Output",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of the Output Clipper (cuts amplitutde)" },
-	{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Output Gain" },
-	{ "Pan",			"PAN",	0.,		-100.,	100.,	1.,		0.,		.5,		"%",	"Output",	typeDouble, SslBlue,	kControlX + kScaleX * 14,		kControlY + kScaleY * 1,		"L", "R", "C",			"Pan" },
-	{ "Pan Freq",		"PNF",	150.,	20.,	1000.,	1.,		150.,	.5,		"Hz",	"Output",	typeDouble, SslRed,		kControlX + kScaleX * 14,		kControlY + kScaleY * 3,		"20", "1k", "200",		"Frequencies below crossover will be not affected by panner" },
-	{ "Limiter",		"LMT",	10.,	-30.,	10.,	0.1,	0.,		.5,		"dB",	"Output",	typeDouble, SslOrange,	kControlX + kScaleX * 14,		kControlY + kScaleY * 5,		"-30", "10", "0",		"Thresold of Output Limiter" },
-	{ "Comp Ser/Par",	"Par",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 9,		kControlY + kScaleY * 16,		"SER", "PAR", "",		"RMS and Peak Compressor can be run serial or parallel" },
-	{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 4 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
-	{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 8 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
-	{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 14 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
-	{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * -1 - 36,	"ACT", "BYP", "",		"Bypass Plugin" },
-	{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix",	"Dial in even harmonics by turning the knob counter-clockwise" },
-	{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 14,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
-	{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 16,		"6", "120", "36",		"NOT WORKING - Order of the Lowpass Filter or filter slope" },
-	{ "TestParam 1",	"T1",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 4,		0,								"0", "1", "0.5",		"NOT WORKING - Generic control for development tests" },
-	{ "TestParam 2",	"T2",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 6,		0,								"0", "1", "0.5",		"NOT WORKING - Generic control for development tests" },
-	{ "TestParam 3",	"T3",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 8,		0,								"0", "1", "0.5",		"NOT WORKING - Generic control for development tests" },
-	{ "TestParam 4",	"T4",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 10,		0,								"0", "1", "0.5",		"NOT WORKING - Generic control for development tests" },
-	{ "TestParam 5",	"T5",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 12,		0,								"0", "1", "0.5",		"NOT WORKING - Generic control for development tests" },
-	{ "Sat Drive",		"DRV",	0.,		0.,		60.,	0.1,	30.,	.5,		"dB",	"Input",	typeDouble, SslRed,		kControlX + kScaleX * 0,		kControlY + kScaleY * 0,		"0", "60", "30",		"Saturation input drive, hits the saturation module harder" },
-	{ "Auto Gain Comp",	"AGC",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 7,		"AGC", "", "",			"Automatic Gain Conpensation. Click to adjust output volume to input volume" },
-	{ "Peak SC Filter",	"SCF",	16.,	16.,	5000.,	1.,		1000.,	.5,		"Hz",	"Compressor",typeDouble, SslBlue,	kControlX + kScaleX * 8,		kControlY + kScaleY * 14,		"16", "5k", "1k",		"Frequency of the Compressors sidechain highpass filter" },
-	{ "Deesser Freq",	"DSF",	7000.,	16.,	22000.,	1.,		7000.,	.5,		"Hz",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 0,		"16", "22k", "7k",		"NOT WORKING - Deessers center frequency" },
-	{ "Deesser Q",		"DSQ",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"Deesser",		typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 2,		"W", "N", "",			"NOT WORKING - Deessers width (Q)" },
-	{ "Deesser Thresh",	"DST",	0.,		-100.,	0.,		0.1,	-50.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 4,		"-100", "0", "-50",		"NOT WORKING - Deessers Threshold" },
-	{ "Deesser Ratio",	"DSR",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 6,		".5:1", "20:1", "3:1",	"NOT WORKING - Deessers Ratio" },
-	{ "Deesser Attack",	"DSA",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 8,		"0.01", "200", "20",	"NOT WORKING - Deessers Attack" },
-	{ "Deesser Release","DSD",	200.,	1.,		2000.,	0.01,	200.,	.5,		"ms",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 10,		"1", "2k", "200",		"NOT WORKING - Deessers Release" },
-	{ "Deesser Makeup",	"DSM",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 12,		"0", "40", "10",		"NOT WORKING - Deessers Makeup" },
-	{ "Peak Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 13,		"0", "30", "10",		"Peak Compressors width of the soft knee" },
-	{ "RMS Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 5,		"0", "30", "10",		"RMS Compressors width of the soft knee" },
-	{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Input Section" },
-	{ "Peak Ext SC",	"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15,		"INT", "EXT", "",		"External sidechain for Peak Compressor. Use tracks input channel 3/4" },
-	{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "",		"External sidechain for RMS Compressor. Use tracks input channel 3/4" },
-	{ "Sat Skew",		"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0",		"Saturations positive/negative skewness. Distorts waveform" }
-
-	//{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
+	//	{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
+		{ "Input Gain",		"IN",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 0,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Input Gain is applied before everything else" },
+		{ "Highpass Freq",	"HP",	16.,	16.,	350.,	1.,		120.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 4,		kControlY + kScaleY * 1,		"16", "350", "120",		"Frequency of the High Pass Filter, turn down to deactivate" },
+		{ "Lowpass Freq",	"LP",	22000., 3000.,	22000.,	1.,		5000.,	.5,		"Hz",	"EQ",		typeDouble, SslWhite,	kControlX + kScaleX * 6,		kControlY + kScaleY * 0,		"3k", "22k", "5k",		"Set the frequency of the Low Pass Filter, turn up to deactivate" },
+		{ "HF Gain",		"HF",	0.,		-12.,	12.,	.1,		0.,		.5,		"dB",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 4,		kControlY + kScaleY * 3,		"-12", "12", "0",		"Gain of the high frequency band" },
+		{ "HF Freq",		"FQ",	8000.,	1500.,	16000.,	1.,		8000.,	.5,		"Hz",	"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 6,		kControlY + kScaleY * 4,		"1.5k", "16k", "8k",	"Frequency of the high frequency band" },
+		{ "HF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslRed,		kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"W", "N", "",			"Set the Q value of the high frequency band" },
+		{ "Hf Bell",		"Bell",	0,		0,		1,		1,		0.5,	.5,		"",		"EQ",		typeBool,	Button,		kControlX + kScaleX * 6,		kControlY + kScaleY * 3,		"SLF", "BLL", "",		"Switches the high frequency band between bell and shelf" },
+		{ "HMF Gain",		"HMF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 4,		kControlY + kScaleY * 5,		"-12", "12", "0",		"Gain of the upper mid frequency band" },
+		{ "HMF Freq",		"FQ",	3000.,	600.,	7000.,	1.,		3000.,	.5,		"Hz",	"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 6,		kControlY + kScaleY * 6,		"600", "7k", "3k",		"Frequency of the upper mid frequency band" },
+		{ "HMF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslBlue,	kControlX + kScaleX * 4,		kControlY + kScaleY * 7,		"W", "N", "",			"Set the Q value of the upper mid frequency band" },
+		{ "LMF Gain",		"LMF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 4,		kControlY + kScaleY * 9,		"-12", "12", "0",		"Gain of the lower mid frequency band" },
+		{ "LMF Freq",		"FQ",	1000.,	200.,	2500.,	1.,		1000.,	.5,		"Hz",	"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 6,		kControlY + kScaleY * 10,		"200", "2.5k", "1k",	"Frequency of the lower mid frequency band" },
+		{ "LMF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslGreen,	kControlX + kScaleX * 4,		kControlY + kScaleY * 11,		"W", "N", "",			"Set the Q value of the lower mid frequency band" },
+		{ "LF Gain",		"LF",	0.,		-12.,	12.,	0.1,	0.,		.5,		"dB",	"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 4,		kControlY + kScaleY * 13,		"-12", "12", "0",		"Gain of the low frequency band" },
+		{ "LF Freq",		"FQ",	200.,	30.,	450.,	1.,		200.,	.5,		"Hz",	"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 6,		kControlY + kScaleY * 12,		"30", "450", "200",		"Set the frequency of the low frequency band" },
+		{ "LF Q",			"Q",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"EQ",		typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"W", "N", "",			"Set the Q value of the low frequency band" },
+		{ "Lf Bell",		"Bell",	0,		0,		1,		0.1,	0.5,	.5,		"",		"EQ",		typeBool,	Button,		kControlX + kScaleX * 6,		kControlY + kScaleY * 14,		"SLF", "BLL", "",		"Switches the low frequency band between bell and shelf" },
+		{ "RMS Thresh",		"THR",	0.,		-40.,	0.,		0.1,	-20.,	.5,		"dB",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 0,		"-40", "0", "-20",		"Threshold of RMS Compressor" },
+		{ "RMS Ratio",		"RAT",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 1,		".5:1", "20:1", "3:1",	"Ratio of RMS Compressor" },
+		{ "RMS Attack",		"ATT",	20.,	10.,	200.,	0.01,	20.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 2,		"10", "200", "20",		"Attack of RMS Compressor" },
+		{ "RMS Release",	"REL",	200.,	100.,	5000.,	1.,		200.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 3,		"100", "5k", "200",		"Release of RMS Compressor" },
+		{ "RMS Makeup",		"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 4,		"0", "40", "10",		"Makeup gain of RMS Compressor" },
+		{ "Peak Thresh",	"THR",	0.,		-40.,	0.,		0.1,	-20.,	.5,		"dB",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 8,		"-40", "0", "-20",		"Threshold of Peak Compressor" },
+		{ "Peak Ratio",		"RAT",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 9,		".5:1", "20:1", "3:1",	"Ratio of Peak Compressor" },
+		{ "Peak Attack",	"ATT",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 8,		kControlY + kScaleY * 10,		"0.01", "200", "20",	"Attack of Peak Compressor" },
+		{ "Peak Release",	"REL",	200.,	1.,		2000.,	0.01,	200.,	.5,		"ms",	"Compressor",typeDouble, SslWhite,	kControlX + kScaleX * 10,		kControlY + kScaleY * 11,		"1", "2k", "200",		"Release of Peak Compressor" },
+		{ "Peak Makeup",	"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"0", "40", "10",		"Makeup Gain of Peak Compressor" },
+		{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50",		"Mix the signal of the RMS and Peak Compressor" },
+		{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50",		"Do parallel compression by dialing in the uncompressed signal" },
+		{ "Sat Amount",		"AMT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of Saturation" },
+		{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Output",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of the Output Clipper (cuts amplitutde)" },
+		{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Output Gain" },
+		{ "Pan",			"PAN",	0.,		-100.,	100.,	1.,		0.,		.5,		"%",	"Output",	typeDouble, SslBlue,	kControlX + kScaleX * 14,		kControlY + kScaleY * 1,		"L", "R", "C",			"Pan" },
+		{ "Pan Freq",		"PNF",	150.,	20.,	1000.,	1.,		150.,	.5,		"Hz",	"Output",	typeDouble, SslRed,		kControlX + kScaleX * 14,		kControlY + kScaleY * 3,		"20", "1k", "200",		"Frequencies below crossover will be not affected by panner" },
+		{ "Limiter",		"LMT",	10.,	-30.,	10.,	0.1,	0.,		.5,		"dB",	"Output",	typeDouble, SslOrange,	kControlX + kScaleX * 14,		kControlY + kScaleY * 5,		"-30", "10", "0",		"Thresold of Output Limiter" },
+		{ "Comp Ser/Par",	"Par",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 9,		kControlY + kScaleY * 16,		"SER", "PAR", "",		"RMS and Peak Compressor can be run serial or parallel" },
+		{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 4 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
+		{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 8 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
+		{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 14 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
+		{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * -1 - 36,	"ACT", "BYP", "",		"Bypass Plugin" },
+		{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix",	"Dial in even harmonics by turning the knob counter-clockwise" },
+		{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 14,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
+		{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 16,		"6", "120", "36",		"HIDED - Order of the Lowpass Filter or filter slope" },
+		{ "TestParam 1",	"T1",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 4,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
+		{ "TestParam 2",	"T2",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 6,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
+		{ "TestParam 3",	"T3",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 8,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
+		{ "TestParam 4",	"T4",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 10,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
+		{ "TestParam 5",	"T5",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 12,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
+		{ "Sat Drive",		"DRV",	0.,		0.,		60.,	0.1,	30.,	.5,		"dB",	"Input",	typeDouble, SslRed,		kControlX + kScaleX * 0,		kControlY + kScaleY * 0,		"0", "60", "30",		"Saturation input drive, hits the saturation module harder" },
+		{ "Auto Gain Comp",	"AGC",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 9,		"AGC", "", "",			"Automatic Gain Conpensation. Click to adjust output volume to input volume" },
+		{ "Peak SC Filter",	"SCF",	16.,	16.,	5000.,	1.,		1000.,	.5,		"Hz",	"Compressor",typeDouble, SslBlue,	kControlX + kScaleX * 8,		kControlY + kScaleY * 14,		"16", "5k", "1k",		"Frequency of the Compressors sidechain highpass filter" },
+		{ "Deesser Freq",	"DSF",	7000.,	16.,	22000.,	1.,		7000.,	.5,		"Hz",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 0,		"16", "22k", "7k",		"Deessers center frequency" },
+		{ "Deesser Q",		"DSQ",	stQ,	0.1,	10.,	0.01,	stQ,	.5,		"",		"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 2,		"W", "N", "",			"Deessers width (Q)" },
+		{ "Deesser Thresh",	"DST",	0.,		-100.,	0.,		0.1,	-50.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 4,		"-100", "0", "-50",		"Deessers Threshold" },
+		{ "Deesser Ratio",	"DSR",	3.,		0.5,	20.,	0.01,	3.,		.5,		":1",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 6,		".5:1", "20:1", "3:1",	"Deessers Ratio" },
+		{ "Deesser Attack",	"DSA",	20.,	0.01,	200.,	0.01,	20.,	.5,		"ms",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 8,		"0.01", "200", "20",	"Deessers Attack" },
+		{ "Deesser Release","DSD",	200.,	1.,		2000.,	0.01,	200.,	.5,		"ms",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 10,		"1", "2k", "200",		"Deessers Release" },
+		{ "Deesser Makeup",	"DSM",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 12,		"0", "40", "10",		"Deessers Makeup" },
+		{ "Peak Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 13,		"0", "30", "10",		"Peak Compressors width of the soft knee" },
+		{ "RMS Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 5,		"0", "30", "10",		"RMS Compressors width of the soft knee" },
+		{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Input Section" },
+		{ "Peak Ext SC",	"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15,		"INT", "EXT", "",		"External sidechain for Peak Compressor. Use tracks input channel 3/4" },
+		{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "",		"External sidechain for RMS Compressor. Use tracks input channel 3/4" },
+		{ "Sat Skew",		"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0",		"Saturations positive/negative skewness. Distorts waveform" },
+		{ "Mono Bass",		"MNB",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 7,		"STB", "MNB", "",		"Bass Frequencies will left stereo or will be monoed" },
+		//	{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
 };
 
 
@@ -325,32 +300,9 @@ void SRChannel::CreateParams() {
 
 		IParam* param = GetParam(i);												// ... for which we temporally create a pointer "param"
 		const structParameterProperties &properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
-		/*
-		switch (i) {																// this is the old
-				// Enum Parameters:
-			case mOsc1Waveform:
-			case mOsc2Waveform:
-				param->InitEnum(properties.name,
-					Oscillator::OSCILLATOR_MODE_SAW,
-					Oscillator::kNumOscillatorModes);
-				// For VST3:
-				param->SetDisplayText(0, properties.name);
-				break;
-			case mLFOWaveform:
-				param->InitEnum(properties.name,
-					Oscillator::OSCILLATOR_MODE_TRIANGLE,
-					Oscillator::kNumOscillatorModes);
-				// For VST3:
-				param->SetDisplayText(0, properties.name);
-				break;
-			case mFilterMode:
-				param->InitEnum(properties.name,
-					Filter::FILTER_MODE_LOWPASS,
-					Filter::kNumFilterModes);
-				break;
-			default:
-				break;
-			*/
+
+
+
 
 		switch (properties.Type) {							// each type of parameter needs another initialization method
 
@@ -363,6 +315,9 @@ void SRChannel::CreateParams() {
 			);
 			break;
 
+		case typeEnum:									// When initializing enum parameter, for VST3 this is necessary: param->SetDisplayText(0, properties.name);
+			break;
+
 		case typeDouble:								// Create parameters of type double.
 			param->InitDouble(
 				properties.name,
@@ -372,14 +327,8 @@ void SRChannel::CreateParams() {
 				properties.stepValue,
 				properties.label,
 				properties.group,
-				SRPlugins::SRHelpers::SetShapeCentered(						// We calculate the controls shape.
-					properties.minVal,
-					properties.maxVal,
-					properties.centerVal,
-					properties.centerPoint
-				)
+				SRPlugins::SRHelpers::SetShapeCentered(properties.minVal, properties.maxVal, properties.centerVal, properties.centerPoint) // We calculate the controls shape.
 			);
-
 			break;
 
 		case typeInt:
@@ -393,7 +342,7 @@ void SRChannel::CreateParams() {
 			);
 			break;
 
-		default:										// Just in case there are paramters of other types.
+		default:											// Just in case there are paramters of other types.
 			break;
 		}
 
@@ -406,15 +355,16 @@ void SRChannel::CreateParams() {
 void SRChannel::CreatePresets() {
 	// These have to be created when Parameters are complete, so work in progress.
 	// Following are original procedures to make default presets
-//	MakeDefaultPreset((char *) "Full Reset", kNumPrograms);
-//	MakePreset("Default", kNumPrograms);
-															// Here's the beginning of the real stuff.
+		// MakeDefaultPreset((char *) "Full Reset", kNumPrograms);
+		// MakePreset("Default", kNumPrograms);
+	// Here's the beginning of the real stuff:
 	MakeDefaultPreset("Default", 1);
-	//MakePresetFromNamedParams("Kick", kInputGain, 0.0, kEqHpFreq, kEqLpFreq, kEqHfGain, kEqHfFreq, kEqHfQ, kEqHfBell, kEqHmfGain, kEqHmfFreq, kEqHmfQ, kEqLmfGain, kEqLmfFreq, kEqLmfQ, kEqLfGain, kEqLfFreq, kEqLfQ, kEqLfBell, kCompRmsThresh, kCompRmsRatio, kCompRmsAttack, kCompRmsRelease, kCompRmsMakeup, kCompPeakThresh, kCompPeakRatio, kCompPeakAttack, kCompPeakRelease, kCompPeakMakeup, kCompPeakRmsRatio, kCompDryWet, kSaturationAmount, kClipperThreshold, kOutputGain, kPan, kPanFreq, kLimiterThresh, kCompIsParallel, kEqBypass, kCompBypass, kOutputBypass, kBypass, kSaturationHarmonics, kEqHpOrder, kEqLpOrder, kTestParam1, kTestParam2, kTestParam3, kTestParam4, kTestParam5, kInputDrive, kAgc, kCompPeakSidechainFilterFreq, kDeesserBottomFreq, kDeesserTopFreq, kDeesserThresh, kDeesserRatio, kDeesserAttack, kDeesserRelease, kDeesserMakeup, kCompPeakKneeWidthDb, kCompRmsKneeWidthDb, kInputBypass, kCompPeakIsExtSc, kCompRmsIsExrSc, kSaturationSkew);
+	// It may work like this:
+//MakePresetFromNamedParams("Kick", kInputGain, 0.0, kEqHpFreq, kEqLpFreq, kEqHfGain, kEqHfFreq, kEqHfQ, kEqHfBell, kEqHmfGain, kEqHmfFreq, kEqHmfQ, kEqLmfGain, kEqLmfFreq, kEqLmfQ, kEqLfGain, kEqLfFreq, kEqLfQ, kEqLfBell, kCompRmsThresh, kCompRmsRatio, kCompRmsAttack, kCompRmsRelease, kCompRmsMakeup, kCompPeakThresh, kCompPeakRatio, kCompPeakAttack, kCompPeakRelease, kCompPeakMakeup, kCompPeakRmsRatio, kCompDryWet, kSaturationAmount, kClipperThreshold, kOutputGain, kPan, kPanFreq, kLimiterThresh, kCompIsParallel, kEqBypass, kCompBypass, kOutputBypass, kBypass, kSaturationHarmonics, kEqHpOrder, kEqLpOrder, kTestParam1, kTestParam2, kTestParam3, kTestParam4, kTestParam5, kInputDrive, kAgc, kCompPeakSidechainFilterFreq, kDeesserBottomFreq, kDeesserTopFreq, kDeesserThresh, kDeesserRatio, kDeesserAttack, kDeesserRelease, kDeesserMakeup, kCompPeakKneeWidthDb, kCompRmsKneeWidthDb, kInputBypass, kCompPeakIsExtSc, kCompRmsIsExrSc, kSaturationSkew);
 }
 
 
-
+// Method to gray controls, which are currently bypassed. Thats why you have to test from top to bottom
 void SRChannel::GrayOutControls()
 {
 	if (GetGUI()) {
@@ -469,14 +419,7 @@ void SRChannel::CreateGraphics() {
 	pGraphics->AttachBackground(BG_ID, BG_FN);
 	IBitmap bitmapLogo = pGraphics->LoadIBitmap(LOGO_ID, LOGO_FN);
 	pGraphics->AttachControl(new IBitmapControl(this, kWidth - 300, 0, &bitmapLogo));
-	pGraphics->AttachControl(new ITextControl(this, IRECT(kWidth - 300, 0, kWidth, 20), &textPresetLabelProp, "v." VST3_VER_STR));
-
-	// Background Shadowing
-	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 0 - 32, bitmapLogo.H, kControlX + kScaleX * 4 - 8, kHeight), &colorBgShadow)); // Input Stage
-	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 5 - 32, bitmapLogo.H, kControlX + kScaleX * 9 - 8, kHeight), &colorBgShadow)); // EQ Section
-	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 10 - 32, bitmapLogo.H, kControlX + kScaleX * 16 - 8, kHeight), &colorBgShadow)); // Comp Section
-	//pGraphics->AttachControl(new IPanelControl(this, IRECT(kControlX + kScaleX * 17 - 32, bitmapLogo.H, kControlX + kScaleX * 21 - 8, kHeight), &colorBgShadow)); // Output Stage
-	//pGraphics->AttachControl(new SRControls::ISectionRect(this, IRECT(kControlX + kScaleX * 0 - 32, bitmapLogo.H, kControlX + kScaleX * 4 - 8, kHeight), &colorBgShadow, &textFg, "Equalizer"));
+	pGraphics->AttachControl(new ITextControl(this, IRECT(kWidth - 300, 0, kWidth, 20), &textPresetLabelProp, "v" VST3_VER_STR));
 
 	// Preset Menu
 	pGraphics->AttachControl(new SRPlugins::SRControls::IPresetMenu(this, IRECT(kControlX + kScaleX * 0 - 32, 10, kControlX + kScaleX * 4 - 8, 28), &textPresetLabelProp));
@@ -510,13 +453,8 @@ void SRChannel::CreateGraphics() {
 			measureChar));
 	}
 
-	// Biquad Frequency Response
-	//cFreqRespGraph = pGraphics->AttachControl(new SRControls::IFreqRespGraph(this, IRECT(kControlX + kScaleX * 15 - 32, kControlY + kScaleY * 8, kControlX + kScaleX * 19 - 8, kHeight), meterFreqRespValues, 64));
 
-
-
-
-// Load bitmamps
+	// Load bitmamps
 	IBitmap knobSslBlue = pGraphics->LoadIBitmap(BLUEKNOB_ID, BLUEKNOB_FN, kSslKnobFrames);
 	IBitmap knobSslGreen = pGraphics->LoadIBitmap(GREENKNOB_ID, GREENKNOB_FN, kSslKnobFrames);
 	IBitmap knobSslRed = pGraphics->LoadIBitmap(REDKNOB_ID, REDKNOB_FN, kSslKnobFrames);
@@ -552,48 +490,130 @@ void SRChannel::CreateGraphics() {
 
 		int knobwidth = knob->frameWidth();
 		int knobheight = knob->frameHeight();
+		int numFaderLabels = 12;
+
 
 		switch (properties.Type) {						// Testing for type of parameter, bools get buttons, doubles get knobs a.s.o.a.s.f.
 
+		
+														
+														
+		// Boolean Parameters
 		case typeBool:
-			pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 32, properties.y + 0, properties.x + 64, properties.y + 16), &textKnobRingMaxProp, properties.labelMax));
-			pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 32, properties.y + 16, properties.x + 64, properties.y + 32), &textKnobRingMaxProp, properties.labelMin));
+
+			// SWITCHES
+			// ------------------------------------------------------------------
+
+			// Every bool switch gets labels
+			pGraphics->AttachControl(new ITextControl(this, IRECT(
+				properties.x + 32,
+				properties.y + 0,
+				properties.x + 50,
+				properties.y + 16
+			), &textKnobRingMaxProp, properties.labelMax));
+			pGraphics->AttachControl(new ITextControl(this, IRECT(
+				properties.x + 32,
+				properties.y + 16,
+				properties.x + 50,
+				properties.y + 32
+			), &textKnobRingMaxProp, properties.labelMin));
 
 			switch (i)
 			{
 			case kAgc:
-				cControlMatrix.at(i) = pGraphics->AttachControl(new IContactControl(this, properties.x, properties.y, i, knob));
-				break;
+				cControlMatrix.at(i) = pGraphics->AttachControl(
+					new IContactControl(this, properties.x, properties.y, i, knob)
+				); break;
 			default:
-				cControlMatrix.at(i) = pGraphics->AttachControl(new ISwitchControl(this, properties.x, properties.y, i, knob));
-				break;
+				cControlMatrix.at(i) = pGraphics->AttachControl(
+					new ISwitchControl(this, properties.x, properties.y, i, knob)
+				); break;
 			}
-			break;
 
+			// ------------------------------------------------------------------
+			// SWITCHES
+
+			break; // End bool
+
+
+
+
+		case typeEnum:
+			break; // End enum
+
+
+				   
+				   
+				   
+				   // Double AND int Paramters
 		case typeDouble:
 		case typeInt:
-			switch (i)									// We've got some special cases in parameters of type double
+			switch (i)
 			{
+				// Unused
 			case kEqHfQ:
 			case kEqLfQ:
-				break;									// ... like parameters for which we don't want to have a control drawn
-
-			case kInputGain:							// ... or faders
-			case kOutputGain:
-				//pGraphics->AttachControl(new IBitmapControl(this, (properties.x + faderGain.W * .5 - bitmapFaderBg.W * .5), (properties.y), &bitmapFaderBg));
-				pGraphics->AttachControl(new IPanelControl(this, IRECT((int(properties.x + faderGain.W * .5) - 4), (properties.y), (int(properties.x + faderGain.W * .5) + 4), kHeight - 10), &COLOR_BLACK));
-				cControlMatrix.at(i) = pGraphics->AttachControl(new IFaderControl(this, properties.x, properties.y, kHeight - properties.y - 10, i, knob, kVertical, true));
-				for (int measureDb = 0; measureDb <= 12; measureDb++) {
-					std::string measureStr = std::to_string((-measureDb + 2) * 6);
-					char const *measureChar = measureStr.c_str();
-					//				pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 48, properties.y + faderGain.H * .5 + measureDb * .0833333333 * (kHeight - properties.y - 10 - faderGain.H) - 7, properties.x + 64, properties.y + faderGain.H * .5 + measureDb * .083333333 * (kHeight - properties.y - 10 - faderGain.H) + 7), &textKnobRingCtrProp, measureChar));
-					pGraphics->AttachControl(new ITextControl(this, IRECT(properties.x + 48, int(properties.y + faderGain.H * .5 + pow(measureDb * .0833333333, GetParam(i)->GetShape()) * (kHeight - properties.y - 10 - faderGain.H) - 7), properties.x + 64, int(properties.y + faderGain.H * .5 + pow(measureDb * .0833333333, GetParam(i)->GetShape()) * (kHeight - properties.y - 10 - faderGain.H) + 7)), &textKnobRingCtrProp, measureChar));
-				}
 				break;
+
+				// Faders
+			case kInputGain:
+			case kOutputGain:
+
+				// FADER
+				// ------------------------------------------------------------------
+
+				// Faders volume labels
+				for (int j = 0; j <= numFaderLabels; j++) {
+					float scaleLabels = 1.f / numFaderLabels;
+					std::string faderLabelString = std::to_string((-j + 2) * 6);
+					char const *faderLabelChar = faderLabelString.c_str();
+					pGraphics->AttachControl(new ITextControl(this, IRECT(
+						properties.x + 48,
+						int(properties.y + knob->H * .5
+							+ pow(j * scaleLabels, GetParam(i)->GetShape())
+							* (kHeight - properties.y - 14 - knob->H) - 7),
+						properties.x + 64,
+						int(properties.y + knob->H * .5
+							+ pow(j * scaleLabels, GetParam(i)->GetShape())
+							* (kHeight - properties.y - 14 - knob->H) + 7)
+					), &textKnobRingCtrProp, faderLabelChar));
+				}
+
+				// Fader Background
+				pGraphics->AttachControl(new IPanelControl(this, IRECT((int(
+					properties.x + knob->W * .5) - 4),
+					(properties.y),
+					(int(properties.x + knob->W * .5) + 4),
+					kHeight - 10
+				), &COLOR_BLACK));
+
+				// Fader ICaptionControl value label, gets part of custom IControl later
+				pGraphics->AttachControl(new ICaptionControl(this, IRECT(
+					properties.x,
+					kHeight - textFg.mSize,
+					properties.x + knob->W,
+					kHeight
+				), i, &textFg, true));
+
+				// Fader control
+				cControlMatrix.at(i) = pGraphics->AttachControl(new IFaderControl(this,
+					properties.x,
+					properties.y,
+					kHeight - properties.y - 14, // fader lenght
+					i, knob, kVertical, true));
+				// ------------------------------------------------------------------
+				// FADER
+
+				break; // End double/int - faders
+
 
 
 			default:									// ... but most of them get a nice rotary control
-														// Label for minimum value
+
+				// KNOBS
+				// ------------------------------------------------------------------
+
+				// Label for minimum value
 				pGraphics->AttachControl(new ITextControl(this, IRECT(
 					properties.x,
 					properties.y + knobheight - 12,
@@ -628,12 +648,20 @@ void SRChannel::CreateGraphics() {
 					properties.x + knobwidth,
 					properties.y + knobheight + textFg.mSize
 				), i, knob, &textFg, properties.label, kVertical, 4.));
-				break;
+
+				// ------------------------------------------------------------------
+				// KNOBS
+
+				break; // End double/int default 
 			}
-		}
-	}
+		default: // if no type: should not happen ...
+			break;
+
+		} // End typeSwitch
+
+	} // End loop through params CreateGraphics
+
 	AttachGraphics(pGraphics);
-	// Gray out controls that don't work by now.
 }
 
 
@@ -653,6 +681,7 @@ void SRChannel::InitGUI() {
 		GetGUI()->GetControl(cOutputPeakMeter2)->SetTooltip("VU Meter of right output channel");
 		for (int i = 0; i < kNumParams; i++) {
 			GetGUI()->GetControl(cControlMatrix.at(i))->SetTooltip(parameterProperties[i].tooltip);
+			//Uncomment next line for showing control bounds in Debug mode
 			//GetGUI()->ShowControlBounds(true);
 		}
 	}
@@ -680,20 +709,12 @@ void SRChannel::InitBiquad() {
 	fEqHpFilter9L.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqHpFilter10L.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqLpFilter1L.setFilter(SRPlugins::SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
-	//	fEqHpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
-	//	fEqLpFilter1L.setFilter(SRPlugins::SRFilters::iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
 	fEqHfFilterL.setFilter(SRPlugins::SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
 	fEqHmfFilterL.setFilter(SRPlugins::SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
 	fEqLmfFilterL.setFilter(SRPlugins::SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
 	fEqLfFilterL.setFilter(SRPlugins::SRFilters::biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
-
 	fDcBlockerL.setFc(10. / mSampleRate);
 
-	//fSatHpFilterL.setFilter(SRPlugins::SRFilters::biquad_highpass, 20 / mSampleRate, stQ, 0., mSampleRate);
-	//fSatLfFilterL.setFilter(SRPlugins::SRFilters::biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
-	//fSatMfFilterL.setFilter(SRPlugins::SRFilters::biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
-	//fSatHfFilterL.setFilter(SRPlugins::SRFilters::biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
-	//fSatLpFilterL.setFilter(SRPlugins::SRFilters::biquad_lowpass, 20000 / mSampleRate, stQ, 0., mSampleRate);
 
 	fEqHpFilterOnepoleR.setFc(mEqHpFreq);
 	fEqHpFilter1R.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
@@ -707,43 +728,25 @@ void SRChannel::InitBiquad() {
 	fEqHpFilter9R.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqHpFilter10R.setFilter(SRPlugins::SRFilters::biquad_highpass, mEqHpFreq / mSampleRate, stQ, 0., mSampleRate);
 	fEqLpFilter1R.setFilter(SRPlugins::SRFilters::biquad_lowpass, mEqLpFreq / mSampleRate, stQ, 0., mSampleRate);
-	//	fEqHpFilter1R.setFilter(iir_linkwitz_highpass, mEqHpFreq / mSampleRate, 0., 0., mSampleRate);
-	//	fEqLpFilter1R.setFilter(iir_linkwitz_lowpass, mEqLpFreq / mSampleRate, 0., 0., mSampleRate);
 	fEqHfFilterR.setFilter(SRPlugins::SRFilters::biquad_highshelf, mEqHfFreq / mSampleRate, mEqHfQ, mEqHfGain, mSampleRate);
 	fEqHmfFilterR.setFilter(SRPlugins::SRFilters::biquad_peak, mEqHmfFreq / mSampleRate, mEqHmfQ, mEqHmfGain, mSampleRate);
 	fEqLmfFilterR.setFilter(SRPlugins::SRFilters::biquad_peak, mEqLmfFreq / mSampleRate, mEqLmfQ, mEqLmfGain, mSampleRate);
 	fEqLfFilterR.setFilter(SRPlugins::SRFilters::biquad_lowshelf, mEqLfFreq / mSampleRate, mEqLfQ, mEqLfGain, mSampleRate);
-
 	fDcBlockerR.setFc(10. / mSampleRate);
 
-	//fSatHpFilterR.setFilter(SRPlugins::SRFilters::biquad_highpass, 20 / mSampleRate, 0.70710678, 0., mSampleRate);
-	//fSatLfFilterR.setFilter(SRPlugins::SRFilters::biquad_lowshelf, 60 / mSampleRate, .5, mSatLfGain, mSampleRate);
-	//fSatMfFilterR.setFilter(SRPlugins::SRFilters::biquad_peak, 2200 / mSampleRate, .5, mSatMfGain, mSampleRate);
-	//fSatHfFilterR.setFilter(SRPlugins::SRFilters::biquad_highshelf, 15000 / mSampleRate, .5, mSatHfGain, mSampleRate);
-	//fSatLpFilterR.setFilter(SRPlugins::SRFilters::biquad_lowpass, 20000 / mSampleRate, 0.70710678, 0., mSampleRate);
+
 }
 
 void SRChannel::InitCompPeak() {
 	mSampleRate = GetSampleRate();
-	//fCompressorPeak.setSampleRate(mSampleRate);
-	//fCompressorPeak.setRatio(mCompPeakRatio);
-	//fCompressorPeak.setThresh(mCompPeakThresh);
-	//fCompressorPeak.setAttack(mCompPeakAttack);
-	//fCompressorPeak.setRelease(mCompPeakRelease);
-	fCompressorPeak.setCompressor(mCompPeakThresh, mCompPeakRatio, mCompPeakAttack, mCompPeakRelease, mCompPeakSidechainFilterFreq, mCompPeakKneeWidthDb, mSampleRate);
+	fCompressorPeak.initCompressor(mCompPeakThresh, mCompPeakRatio, mCompPeakAttack, mCompPeakRelease, mCompPeakSidechainFilterFreq, mCompPeakKneeWidthDb, mSampleRate);
 	fCompressorPeak.initRuntime();
 }
 
 void SRChannel::InitCompRms() {
 	mSampleRate = GetSampleRate();
-	fCompressorRms.setSampleRate(mSampleRate);
-	fCompressorRms.setRatio(mCompRmsRatio);
-	fCompressorRms.setThresh(mCompRmsThresh);
-	fCompressorRms.setAttack(mCompRmsAttack);
-	fCompressorRms.setRelease(mCompRmsRelease);
-	fCompressorRms.setKnee(mCompRmsKneeWidthDb);
-	fCompressorRms.setWindow(300.);
-	fCompressorRms.initSidechainFilter(100.);
+	// For sidechain filter frequency it requires an own knob later
+	fCompressorRms.initCompressor(mCompRmsThresh, mCompRmsRatio, mCompRmsAttack, mCompRmsRelease, mCompPeakSidechainFilterFreq, mCompRmsKneeWidthDb, 300., mSampleRate);
 	fCompressorRms.initRuntime();
 }
 
@@ -841,11 +844,19 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	// Begin Processing per Frame
 
 	for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2) {
+
+		// Begin global bypass test
+		// ------------------------
+
 		if (mBypass == 1) {
 			*out1 = *in1;
 			*out2 = *in2;
 		}
 		else {
+
+			// PRE SECTIONS
+			// ------------
+
 			// Adding DC Off
 			*out1 = *in1 + dcoff;
 			*out2 = *in2 + dcoff;
@@ -862,57 +873,80 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 			mInputPeakMeterValue1 = IPMAX(mInputPeakMeterValue1, fabs(*out1));
 			mInputPeakMeterValue2 = IPMAX(mInputPeakMeterValue2, fabs(*out2));
 
-			// Fill circular buffer with input gain values
-			//circularBuffer[1][circularBufferPointer] = *out1;
-			//circularBuffer[2][circularBufferPointer] = *out2;
-			circularBufferInL[circularBufferPointer] = *out1;
+			circularBufferInL[circularBufferPointer] = *out1; // Fill circular buffer with input gain values
 			circularBufferInR[circularBufferPointer] = *out2;
 
+			// ----------------
+			// End Pre Sections
 
+
+
+			// INPUT SECTION
+			// -------------
 			if (mInputBypass != 1) {
 
-				//// Upsample
-				//// double y = mOverSampler.Process(x, [](double input) { return std::tanh(input); })
+				// Upsample
+				// Insert upsample method here ...
+				// double y = mOverSampler.Process(x, [](double input) { return std::tanh(input); })
 
 				// Saturation
 				if (mSaturationAmount != 0.) fInputSaturation.process(*out1, *out2);
 
-				//// Downsample
+				// Downsample
+				// Insert downsample method here ...
 
 			}
+			//	----------------
+			// End Input Section
+
+
 
 			// EQ SECTION
+			// ----------
+
 			if (mEqBypass != 1) {
+
 				// Filter
+
+				// High Pass
+
 				if (mEqHpFreq > 16.) {
+					// one pole for 1st and 3rd (and further odd) orders
 					if (mEqHpOrder == 1 || mEqHpOrder == 3) {
 						*out1 = fEqHpFilterOnepoleL.process(*out1);
 						*out2 = fEqHpFilterOnepoleR.process(*out2);
 					}
+					// two pole for 2nd order
 					if (mEqHpOrder >= 2) {
 						*out1 = fEqHpFilter1L.process(*out1);
 						*out2 = fEqHpFilter1R.process(*out2);
 					}
+					// two pole for 4th order
 					if (mEqHpOrder >= 4) {
 						*out1 = fEqHpFilter2L.process(*out1);
 						*out2 = fEqHpFilter2R.process(*out2);
 					}
+					// two pole for 6th order
 					if (mEqHpOrder >= 5) {
 						*out1 = fEqHpFilter3L.process(*out1);
 						*out2 = fEqHpFilter3R.process(*out2);
 					}
+					// two pole for 8th order
 					if (mEqHpOrder >= 6) {
 						*out1 = fEqHpFilter4L.process(*out1);
 						*out2 = fEqHpFilter4R.process(*out2);
 					}
+					// two pole for 10th order
 					if (mEqHpOrder >= 7) {
 						*out1 = fEqHpFilter5L.process(*out1);
 						*out2 = fEqHpFilter5R.process(*out2);
 					}
+					// two pole for 12th order
 					if (mEqHpOrder >= 8) {
 						*out1 = fEqHpFilter6L.process(*out1);
 						*out2 = fEqHpFilter6R.process(*out2);
 					}
+					// two pole for 20th order
 					if (mEqHpOrder >= 9) {
 						*out1 = fEqHpFilter7L.process(*out1);
 						*out2 = fEqHpFilter7R.process(*out2);
@@ -924,20 +958,36 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 						*out2 = fEqHpFilter10R.process(*out2);
 					}
 				}
+
+				// Low Pass
+
 				if (mEqLpFreq < 22000.0) { *out1 = fEqLpFilter1L.process(*out1); *out2 = fEqLpFilter1R.process(*out2); }
+
 				// Parametric EQ
+
 				if (mEqLfGain != 0.0) { *out1 = fEqLfFilterL.process(*out1); *out2 = fEqLfFilterR.process(*out2); }
 				if (mEqLmfGain != 0.0) { *out1 = fEqLmfFilterL.process(*out1); *out2 = fEqLmfFilterR.process(*out2); }
 				if (mEqHmfGain != 0.0) { *out1 = fEqHmfFilterL.process(*out1); *out2 = fEqHmfFilterR.process(*out2); }
 				if (mEqHfGain != 0.0) { *out1 = fEqHfFilterL.process(*out1); *out2 = fEqHfFilterR.process(*out2); }
 			}
+			// --------------
+			// End EQ Section
+
+
+
+			// COMPRESSOR SECTION
+			// ------------------
 
 			if (mCompBypass != 1) {
+
 				// Deesser
-				fDeesser.process(*out1, *out2);
 
+				if (mDeesserRatio != 1.0 && mDeesserThresh != 0.0) {
+					fDeesser.process(*out1, *out2);
+				}
 
-				//	 Simple Compressor
+				// Compressor
+
 				double vCompDry1 = *out1;
 				double vCompDry2 = *out2;
 
@@ -974,39 +1024,46 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 					}
 				}
 
-				// Dry/Wet
+				// Compressor's Dry/Wet
 				if (mCompDryWet != 1.) {
 					*out1 = (mCompDryWet * *out1) + (vCompDry1 * (1. - mCompDryWet));
 					*out2 = (mCompDryWet * *out2) + (vCompDry2 * (1. - mCompDryWet));
 				}
 
 			}
-
-			// Pan
-			if (mPan != .5) {
-				vSafePanLowSignal1 = *out1;
-				vSafePanHighSignal1 = *out1;
-				vSafePanLowSignal2 = *out2;
-				vSafePanHighSignal2 = *out2;
-
-				vSafePanLowSignal1 = fSafePanLpL.process(vSafePanLowSignal1);
-				vSafePanLowSignal2 = fSafePanLpR.process(vSafePanLowSignal2);
-				vSafePanHighSignal1 = fSafePanHpL.process(vSafePanHighSignal1);
-				vSafePanHighSignal2 = fSafePanHpR.process(vSafePanHighSignal2);
-
-				//				*out1 = -vSafePanHighSignal1 * cos(mPan * (halfpi)) + vSafePanLowSignal1;
-				//				*out2 = -vSafePanHighSignal2 * sin(mPan * (halfpi)) + vSafePanLowSignal2;
-				fPan.process(vSafePanHighSignal1, vSafePanHighSignal2);
-				*out1 = vSafePanHighSignal1 - vSafePanLowSignal1;
-				*out2 = vSafePanHighSignal2 - vSafePanLowSignal2;
-
-				//*out1 = vSafePanHighSignal1 * sqrt(1 - mPan) * 1.41 - vSafePanLowSignal1;
-				//*out2 = vSafePanHighSignal2 * sqrt(mPan) * 1.41 - vSafePanLowSignal2;
-			}
+			// ----------------------
+			// End Compressor Section
 
 
+
+			// OUTPUT SECTION
+			// --------------
 
 			if (mOutputBypass != 1) {
+
+				// Pan
+
+				if (mPan != .5) {
+					vSafePanLowSignal1 = *out1;
+					vSafePanHighSignal1 = *out1;
+					vSafePanLowSignal2 = *out2;
+					vSafePanHighSignal2 = *out2;
+
+					vSafePanLowSignal1 = fSafePanLpL.process(vSafePanLowSignal1);
+					vSafePanLowSignal2 = fSafePanLpR.process(vSafePanLowSignal2);
+					vSafePanHighSignal1 = fSafePanHpL.process(vSafePanHighSignal1);
+					vSafePanHighSignal2 = fSafePanHpR.process(vSafePanHighSignal2);
+
+					fPan.process(vSafePanHighSignal1, vSafePanHighSignal2);
+					if (mIsPanMonoLow) {
+						vSafePanLowSignal1 = (vSafePanLowSignal1 + vSafePanLowSignal2) * 0.5;
+						vSafePanLowSignal2 = (vSafePanLowSignal1 + vSafePanLowSignal2) * 0.5;
+					}
+					*out1 = vSafePanHighSignal1 - vSafePanLowSignal1;
+					*out2 = vSafePanHighSignal2 - vSafePanLowSignal2;
+				}
+
+
 				// Clipper
 
 				if (mClipperThreshold < 1.) {
@@ -1016,11 +1073,13 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 
 				// Limiter
+
 				if (mLimiterThresh != 10.) {
 					fLimiter.process(*out1, *out2);
 				}
 
 				// Soft Limiter
+
 				if (*out1 > 1.) {
 					*out1 = (1. - 4 / (*out1 + (4 - 1.))) * 4 + 1.;
 				}
@@ -1038,34 +1097,46 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 						*out2 = (1. + 4 / (*out2 - (4 - 1.))) * -4 - 1.;
 					}
 				}
+
 			}
+			// ------------------
+			// End Output Section
+
+
+
+			// POST SECTIONS
+			// -------------
 
 			// Fill circular buffer with output gain values
-			//circularBuffer[3][circularBufferPointer] = *out1;
-			//circularBuffer[4][circularBufferPointer] = *out2;
 			circularBufferOutL[circularBufferPointer] = *out1;
 			circularBufferOutR[circularBufferPointer] = *out2;
 
 			// Output Gain
-			if (mOutputGain != 1.) {
-				//*out1 *= mOutputGain;
-				//*out2 *= mOutputGain;
-			}
 			fOutputGain.process(*out1, *out2);
+			//if (mOutputGain != 1.) {
+			//	*out1 *= mOutputGain;
+			//	*out2 *= mOutputGain;
+			//}
 
 			*out1 = fDcBlockerL.process(*out1);
 			*out2 = fDcBlockerR.process(*out2);
 			*out1 -= dcoff;
 			*out2 -= dcoff;
 
+			// ----------------
+			// End Post Section
+
+
 		}
+		// -------------------------
+		// End of global bypass test
+
+
 
 		// Output Meter +  GR Meter
 
-
 		mOutputPeakMeterValue1 = IPMAX(mOutputPeakMeterValue1, fabs(*out1));
 		mOutputPeakMeterValue2 = IPMAX(mOutputPeakMeterValue2, fabs(*out2));
-
 
 		double limitedOut1 = (*out1 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out1;
 		double limitedOut2 = (*out2 < DBToAmp(-38.)) ? DBToAmp(-38.) : *out2;
@@ -1074,14 +1145,14 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 		fOutputVuMeterEnvelope1.run(AmpToDB(mOutputVuMeterSos1), mOutputVuMeterValue1);
 		fOutputVuMeterEnvelope2.run(AmpToDB(mOutputVuMeterSos2), mOutputVuMeterValue2);
 
-
 		(circularBufferPointer >= circularBufferLenght - 1) ? circularBufferPointer = 0 : circularBufferPointer++;
 
-	}	// End Processing per Frame
+	}
+	// ----------------------------------------------------------------
+	// End processing per frame and again some processing per Framesize
 
 
-	// Begin Processing per Framesize
-
+	// Get input peak meter value from maxed values each sample
 	mInputPeakMeterTimeConst1 = (mInputPeakMeterValue1 < mInputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
 	mInputPeakMeterTimeConst2 = (mInputPeakMeterValue2 < mInputPeakMeterPreviousValue2 ? METER_DECAY : METER_ATTACK);
 	mInputPeakMeterValue1 = mInputPeakMeterValue1 * mInputPeakMeterTimeConst1 + mInputPeakMeterPreviousValue1 * (1.0 - mInputPeakMeterTimeConst1);
@@ -1091,6 +1162,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	mInputPeakMeterValue1 = (AmpToDB(mInputPeakMeterValue1) + 60) / 60;
 	mInputPeakMeterValue2 = (AmpToDB(mInputPeakMeterValue2) + 60) / 60;
 
+	// Get output peak meter value from maxed values each sample
 	mOutputPeakMeterTimeConst1 = (mOutputPeakMeterValue1 < mOutputPeakMeterPreviousValue1 ? METER_DECAY : METER_ATTACK);
 	mOutputPeakMeterTimeConst2 = (mOutputPeakMeterValue2 < mOutputPeakMeterPreviousValue2 ? METER_DECAY : METER_ATTACK);
 	mOutputPeakMeterValue1 = mOutputPeakMeterValue1 * mOutputPeakMeterTimeConst1 + mOutputPeakMeterPreviousValue1 * (1.0 - mOutputPeakMeterTimeConst1);
@@ -1100,30 +1172,15 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	mOutputPeakMeterValue1 = (AmpToDB(mOutputPeakMeterValue1) + 60) / 60;
 	mOutputPeakMeterValue2 = (AmpToDB(mOutputPeakMeterValue2) + 60) / 60;
 
-	if (mCompBypass != 1 && mCompRmsRatio != 1. && mCompRmsThresh != 0. && mBypass != 1) {
-		mRmsGrMeterValue += (-fabs(fCompressorRms.getGrDb()) + 60) / 60;
-	}
-	else {
-		mRmsGrMeterValue += 1.;
-	}
+	// Update gain reduction meters with current state after processing block
+	mRmsGrMeterValue = (mCompBypass != 1 && mCompRmsRatio != 1. && mCompRmsThresh != 0. && mBypass != 1)
+		? (-fabs(fCompressorRms.getGrDb()) + 60) / 60 : 1.;
+	mPeakGrMeterValue = (mCompBypass != 1 && mCompPeakRatio != 1. && mCompPeakThresh != 0. && mBypass != 1)
+		? (-fabs(fCompressorPeak.getGrDb()) + 60) / 60 : 1.;
+	mDeesserMeterValue = (mCompBypass != 1 && mDeesserRatio != 1. && mDeesserThresh != 0. && mBypass != 1)
+		? (-fabs(fDeesser.getGrDb()) + 60) / 60 : 1.;
 
-	if (mCompBypass != 1 && mCompPeakRatio != 1. && mCompPeakThresh != 0. && mBypass != 1) {
-		mPeakGrMeterValue += (-fabs(fCompressorPeak.getGrDb()) + 60) / 60;
-	}
-	else {
-		mPeakGrMeterValue += 1.;
-	}
-
-	if (mCompBypass != 1 && mDeesserRatio != 1. && mDeesserThresh != 0. && mBypass != 1) {
-		mDeesserMeterValue += (-fabs(fDeesser.getGrDb()) + 60) / 60;
-	}
-	else {
-		mDeesserMeterValue += 1.;
-	}
-	//mRmsGrMeterValue /= (double)nFrames;
-	//mPeakGrMeterValue /= (double)nFrames;
-	//mDeesserMeterValue /= (double)nFrames;
-
+	// Set meter GUIs from plug
 	if (GetGUI())
 	{
 		GetGUI()->SetControlFromPlug(cInputPeakMeter1, mInputPeakMeterValue1);
@@ -1175,6 +1232,7 @@ void SRChannel::OnParamChange(int paramIdx)
 	{
 
 		// INPUT AND OUTPUT STAGE
+		// ----------------------
 
 	case kInputGain:
 		mInputGain = DBToAmp(GetParam(paramIdx)->Value());
@@ -1184,7 +1242,6 @@ void SRChannel::OnParamChange(int paramIdx)
 		mOutputGain = DBToAmp(GetParam(paramIdx)->Value());
 		fOutputGain.setGain(mOutputGain);
 		break;
-
 	case kInputDrive:
 		mInputDrive = GetParam(paramIdx)->Value();
 		fInputSaturation.setDrive(mInputDrive);
@@ -1192,11 +1249,6 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kSaturationAmount:
 		mSaturationAmount = GetParam(paramIdx)->Value() / 100.;
 		fInputSaturation.setAmount(mSaturationAmount);
-		//mSatLfGain = (1 - mSaturationAmount) * 3.;		 fSatLfFilterL.setPeakGain(mSatLfGain);	  fSatLfFilterR.setPeakGain(mSatLfGain);
-		//mSatMfGain = (1 - mSaturationAmount) * -3.; 	 fSatMfFilterL.setPeakGain(mSatMfGain);	  fSatMfFilterR.setPeakGain(mSatMfGain);
-		//mSatHfGain = (1 - mSaturationAmount) * 5.; 	 fSatHfFilterL.setPeakGain(mSatHfGain);	  fSatHfFilterR.setPeakGain(mSatHfGain);
-		//mSatHpFreq = (1 - mSaturationAmount) * 30.;	fSatHpFilterL.setFc(mSatHpFreq / mSampleRate); fSatHpFilterR.setFc(mSatHpFreq / mSampleRate);
-		//mSatLpFreq = 22000 - (1 - mSaturationAmount) * 10000.;	fSatLpFilterL.setFc(mSatLpFreq / mSampleRate); fSatLpFilterR.setFc(mSatLpFreq / mSampleRate);
 		break;
 	case kSaturationHarmonics:
 		mSaturationHarmonics = GetParam(paramIdx)->Value() / 100.;
@@ -1220,9 +1272,13 @@ void SRChannel::OnParamChange(int paramIdx)
 		fSafePanLpL.setFc(mSafePanFreq / mSampleRate);
 		fSafePanLpR.setFc(mSafePanFreq / mSampleRate);
 		break;
+	case kIsPanMonoLow: mIsPanMonoLow = GetParam(paramIdx)->Value(); break;
+
 
 		// FILTER
+		// ------
 
+		// High Pass
 	case kEqHpFreq:
 		mEqHpFreq = GetParam(paramIdx)->Value();
 		if (mEqHpOrder == 1 || mEqHpOrder == 3) {
@@ -1356,6 +1412,7 @@ void SRChannel::OnParamChange(int paramIdx)
 		OnParamChange(kEqHpFreq);
 		break;
 
+		// Low Pass
 	case kEqLpOrder:
 		GetParam(paramIdx)->SetDisplayText(1, "6");
 		GetParam(paramIdx)->SetDisplayText(2, "12");
@@ -1375,7 +1432,9 @@ void SRChannel::OnParamChange(int paramIdx)
 		GetParam(paramIdx)->SetDisplayText(22000, "Off");
 		break;
 
+
 		// EQUALIZER
+		// ---------
 
 	case kEqHfBell:
 		mEqHfIsBell = GetParam(paramIdx)->Value();
@@ -1405,19 +1464,11 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kEqHfFreq: mEqHfFreq = GetParam(paramIdx)->Value(); fEqHfFilterL.setFc(mEqHfFreq / mSampleRate); fEqHfFilterR.setFc(mEqHfFreq / mSampleRate); break;
 	case kEqHfQ: mEqHfQ = GetParam(paramIdx)->Value(); fEqHfFilterL.setQ(mEqHfQ); fEqHfFilterR.setQ(mEqHfQ); break;
 
+
 		// COMPRESSOR
+		// ----------
 
-	case kCompIsParallel:
-		mCompIsParallel = GetParam(paramIdx)->Value();
-		if (GetGUI()) {
-			//(mCompIsParallel == 0) ? GetGUI()->GrayOutControl(kCompPeakRmsRatio, true) : GetGUI()->GrayOutControl(kCompPeakRmsRatio, false);
-			GrayOutControls();
-		}
-		break;
-
-	case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
-	case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
-
+		// Peak Compressor
 	case kCompPeakRatio:
 		mCompPeakRatio = (1. / GetParam(paramIdx)->Value());
 		if (mCompPeakRatio <= 1. / 20.) {
@@ -1425,28 +1476,25 @@ void SRChannel::OnParamChange(int paramIdx)
 			mCompPeakRatio = 0.;
 		}
 		fCompressorPeak.setRatio(mCompPeakRatio);
-		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease); // Auto Makeup
 		break;
 
-		// Thresh in dB !!
 	case kCompPeakThresh:
 		mCompPeakThresh = GetParam(paramIdx)->Value();
 		fCompressorPeak.setThresh(mCompPeakThresh);
-		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease); // Auto Makeup
 		break;
 
-		// Attack in ms
 	case kCompPeakAttack:
 		mCompPeakAttack = GetParam(paramIdx)->Value();
 		fCompressorPeak.setAttack(mCompPeakAttack);
-		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease); // Auto Makeup
 		break;
 
-		// Release in ms
 	case kCompPeakRelease:
 		mCompPeakRelease = GetParam(paramIdx)->Value();
 		fCompressorPeak.setRelease(mCompPeakRelease);
-		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease);
+		mCompPeakAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompPeakThresh, mCompPeakRatio, -18., mCompPeakAttack, mCompPeakRelease); // Auto Makeup
 		break;
 
 	case kCompPeakKneeWidthDb:
@@ -1457,60 +1505,63 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kCompPeakSidechainFilterFreq:
 		mCompPeakSidechainFilterFreq = GetParam(paramIdx)->Value();
 		fCompressorPeak.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate);
+		fCompressorRms.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate); // !!! This moves to own switch when RMS sidechain filter is implemented
 		GetParam(paramIdx)->SetDisplayText(16, "Off");
 		break;
 
+	case kCompPeakMakeup: mCompPeakMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
+
+
+		// RMS Compressor
 	case kCompRmsRatio:
 		mCompRmsRatio = (1 / GetParam(paramIdx)->Value());
 		fCompressorRms.setRatio(mCompRmsRatio);
-		// Auto Makeup
-		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease); // Auto Makeup
 		break;
 
-		// Thresh in dB !!
 	case kCompRmsThresh:
 		mCompRmsThresh = GetParam(paramIdx)->Value();
 		fCompressorRms.setThresh(mCompRmsThresh);
-		// Auto Makeup
-		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease); // Auto Makeup
 		break;
 
-		// Attack in ms
 	case kCompRmsAttack:
 		mCompRmsAttack = GetParam(paramIdx)->Value();
 		fCompressorRms.setAttack(mCompRmsAttack);
-		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease); // Auto Makeup
 		break;
 
-		// Release in ms
 	case kCompRmsRelease:
 		mCompRmsRelease = GetParam(paramIdx)->Value();
 		fCompressorRms.setRelease(mCompRmsRelease);
-		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease);
+		mCompRmsAutoMakeup = SRPlugins::SRHelpers::calcAutoMakeup(mCompRmsThresh, mCompRmsRatio, -18., mCompRmsAttack, mCompRmsRelease); // Auto Makeup
 		break;
 
-	case kCompRmsKneeWidthDb:
-		mCompRmsKneeWidthDb = GetParam(paramIdx)->Value();
-		fCompressorRms.setKnee(mCompRmsKneeWidthDb);
-		break;
-
-	case kCompPeakRmsRatio:
-		mCompPeakRmsRatio = GetParam(paramIdx)->Value() / 100;
-		break;
-
-		// RMS Makeup (db -> amp)
+	case kCompRmsKneeWidthDb: mCompRmsKneeWidthDb = GetParam(paramIdx)->Value(); fCompressorRms.setKnee(mCompRmsKneeWidthDb); break;
 	case kCompRmsMakeup: mCompRmsMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
-	case kCompPeakMakeup: mCompPeakMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
+
+		// Both Compressors
+	case kCompPeakRmsRatio: mCompPeakRmsRatio = GetParam(paramIdx)->Value() / 100; break;
 	case kCompDryWet: mCompDryWet = GetParam(paramIdx)->Value() / 100; break;
 
+		// Bool Switches
+	case kCompIsParallel: mCompIsParallel = GetParam(paramIdx)->Value(); if (GetGUI()) GrayOutControls(); break;
+	case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
+	case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
+
+
 		// GLOBAL BYPASS
+		// -------------
+
 	case kEqBypass: mEqBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 	case kCompBypass: mCompBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 	case kInputBypass: mInputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 	case kOutputBypass: mOutputBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 	case kBypass: mBypass = GetParam(paramIdx)->Value(); GrayOutControls(); break;
 
-		// Automatic Gain Control
+
+		// AUTOMATIC GAIN CONTROL
+		// ----------------------
 
 	case kAgc:
 		if (circularBufferInL[circularBufferLenght - 1]) {
@@ -1540,7 +1591,8 @@ void SRChannel::OnParamChange(int paramIdx)
 		}
 		break;
 
-		// Deesser
+		// DEESSER
+		// -------
 
 	case kDeesserFreq: mDeesserFreq = GetParam(paramIdx)->Value(); fDeesser.setFrequency(mDeesserFreq / mSampleRate); break;
 	case kDeesserQ: mDeesserQ = GetParam(paramIdx)->Value(); fDeesser.setQ(mDeesserQ); break;
@@ -1551,6 +1603,7 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kDeesserMakeup: mDeesserMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;
 
 		// TEST PARAMS
+		// -----------
 
 	case kTestParam1: mTestParam1 = GetParam(paramIdx)->Value(); break;
 	case kTestParam2: mTestParam2 = GetParam(paramIdx)->Value(); break;

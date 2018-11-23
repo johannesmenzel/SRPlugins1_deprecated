@@ -48,7 +48,6 @@ const int circularBufferLenght = 65536;
 		void OnParamChange(int paramIdx);
 		void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
 		// CIRCULAR BUFFER
-		//double circularBuffer[4][circularBufferLenght];
 		double circularBufferInL[circularBufferLenght], circularBufferInR[circularBufferLenght], circularBufferOutL[circularBufferLenght], circularBufferOutR[circularBufferLenght];
 
 	private:
@@ -108,7 +107,7 @@ const int circularBufferLenght = 65536;
 
 
 	// BOOL VARS
-		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mCompPeakIsExtSc, mCompRmsIsExtSc, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass,
+		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mCompPeakIsExtSc, mCompRmsIsExtSc, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass, mIsPanMonoLow,
 			mAgc;
 
 		// INT VARS
