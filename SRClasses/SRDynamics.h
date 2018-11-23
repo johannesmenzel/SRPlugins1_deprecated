@@ -165,7 +165,7 @@ namespace SRPlugins {
 			virtual ~SRCompressor() {}
 
 			// parameters
-			virtual void setCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate);
+			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate);
 			virtual void setThresh(double dB);
 			virtual void setRatio(double dB);
 			virtual void setKnee(double kneeDb);
@@ -183,7 +183,8 @@ namespace SRPlugins {
 			void process(double &in1, double &in2); // compressor runtime process if internal sidechain 
 			void process(double &in1, double &in2, double &extSC1, double &extSC2); // if eternal sidechain
 			void process(double &in1, double &in2, double sidechain);	// with stereo-linked key in
-
+		protected:
+			SRFilters::SRFiltersTwoPole fSidechainFilter1, fSidechainFilter2;
 		private:
 
 			// transfer function
@@ -198,7 +199,6 @@ namespace SRPlugins {
 			// runtime variables
 			double currentOvershootDb;			// over-threshold envelope (dB)
 
-			SRFilters::SRFiltersTwoPole fSidechainFilter1, fSidechainFilter2;
 
 		};
 		//-------------------------------------------------------------
@@ -219,6 +219,7 @@ namespace SRPlugins {
 
 			// sample rate
 			virtual void setSampleRate(double sampleRate);
+			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, double samplerate);
 
 			// RMS window
 			virtual void setWindow(double ms);
@@ -231,7 +232,6 @@ namespace SRPlugins {
 			void process(double &in1, double &in2);	// compressor runtime process
 
 		private:
-
 			EnvelopeDetector mEnvelopeDetectorAverager;	// averager
 			double mAverageOfSquares;		// average of squares
 

@@ -114,7 +114,7 @@ namespace SRPlugins {
 		{
 		}
 
-		void SRCompressor::setCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate) {
+		void SRCompressor::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate) {
 			setThresh(dB);
 			setRatio(ratio);
 			setAttack(attackMs);
@@ -122,8 +122,8 @@ namespace SRPlugins {
 			initSidechainFilter(sidechainFc);
 			setSampleRate(samplerate);
 			setKnee(kneeDb);
-			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
-			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., samplerate);
+			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
+			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
 		}
 
 		//-------------------------------------------------------------
@@ -142,18 +142,18 @@ namespace SRPlugins {
 
 		void SRCompressor::setKnee(double kneeDb)
 		{
-			mKneeWidthDb = kneeDb;
+			this->mKneeWidthDb = kneeDb;
 		}
 
 		void SRCompressor::initSidechainFilter(double sidechainFc) {
-			mSidechainFc = sidechainFc;
+			this->mSidechainFc = sidechainFc;
 			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
 			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, mSidechainFc, 0.7071, 0., getSampleRate());
 		}
 
 		void SRCompressor::setSidechainFilterFreq(double sidechainFc)
 		{
-			mSidechainFc = sidechainFc;
+			this->mSidechainFc = sidechainFc;
 			fSidechainFilter1.setFc(mSidechainFc);
 			fSidechainFilter2.setFc(mSidechainFc);
 		}
@@ -161,7 +161,7 @@ namespace SRPlugins {
 		//-------------------------------------------------------------
 		void SRCompressor::initRuntime(void)
 		{
-			currentOvershootDb = DC_OFFSET;
+			this->currentOvershootDb = DC_OFFSET;
 		}
 
 		//-------------------------------------------------------------
@@ -171,6 +171,19 @@ namespace SRPlugins {
 			: mEnvelopeDetectorAverager(5.0)
 			, mAverageOfSquares(DC_OFFSET)
 		{
+		}
+
+		void SRCompressorRMS::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, double samplerate) {
+			setThresh(dB);
+			setRatio(ratio);
+			setAttack(attackMs);
+			setRelease(releaseMs);
+			initSidechainFilter(sidechainFc);
+			setSampleRate(samplerate);
+			setKnee(kneeDb);
+			mEnvelopeDetectorAverager.setTc(rmsWindowMs);
+			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
+			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
 		}
 
 		//-------------------------------------------------------------
