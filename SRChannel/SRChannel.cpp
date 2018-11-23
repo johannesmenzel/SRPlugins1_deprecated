@@ -217,13 +217,13 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "Pan Freq",		"PNF",	150.,	20.,	1000.,	1.,		150.,	.5,		"Hz",	"Output",	typeDouble, SslRed,		kControlX + kScaleX * 14,		kControlY + kScaleY * 3,		"20", "1k", "200",		"Frequencies below crossover will be not affected by panner" },
 		{ "Limiter",		"LMT",	10.,	-30.,	10.,	0.1,	0.,		.5,		"dB",	"Output",	typeDouble, SslOrange,	kControlX + kScaleX * 14,		kControlY + kScaleY * 5,		"-30", "10", "0",		"Thresold of Output Limiter" },
 		{ "Comp Ser/Par",	"Par",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 9,		kControlY + kScaleY * 16,		"SER", "PAR", "",		"RMS and Peak Compressor can be run serial or parallel" },
-		{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 4 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
-		{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 8 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
-		{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 14 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
-		{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * -1 - 36,	"ACT", "BYP", "",		"Bypass Plugin" },
+		{ "EQ Bypass",		"EQ Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 7 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Equalizer Section" },
+		{ "Comp Bypass",	"Comp Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 13 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Compressor Section" },
+		{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 17 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
+		{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		4,								4,								"ACT", "BYP", "",		"Bypass Plugin" },
 		{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix",	"Dial in even harmonics by turning the knob counter-clockwise" },
-		{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 14,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
-		{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 2,		kControlY + kScaleY * 16,		"6", "120", "36",		"HIDED - Order of the Lowpass Filter or filter slope" },
+		{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 4,		kControlY + kScaleY * 16,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
+		{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 6,		kControlY + kScaleY * 16,		"6", "120", "36",		"HIDED - Order of the Lowpass Filter or filter slope" },
 		{ "TestParam 1",	"T1",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 4,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
 		{ "TestParam 2",	"T2",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 6,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
 		{ "TestParam 3",	"T3",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 8,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
@@ -241,7 +241,7 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "Deesser Makeup",	"DSM",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Deesser",	typeDouble, SslYellow,	kControlX + kScaleX * 12,		kControlY + kScaleY * 12,		"0", "40", "10",		"Deessers Makeup" },
 		{ "Peak Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 13,		"0", "30", "10",		"Peak Compressors width of the soft knee" },
 		{ "RMS Knee",		"SKN",	0.,		0.,		30.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslGreen,	kControlX + kScaleX * 10,		kControlY + kScaleY * 5,		"0", "30", "10",		"RMS Compressors width of the soft knee" },
-		{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 0 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Input Section" },
+		{ "Input Bypass",	"In Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 3 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Input Section" },
 		{ "Peak Ext SC",	"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15,		"INT", "EXT", "",		"External sidechain for Peak Compressor. Use tracks input channel 3/4" },
 		{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "",		"External sidechain for RMS Compressor. Use tracks input channel 3/4" },
 		{ "Sat Skew",		"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0",		"Saturations positive/negative skewness. Distorts waveform" },
@@ -422,7 +422,7 @@ void SRChannel::CreateGraphics() {
 	pGraphics->AttachControl(new ITextControl(this, IRECT(kWidth - 300, 0, kWidth, 20), &textPresetLabelProp, "v" VST3_VER_STR));
 
 	// Preset Menu
-	pGraphics->AttachControl(new SRPlugins::SRControls::IPresetMenu(this, IRECT(kControlX + kScaleX * 0 - 32, 10, kControlX + kScaleX * 4 - 8, 28), &textPresetLabelProp));
+	pGraphics->AttachControl(new SRPlugins::SRControls::IPresetMenu(this, IRECT(402, 4, 698, 24), &textPresetLabelProp));
 
 	// Meters
 		// Peak and GR
@@ -550,10 +550,6 @@ void SRChannel::CreateGraphics() {
 		case typeInt:
 			switch (i)
 			{
-				// Unused
-			case kEqHfQ:
-			case kEqLfQ:
-				break;
 
 				// Faders
 			case kInputGain:
@@ -606,7 +602,15 @@ void SRChannel::CreateGraphics() {
 
 				break; // End double/int - faders
 
-
+								// Unused
+			case kEqHfQ:
+			case kEqLfQ:
+			case kTestParam1:
+			case kTestParam2:
+			case kTestParam3:
+			case kTestParam4:
+			case kTestParam5:
+				break;
 
 			default:									// ... but most of them get a nice rotary control
 
@@ -1043,7 +1047,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 				// Pan
 
-				if (mPan != .5) {
+				if (mPan != .5 || mIsPanMonoLow == true) {
 					vSafePanLowSignal1 = *out1;
 					vSafePanHighSignal1 = *out1;
 					vSafePanLowSignal2 = *out2;
@@ -1053,7 +1057,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 					vSafePanLowSignal2 = fSafePanLpR.process(vSafePanLowSignal2);
 					vSafePanHighSignal1 = fSafePanHpL.process(vSafePanHighSignal1);
 					vSafePanHighSignal2 = fSafePanHpR.process(vSafePanHighSignal2);
-
+				
 					fPan.process(vSafePanHighSignal1, vSafePanHighSignal2);
 					if (mIsPanMonoLow) {
 						vSafePanLowSignal1 = (vSafePanLowSignal1 + vSafePanLowSignal2) * 0.5;
