@@ -76,28 +76,24 @@ namespace SRPlugins
 
 		inline void SRGain::process(double &in1, double &in2)
 		{
-			if (currentGain1 != 1.0 && stepGain1 != 0.0 && mBypassed == false) {
-				if (stepGain1 != 0.0) {
-					currentGain1 += stepGain1;
-					if ((stepGain1 > 0.0 && currentGain1 > targetGain1) || (stepGain1 < 0.0 && currentGain1 < targetGain1)) {
-						currentGain1 = targetGain1;
-						stepGain1 = 0.0;
-					}
+			if (stepGain1 != 0.0) {
+				currentGain1 += stepGain1;
+				if ((stepGain1 > 0.0 && currentGain1 > targetGain1) || (stepGain1 < 0.0 && currentGain1 < targetGain1)) {
+					currentGain1 = targetGain1;
+					stepGain1 = 0.0;
 				}
-				in1 *= currentGain1;
 			}
 
-			if (currentGain1 != 1.0 && stepGain1 != 0.0 && mBypassed == false) {
-				if (stepGain2 != 0.0) {
-					currentGain2 += stepGain2;
-					if ((stepGain2 > 0.0 && currentGain2 > targetGain2) || (stepGain2 < 0.0 && currentGain2 < targetGain2)) {
-						currentGain2 = targetGain2;
-						stepGain2 = 0.0;
-					}
+			if (stepGain2 != 0.0) {
+				currentGain2 += stepGain2;
+				if ((stepGain2 > 0.0 && currentGain2 > targetGain2) || (stepGain2 < 0.0 && currentGain2 < targetGain2)) {
+					currentGain2 = targetGain2;
+					stepGain2 = 0.0;
 				}
-				in2 *= currentGain2;
 			}
 
+			in1 *= currentGain1;
+			in2 *= currentGain2;
 		}
 
 
