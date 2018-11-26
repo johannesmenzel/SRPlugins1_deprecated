@@ -4,6 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <cmath>
+#include <string>
 
 namespace SRPlugins {
 	namespace SRHelpers {
@@ -20,6 +21,12 @@ namespace SRPlugins {
 		{
 			x = exp(x + x);
 			return (x - 1) / (x + 1);
+		}
+
+		inline char* setCharFromDouble(double doubleValue) {
+			std::string stringValue = std::to_string(doubleValue);
+			char *charValue = new char[stringValue.length() + 1];
+			return strcpy(charValue, stringValue.c_str());
 		}
 
 		inline double calcAutoMakeup(double threshDb, double ratio, double referenceDb, double attackMs, double releaseMs) {

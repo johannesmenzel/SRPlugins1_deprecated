@@ -485,7 +485,7 @@ void SRChannel::CreateGraphics() {
 	cRmsGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 39, bitmapLogo.H, kWidth - 31, kHeight), colorMeterBg, colorMeterFg));
 	cPeakGrMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
 	cDeesserMeter = pGraphics->AttachControl(new SRPlugins::SRControls::IGrMeterVert(this, IRECT(kWidth - 29, bitmapLogo.H, kWidth - 21, kHeight), colorMeterBg, colorMeterFg));
-	cOuputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
+	cOutputPeakMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
 	cOutputPeakMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
 	cOutputVuMeter1 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 19, bitmapLogo.H, kWidth - 11, kHeight), colorMeterBg, colorMeterFg));
 	cOutputVuMeter2 = pGraphics->AttachControl(new SRPlugins::SRControls::IPeakMeterVert(this, IRECT(kWidth - 9, bitmapLogo.H, kWidth - 1, kHeight), colorMeterBg, colorMeterFg));
@@ -598,7 +598,7 @@ void SRChannel::CreateGraphics() {
 			cControlMatrix.at(i) = pGraphics->AttachControl(new SRPlugins::SRControls::IPopUpMenuControl(this, IRECT(
 				properties.x,
 				properties.y,
-				properties.x + 60,
+				properties.x + 48,
 				properties.y + textFg.mSize
 			), i, &textFg, colorBg));
 			break; // End enum
@@ -744,7 +744,7 @@ void SRChannel::InitGUI() {
 		GetGUI()->GetControl(cRmsGrMeter)->SetTooltip("Gain reduction of RMS compressor");
 		GetGUI()->GetControl(cPeakGrMeter)->SetTooltip("Gain reduction of peak compressor");
 		GetGUI()->GetControl(cDeesserMeter)->SetTooltip("Gain reduction of Deesser");
-		GetGUI()->GetControl(cOuputPeakMeter1)->SetTooltip("VU Meter of left output channel");
+		GetGUI()->GetControl(cOutputPeakMeter1)->SetTooltip("VU Meter of left output channel");
 		GetGUI()->GetControl(cOutputPeakMeter2)->SetTooltip("VU Meter of right output channel");
 		for (int i = 0; i < kNumParams; i++) {
 			GetGUI()->GetControl(cControlMatrix.at(i))->SetTooltip(parameterProperties[i].tooltip);
@@ -1255,7 +1255,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 		GetGUI()->SetControlFromPlug(cRmsGrMeter, mRmsGrMeterValue);
 		GetGUI()->SetControlFromPlug(cPeakGrMeter, mPeakGrMeterValue);
 		GetGUI()->SetControlFromPlug(cDeesserMeter, mDeesserMeterValue);
-		GetGUI()->SetControlFromPlug(cOuputPeakMeter1, mOutputPeakMeterValue1);
+		GetGUI()->SetControlFromPlug(cOutputPeakMeter1, mOutputPeakMeterValue1);
 		GetGUI()->SetControlFromPlug(cOutputPeakMeter2, mOutputPeakMeterValue2);
 		GetGUI()->SetControlFromPlug(cOutputVuMeter1, ((mOutputVuMeterValue1 + 60) / 60));
 		GetGUI()->SetControlFromPlug(cOutputVuMeter2, ((mOutputVuMeterValue2 + 60) / 60));

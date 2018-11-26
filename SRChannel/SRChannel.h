@@ -114,7 +114,7 @@ const int circularBufferLenght = 65536;
 		int mEqHpOrder, mSaturationType,
 
 			// METERS
-			cInputPeakMeter1, cInputPeakMeter2, cOuputPeakMeter1, cOutputPeakMeter2,
+			cInputPeakMeter1, cInputPeakMeter2, cOutputPeakMeter1, cOutputPeakMeter2,
 			cRmsGrMeter, cPeakGrMeter, cDeesserMeter, /*cFreqRespGraph, */cOutputVuMeter1, cOutputVuMeter2;
 
 
@@ -180,7 +180,6 @@ const int circularBufferLenght = 65536;
 		double aveOut;
 		double diffInOut;
 
-		int cCompPeakRmsRatio;
 	};
 
 #endif

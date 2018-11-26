@@ -64,7 +64,7 @@ namespace SRPlugins {
 			bool Draw(IGraphics*);
 		};
 
-	
+
 		class IPeakMeterVert : public IControl {
 		public:
 			IPeakMeterVert(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
@@ -79,7 +79,7 @@ namespace SRPlugins {
 			IColor meterfg, meterbg;
 		};
 
-		
+
 		class IGrMeterVert : public IPeakMeterVert {
 		public:
 			IGrMeterVert(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
@@ -91,7 +91,7 @@ namespace SRPlugins {
 			bool Draw(IGraphics* pGraphics);
 		};
 
-	
+
 		class IPeakMeterHoriz : public IPeakMeterVert {
 		public:
 			IPeakMeterHoriz(IPlugBase* pPlug, IRECT pR, IColor background, IColor foreground)
@@ -101,7 +101,7 @@ namespace SRPlugins {
 			bool Draw(IGraphics* pGraphics);
 		};
 
-	
+
 		class ITempoDisplay : public IControl {
 		public:
 			ITempoDisplay(IPlugBase* pPlug, IRECT pR, IText* pText, ITimeInfo* pTimeInfo)
@@ -116,15 +116,30 @@ namespace SRPlugins {
 			WDL_String mDisplay;
 		};
 
-	
-		
+		class IVariableControl : public IControl {
+		public:
+			IVariableControl(IPlugBase* pPlug, IRECT pR, IText* pText, double doubleValue)
+				: IControl(pPlug, pR) {
+				mText = *pText;
+				mDoubleValue = doubleValue;
+			}
+			bool IsDirty() { return true; }
+			bool Draw(IGraphics* pGraphics);
+		private:
+			double mDoubleValue;
+			WDL_String mDisplay;
+		};
+
+
+
+
 		//------------------------------------
 		// Menus
 		// -----------------------------------
 
 		// Popup Menu
 		// -----------------------------------
-	
+
 		class ITestPopupMenu : public IControl {
 		public:
 			ITestPopupMenu(IPlugBase *pPlug, IRECT pR)
@@ -207,7 +222,7 @@ namespace SRPlugins {
 		// -----------------------------------
 
 		// Key catcher is an icontrol but only its OnKeyDown() is called... after all the other controls have been tested to see if they want keyboard input
-	
+
 		class IKeyCatcher : public IControl {
 		public:
 			IKeyCatcher(IPlugBase* pPlug, IRECT pR)

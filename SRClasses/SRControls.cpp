@@ -42,7 +42,7 @@ namespace SRPlugins {
 				SetDirty();
 			}
 #endif
-		}	
+		}
 		bool SRMultiMeter::Draw(IGraphics *) {
 			return true;
 		}
@@ -223,6 +223,11 @@ namespace SRPlugins {
 		}
 		bool ITempoDisplay::Draw(IGraphics * pGraphics) {
 			mDisplay.SetFormatted(80, "Tempo: %f, SamplePos: %i, PPQPos: %f", mTimeInfo->mTempo, (int)mTimeInfo->mSamplePos, mTimeInfo->mPPQPos);
+			return pGraphics->DrawIText(&mText, mDisplay.Get(), &mRECT);
+		}
+
+		bool IVariableControl::Draw(IGraphics * pGraphics) {
+			mDisplay.SetFormatted(80, "%f", mDoubleValue);
 			return pGraphics->DrawIText(&mText, mDisplay.Get(), &mRECT);
 		}
 	}
