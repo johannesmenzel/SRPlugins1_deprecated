@@ -32,6 +32,7 @@
 
 
 namespace SRPlugins {
+	namespace SRSaturation {
 
 
 		// If type definitions of type int needed:
@@ -39,7 +40,8 @@ namespace SRPlugins {
 			typeMusicDSP = 0,
 			typeZoelzer,
 			typePirkle,
-			typePirkleModified
+			typePirkleModified,
+			numTypes
 			// ...
 		};
 
@@ -134,10 +136,10 @@ namespace SRPlugins {
 			if (mPositive && in1 > 0.) in1 = in1 * mHarmonicsNormalized + in1Dry * (1. - mHarmonicsNormalized);
 			if (!mPositive && in2 < 0.) in2 = in2 * mHarmonicsNormalized + in2Dry * (1. - mHarmonicsNormalized);
 			if (mPositive && in2 > 0.) in2 = in2 * mHarmonicsNormalized + in2Dry * (1. - mHarmonicsNormalized);
-			
+
 			in1PrevSample = in1Dry;
 			in2PrevSample = in2Dry;
-			
+
 			// return to old drive level
 			in1 *= (1. / mDriveNormalized);
 			in2 *= (1. / mDriveNormalized);
@@ -152,7 +154,7 @@ namespace SRPlugins {
 			}
 
 			if (fabs(in2) > mAmount) {
-				in2 = (in2 > 0) 
+				in2 = (in2 > 0)
 					? (mAmount + (fabs(in2) - mAmount) / (1. + pow((fabs(in2) - mAmount) / (1 - mAmount), 2))) * (in2 / fabs(in2))
 					: (mAmount + (fabs(in2) - mAmount) / (1. + pow((fabs(in2) - mAmount) / (1 - mAmount), 2))) * (in2 / fabs(in2));
 			}
@@ -193,15 +195,15 @@ namespace SRPlugins {
 		inline void SRSaturation::processPirkleModified(double &in1, double &in2) {
 			if (mAmountNormalized > .001) {
 				double mAmountModified = pow(mAmountNormalized, 3.) * (1. + 0.5 * (in1 - in1PrevSample + in2 - in2PrevSample) * (1. / mDriveNormalized) * mSkewNormalized);
-				in1 = (in1 >= 0) 
-					? atan(mAmountModified * in1) / atan(mAmountModified) 
+				in1 = (in1 >= 0)
+					? atan(mAmountModified * in1) / atan(mAmountModified)
 					: atan(mAmountModified * in1) / atan(mAmountModified);
 
-				in2 = (in2 >= 0.) 
+				in2 = (in2 >= 0.)
 					? atan(mAmountModified * in2) / atan(mAmountModified)
 					: atan(mAmountModified * in2) / atan(mAmountModified);
 			}
 		}
-
 	}
+}
 #endif // SRSaturation_h

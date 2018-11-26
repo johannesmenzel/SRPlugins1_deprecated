@@ -124,6 +124,7 @@ enum EParams
 	kCompRmsIsExrSc,
 	kSaturationSkew,
 	kIsPanMonoLow,
+	kSaturationType,
 	kNumParams
 };
 
@@ -139,6 +140,7 @@ enum Knobs {
 	AbbeyChicken,
 	Button,
 	Fader,
+	none,
 	kNumKnobs
 };
 
@@ -149,6 +151,19 @@ enum Type {
 	typeInt,
 	typeEnum,
 	kNumDataType
+};
+
+enum Order {
+	dbo6 = 0,
+	dbo12,
+	dbo18,
+	dbo24,
+	dbo36,
+	dbo48,
+	dbo60,
+	dbo72,
+	dbo120,
+	kNumOrders
 };
 
 // Struct object containing possible parameters properties
@@ -222,8 +237,8 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "Output Bypass",	"Out Byp",	0,	0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		kControlX + kScaleX * 17 - 32,	kControlY + kScaleY * 0 - 36,	"ACT", "BYP", "",		"Bypass Output Section" },
 		{ "Bypass",			"Byp",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Global",	typeBool,	Button,		4,								4,								"ACT", "BYP", "",		"Bypass Plugin" },
 		{ "Harmonics",		"HRM",	50.,	0.,		100.,	.01,	50.,	.5,		"%",	"Input",	typeDouble, SslBlue,	kControlX + kScaleX * 2,		kControlY + kScaleY * 2,		"Even", "Odd", "Mix",	"Dial in even harmonics by turning the knob counter-clockwise" },
-		{ "HP Order",		"HPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 4,		kControlY + kScaleY * 16,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
-		{ "LP Order",		"LPO",	2,		1,		9,		1,		5,		.5,		"dB/oct", "EQ",		typeInt,	AbbeyChicken, kControlX + kScaleX * 6,		kControlY + kScaleY * 16,		"6", "120", "36",		"HIDED - Order of the Lowpass Filter or filter slope" },
+		{ "HP Order",		"HPO",	1,		0,		8,		1,		5,		.5,		"dB/oct", "EQ",		typeEnum,	none,		kControlX + kScaleX * 4,		kControlY + kScaleY * 0,		"6", "120", "36",		"Order of the Highpass Filter or filter slope" },
+		{ "LP Order",		"LPO",	1,		0,		8,		1,		5,		.5,		"dB/oct", "EQ",		typeEnum,	none,		kControlX + kScaleX * 6,		kControlY + kScaleY * 2,		"6", "120", "36",		"HIDED - Order of the Lowpass Filter or filter slope" },
 		{ "TestParam 1",	"T1",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 4,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
 		{ "TestParam 2",	"T2",	0.2,	0.2,	5.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 6,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
 		{ "TestParam 3",	"T3",	0.,		0.,		1.,		.0001,	.5,		.5,		"",		"Test",		typeDouble, SslRed,		kControlX + kScaleX * 8,		0,								"0", "1", "0.5",		"HIDED - Generic control for development tests" },
@@ -246,7 +261,8 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "",		"External sidechain for RMS Compressor. Use tracks input channel 3/4" },
 		{ "Sat Skew",		"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0",		"Saturations positive/negative skewness. Distorts waveform" },
 		{ "Mono Bass",		"MNB",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 7,		"STB", "MNB", "",		"Bass Frequencies will left stereo or will be monoed" },
-		//	{ "NAME",			"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
+		{ "Saturation Type","TPE",	0,		0,		3,		-1,		-1,		-1,		"",		"Input",	typeEnum,	none,			kControlX + kScaleX * 2,		kControlY + kScaleY * 6,		"", "", "",				"Type of Saturation"}
+		//	{ "NAME",		"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
 };
 
 
@@ -296,13 +312,11 @@ SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
 ##########################################################*/
 
 void SRChannel::CreateParams() {
+
 	for (int i = 0; i < kNumParams; i++) {											// We iterate through ALL parameters
 
 		IParam* param = GetParam(i);												// ... for which we temporally create a pointer "param"
 		const structParameterProperties &properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
-
-
-
 
 		switch (properties.Type) {							// each type of parameter needs another initialization method
 
@@ -316,6 +330,17 @@ void SRChannel::CreateParams() {
 			break;
 
 		case typeEnum:									// When initializing enum parameter, for VST3 this is necessary: param->SetDisplayText(0, properties.name);
+
+			int enumLenght;								// Get number of enum states
+			switch (i) {
+			case kEqHpOrder: case kEqLpOrder: enumLenght = kNumOrders; break;
+			case kSaturationType: enumLenght = SRPlugins::SRSaturation::numTypes; break;
+			default: break;
+			}
+
+			// Create Enum Parameter
+			param->InitEnum(properties.name, int(properties.defaultVal), enumLenght, properties.label, properties.group);
+
 			break;
 
 		case typeDouble:								// Create parameters of type double.
@@ -344,6 +369,35 @@ void SRChannel::CreateParams() {
 
 		default:											// Just in case there are paramters of other types.
 			break;
+		}
+
+
+		// Setup display texts
+		switch (i)
+		{
+		case kEqHpOrder:
+		case kEqLpOrder:
+			GetParam(i)->SetDisplayText(dbo6, "6 dB/oct");
+			GetParam(i)->SetDisplayText(dbo12, "12 dB/oct");
+			GetParam(i)->SetDisplayText(dbo18, "18 dB/oct");
+			GetParam(i)->SetDisplayText(dbo24, "24 dB/oct");
+			GetParam(i)->SetDisplayText(dbo36, "36 dB/oct");
+			GetParam(i)->SetDisplayText(dbo48, "48 dB/oct");
+			GetParam(i)->SetDisplayText(dbo60, "60 dB/oct");
+			GetParam(i)->SetDisplayText(dbo72, "72 dB/oct");
+			GetParam(i)->SetDisplayText(dbo120, "120 dB/oct");
+			break;
+		case kSaturationType:
+			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typeMusicDSP, "MusicDSP");
+			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typeZoelzer, "Zoelzer");
+			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typePirkle, "Pirkle");
+			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typePirkleModified, "Pirkle Mod");
+			break;
+		case kLimiterThresh: GetParam(i)->SetDisplayText(10, "Off"); break;
+		case kEqHpFreq: case kCompPeakSidechainFilterFreq: GetParam(i)->SetDisplayText(16, "Off"); break;
+		case kEqLpFreq: GetParam(i)->SetDisplayText(22000, "Off"); break;
+		case kCompPeakRatio: GetParam(i)->SetDisplayText(20, "inf"); break;
+		default: break;
 		}
 
 		OnParamChange(i);									// Run OnParamChange() once for each parameter to initialize member variables and so on.
@@ -382,8 +436,7 @@ void SRChannel::GrayOutControls()
 					|| i == kTestParam3
 					|| i == kTestParam4
 					|| i == kTestParam5
-					|| i == kEqLpOrder
-					|| i == kSaturationSkew) ? grayout = true
+					|| i == kEqLpOrder) ? grayout = true
 				: grayout = false;
 
 			GetGUI()->GrayOutControl(i, grayout);
@@ -484,20 +537,22 @@ void SRChannel::CreateGraphics() {
 		case AbbeyChicken: knob = &knobAbbeyChicken; break;
 		case Button: knob = &buttonSimple; break;
 		case Fader: knob = &faderGain; break;
+		case none: knob = 0;
 		}
 
 		IRECT knobspace = IRECT(properties.x, properties.y, properties.x + 2 * kScaleX, properties.y + 2 * kScaleY);
 
-		int knobwidth = knob->frameWidth();
-		int knobheight = knob->frameHeight();
+		int knobwidth = (knob != 0) ? knob->frameWidth() : 0;
+		int knobheight = (knob != 0) ? knob->frameHeight() : 0;
+
 		int numFaderLabels = 12;
 
 
 		switch (properties.Type) {						// Testing for type of parameter, bools get buttons, doubles get knobs a.s.o.a.s.f.
 
-		
-														
-														
+
+
+
 		// Boolean Parameters
 		case typeBool:
 
@@ -539,12 +594,19 @@ void SRChannel::CreateGraphics() {
 
 
 		case typeEnum:
+			//pGraphics->AttachControl(new ISwitchPopUpControl(this, properties.x, properties.y, i, knob));
+			cControlMatrix.at(i) = pGraphics->AttachControl(new SRPlugins::SRControls::IPopUpMenuControl(this, IRECT(
+				properties.x,
+				properties.y,
+				properties.x + 60,
+				properties.y + textFg.mSize
+			), i, &textFg, colorBg));
 			break; // End enum
 
 
-				   
-				   
-				   
+
+
+
 				   // Double AND int Paramters
 		case typeDouble:
 		case typeInt:
@@ -601,6 +663,7 @@ void SRChannel::CreateGraphics() {
 				// FADER
 
 				break; // End double/int - faders
+
 
 								// Unused
 			case kEqHfQ:
@@ -787,7 +850,7 @@ void SRChannel::InitMeter() {
 }
 
 void SRChannel::InitSaturation() {
-	fInputSaturation.setSaturation(SRPlugins::typeMusicDSP, mInputDrive, mSaturationAmount, mSaturationHarmonics, false, mSaturationSkew, 1.);
+	fInputSaturation.setSaturation(SRPlugins::SRSaturation::typeMusicDSP, mInputDrive, mSaturationAmount, mSaturationHarmonics, false, mSaturationSkew, 1.);
 }
 
 void SRChannel::InitExtSidechain()
@@ -916,42 +979,42 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 				if (mEqHpFreq > 16.) {
 					// one pole for 1st and 3rd (and further odd) orders
-					if (mEqHpOrder == 1 || mEqHpOrder == 3) {
+					if (mEqHpOrder == dbo6 || mEqHpOrder == dbo18) {
 						*out1 = fEqHpFilterOnepoleL.process(*out1);
 						*out2 = fEqHpFilterOnepoleR.process(*out2);
 					}
 					// two pole for 2nd order
-					if (mEqHpOrder >= 2) {
+					if (mEqHpOrder >= dbo12) {
 						*out1 = fEqHpFilter1L.process(*out1);
 						*out2 = fEqHpFilter1R.process(*out2);
 					}
 					// two pole for 4th order
-					if (mEqHpOrder >= 4) {
+					if (mEqHpOrder >= dbo24) {
 						*out1 = fEqHpFilter2L.process(*out1);
 						*out2 = fEqHpFilter2R.process(*out2);
 					}
 					// two pole for 6th order
-					if (mEqHpOrder >= 5) {
+					if (mEqHpOrder >= dbo36) {
 						*out1 = fEqHpFilter3L.process(*out1);
 						*out2 = fEqHpFilter3R.process(*out2);
 					}
 					// two pole for 8th order
-					if (mEqHpOrder >= 6) {
+					if (mEqHpOrder >= dbo48) {
 						*out1 = fEqHpFilter4L.process(*out1);
 						*out2 = fEqHpFilter4R.process(*out2);
 					}
 					// two pole for 10th order
-					if (mEqHpOrder >= 7) {
+					if (mEqHpOrder >= dbo60) {
 						*out1 = fEqHpFilter5L.process(*out1);
 						*out2 = fEqHpFilter5R.process(*out2);
 					}
 					// two pole for 12th order
-					if (mEqHpOrder >= 8) {
+					if (mEqHpOrder >= dbo72) {
 						*out1 = fEqHpFilter6L.process(*out1);
 						*out2 = fEqHpFilter6R.process(*out2);
 					}
 					// two pole for 20th order
-					if (mEqHpOrder >= 9) {
+					if (mEqHpOrder >= dbo120) {
 						*out1 = fEqHpFilter7L.process(*out1);
 						*out2 = fEqHpFilter7R.process(*out2);
 						*out1 = fEqHpFilter8L.process(*out1);
@@ -1057,7 +1120,7 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 					vSafePanLowSignal2 = fSafePanLpR.process(vSafePanLowSignal2);
 					vSafePanHighSignal1 = fSafePanHpL.process(vSafePanHighSignal1);
 					vSafePanHighSignal2 = fSafePanHpR.process(vSafePanHighSignal2);
-				
+
 					fPan.process(vSafePanHighSignal1, vSafePanHighSignal2);
 					if (mIsPanMonoLow) {
 						vSafePanLowSignal1 = (vSafePanLowSignal1 + vSafePanLowSignal2) * 0.5;
@@ -1262,10 +1325,13 @@ void SRChannel::OnParamChange(int paramIdx)
 		mSaturationSkew = GetParam(paramIdx)->Value() * 0.05;
 		fInputSaturation.setSkew(mSaturationSkew);
 		break;
+	case kSaturationType:
+		mSaturationType = GetParam(paramIdx)->Value();
+		fInputSaturation.setType(mSaturationType);
+		break;
 	case kClipperThreshold: mClipperThreshold = 1. - GetParam(paramIdx)->Value() / 100.; break;
 	case kLimiterThresh:
 		mLimiterThresh = GetParam(paramIdx)->Value();
-		GetParam(paramIdx)->SetDisplayText(10, "Off");
 		fLimiter.setThresh(mLimiterThresh);
 		break;
 	case kPan: mPan = (GetParam(paramIdx)->Value() + 100) / 200; fPan.setPanPosition(mPan); break;
@@ -1285,66 +1351,55 @@ void SRChannel::OnParamChange(int paramIdx)
 		// High Pass
 	case kEqHpFreq:
 		mEqHpFreq = GetParam(paramIdx)->Value();
-		if (mEqHpOrder == 1 || mEqHpOrder == 3) {
+		if (mEqHpOrder == dbo6 || mEqHpOrder == dbo18) {
 			fEqHpFilterOnepoleL.setFc(mEqHpFreq / mSampleRate); fEqHpFilterOnepoleR.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 2) {
+		if (mEqHpOrder >= dbo12) {
 			fEqHpFilter1L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter1R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 4) {
+		if (mEqHpOrder >= dbo24) {
 			fEqHpFilter2L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter2R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 5) {
+		if (mEqHpOrder >= dbo36) {
 			fEqHpFilter3L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter3R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 6) {
+		if (mEqHpOrder >= dbo48) {
 			fEqHpFilter4L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter4R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 7) {
+		if (mEqHpOrder >= dbo60) {
 			fEqHpFilter5L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter5R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 8) {
+		if (mEqHpOrder >= dbo72) {
 			fEqHpFilter6L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter6R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= 9) {
+		if (mEqHpOrder >= dbo120) {
 			fEqHpFilter7L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter7R.setFc(mEqHpFreq / mSampleRate);
 			fEqHpFilter8L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter8R.setFc(mEqHpFreq / mSampleRate);
 			fEqHpFilter9L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter9R.setFc(mEqHpFreq / mSampleRate);
 			fEqHpFilter10L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter10R.setFc(mEqHpFreq / mSampleRate);
 		}
-		GetParam(paramIdx)->SetDisplayText(16, "Off");
 		break;
 
 	case kEqHpOrder:
-		GetParam(paramIdx)->SetDisplayText(1, "6");
-		GetParam(paramIdx)->SetDisplayText(2, "12");
-		GetParam(paramIdx)->SetDisplayText(3, "18");
-		GetParam(paramIdx)->SetDisplayText(4, "24");
-		GetParam(paramIdx)->SetDisplayText(5, "36");
-		GetParam(paramIdx)->SetDisplayText(6, "48");
-		GetParam(paramIdx)->SetDisplayText(7, "60");
-		GetParam(paramIdx)->SetDisplayText(8, "72");
-		GetParam(paramIdx)->SetDisplayText(9, "120");
-
 		mEqHpOrder = int(GetParam(paramIdx)->Value());
 		switch (mEqHpOrder) {
-		case 1:									// 1st order, 6 dB/Oct
+		case dbo6:									// 1st order, 6 dB/Oct
 			break;
-		case 2:
+		case dbo12:
 			fEqHpFilter1L.setQ(mEqPassQ_O2_F1);	// 2nd order, 12 dB/Oct
 			fEqHpFilter1R.setQ(mEqPassQ_O2_F1);
 			break;
-		case 3:									// 3rd order, 18 dB/Oct
+		case dbo18:									// 3rd order, 18 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O3_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O3_F1);
 			break;
-		case 4:									// 4th order, 24 dB/Oct
+		case dbo24:									// 4th order, 24 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O4_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O4_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O4_F2);
 			fEqHpFilter2R.setQ(mEqPassQ_O4_F2);
 			break;
-		case 5:									// 6th order, 36 dB/Oct
+		case dbo36:									// 6th order, 36 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O6_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O6_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O6_F2);
@@ -1352,7 +1407,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter3L.setQ(mEqPassQ_O6_F3);
 			fEqHpFilter3R.setQ(mEqPassQ_O6_F3);
 			break;
-		case 6:									// 8th order, 48 dB/Oct
+		case dbo48:									// 8th order, 48 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O8_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O8_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O8_F2);
@@ -1362,7 +1417,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter4L.setQ(mEqPassQ_O8_F4);
 			fEqHpFilter4R.setQ(mEqPassQ_O8_F4);
 			break;
-		case 7:									// 10th order, 48 dB/Oct
+		case dbo60:									// 10th order, 48 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O10_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O10_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O10_F2);
@@ -1374,7 +1429,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter5L.setQ(mEqPassQ_O10_F5);
 			fEqHpFilter5R.setQ(mEqPassQ_O10_F5);
 			break;
-		case 8:									// 12th order, 72 db/Oct
+		case dbo72:									// 12th order, 72 db/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O12_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O12_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O12_F2);
@@ -1388,7 +1443,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter6L.setQ(mEqPassQ_O12_F6);
 			fEqHpFilter6R.setQ(mEqPassQ_O12_F6);
 			break;
-		case 9:									// 20th order, 120 dB/Oct
+		case dbo120:									// 20th order, 120 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O20_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O20_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O20_F2);
@@ -1418,22 +1473,12 @@ void SRChannel::OnParamChange(int paramIdx)
 
 		// Low Pass
 	case kEqLpOrder:
-		GetParam(paramIdx)->SetDisplayText(1, "6");
-		GetParam(paramIdx)->SetDisplayText(2, "12");
-		GetParam(paramIdx)->SetDisplayText(3, "18");
-		GetParam(paramIdx)->SetDisplayText(4, "24");
-		GetParam(paramIdx)->SetDisplayText(5, "36");
-		GetParam(paramIdx)->SetDisplayText(6, "48");
-		GetParam(paramIdx)->SetDisplayText(7, "60");
-		GetParam(paramIdx)->SetDisplayText(8, "72");
-		GetParam(paramIdx)->SetDisplayText(9, "120");
 		break;
 
 	case kEqLpFreq:
 		mEqLpFreq = GetParam(paramIdx)->Value();
 		fEqLpFilter1L.setFc(mEqLpFreq / mSampleRate);
 		fEqLpFilter1R.setFc(mEqLpFreq / mSampleRate);
-		GetParam(paramIdx)->SetDisplayText(22000, "Off");
 		break;
 
 
@@ -1476,7 +1521,6 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kCompPeakRatio:
 		mCompPeakRatio = (1. / GetParam(paramIdx)->Value());
 		if (mCompPeakRatio <= 1. / 20.) {
-			GetParam(paramIdx)->SetDisplayText(20, "inf");
 			mCompPeakRatio = 0.;
 		}
 		fCompressorPeak.setRatio(mCompPeakRatio);
@@ -1510,7 +1554,6 @@ void SRChannel::OnParamChange(int paramIdx)
 		mCompPeakSidechainFilterFreq = GetParam(paramIdx)->Value();
 		fCompressorPeak.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate);
 		fCompressorRms.setSidechainFilterFreq(mCompPeakSidechainFilterFreq / mSampleRate); // !!! This moves to own switch when RMS sidechain filter is implemented
-		GetParam(paramIdx)->SetDisplayText(16, "Off");
 		break;
 
 	case kCompPeakMakeup: mCompPeakMakeup = DBToAmp(GetParam(paramIdx)->Value()); break;

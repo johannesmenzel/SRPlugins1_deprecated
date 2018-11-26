@@ -111,7 +111,7 @@ const int circularBufferLenght = 65536;
 			mAgc;
 
 		// INT VARS
-		int mEqHpOrder,
+		int mEqHpOrder, mSaturationType,
 
 			// METERS
 			cInputPeakMeter1, cInputPeakMeter2, cOuputPeakMeter1, cOutputPeakMeter2,
@@ -171,7 +171,7 @@ const int circularBufferLenght = 65536;
 		SRPlugins::SRDynamics::AttRelEnvelope fOutputVuMeterEnvelope1, fOutputVuMeterEnvelope2;
 
 		// Saturation
-		SRPlugins::SRSaturation fInputSaturation;
+		SRPlugins::SRSaturation::SRSaturation fInputSaturation;
 
 		// TESTVARS
 		double sumIn;

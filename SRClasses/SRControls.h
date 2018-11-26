@@ -166,15 +166,18 @@ namespace SRPlugins {
 
 		class IPopUpMenuControl : public IControl {
 		public:
-			IPopUpMenuControl(IPlugBase *pPlug, IRECT pR, int paramIdx)
+			IPopUpMenuControl(IPlugBase *pPlug, IRECT pR, int paramIdx, IText* pText, IColor pColorBG)
 				: IControl(pPlug, pR, paramIdx) {
 				mDisablePrompt = false;
 				mDblAsSingleClick = true;
-				mText = IText(14);
+				mText = *pText;
+				mColorBG = pColorBG;
 			}
 			bool Draw(IGraphics* pGraphics);
 			void OnMouseDown(int x, int y, IMouseMod* pMod);
 			//void OnMouseWheel(int x, int y, IMouseMod* pMod, int d){} //TODO: popup menus seem to hog the mousewheel
+		private:
+			IColor mColorBG;
 		};
 
 

@@ -119,7 +119,7 @@ namespace SRPlugins {
 			}
 		}
 		bool IPopUpMenuControl::Draw(IGraphics * pGraphics) {
-			pGraphics->FillIRect(&COLOR_WHITE, &mRECT);
+			pGraphics->FillIRect(&mColorBG, &mRECT);
 
 			char disp[32];
 			mPlug->GetParam(mParamIdx)->GetDisplayForHost(disp);
