@@ -36,11 +36,13 @@ namespace SRPlugins {
 
 
 		// If type definitions of type int needed:
-		enum {
+		enum SaturationTypes {
 			typeMusicDSP = 0,
 			typeZoelzer,
 			typePirkle,
 			typePirkleModified,
+			typeRectHalf,
+			typeRectFull,
 			numTypes
 			// ...
 		};
@@ -87,10 +89,12 @@ namespace SRPlugins {
 
 		protected:
 			// Protected functions that do internal calculations and that are called from other funcions
-			void processMusicDSP(double & in1, double & in2);
-			void processZoelzer(double & in1, double & in2);
-			void processPirkle(double & in1, double & in2);
-			void processPirkleModified(double & in1, double & in2);
+			void processMusicDSP(double &in1, double &in2);
+			void processZoelzer(double &in1, double &in2);
+			void processPirkle(double &in1, double &in2);
+			void processPirkleModified(double &in1, double &in2);
+			void processRectHalf(double &in1, double &in2);
+			void processRectFull(double &in1, double &in2);
 			void calcSaturation(void);
 
 			// Internal member and internal variables
@@ -113,8 +117,6 @@ namespace SRPlugins {
 
 		inline void SRSaturation::process(double &in1, double &in2) {
 
-
-
 			// apply drive
 			in1 *= mDriveNormalized;
 			in2 *= mDriveNormalized;
@@ -129,6 +131,8 @@ namespace SRPlugins {
 			case typePirkle: processPirkle(in1, in2); break;
 			case typeZoelzer: processZoelzer(in1, in2); break;
 			case typePirkleModified: processPirkleModified(in1, in2); break;
+			case typeRectHalf: processRectHalf(in1, in2); break;
+			case typeRectFull: processRectFull(in1, in2); break;
 			default: in1 = in1; in2 = in2; break;
 			}
 
@@ -167,6 +171,7 @@ namespace SRPlugins {
 			in1 *= (1. / ((mAmount + 1.) / 2.));
 			in2 *= (1. / ((mAmount + 1.) / 2.));
 		}
+
 		inline void SRSaturation::processZoelzer(double &in1, double &in2) {
 			if (mAmountNormalized > 0.) {
 				in1 = (in1 > 0.)
@@ -179,16 +184,18 @@ namespace SRPlugins {
 			}
 
 		}
+
 		inline void SRSaturation::processPirkle(double &in1, double &in2) {
 
-			if (mAmount > .001) {
+			if (mAmountNormalized > .001) {
+				double mAmountModified = pow(mAmountNormalized, 3.);
 				in1 = (in1 >= 0)
-					? tanh(mAmount * in1) / tanh(mAmount)
-					: tanh(mAmount * in1) / tanh(mAmount);
+					? tanh(mAmountModified * in1) / tanh(mAmountModified)
+					: tanh(mAmountModified * in1) / tanh(mAmountModified);
 
 				in2 = (in2 >= 0.)
-					? tanh(mAmount * in2) / tanh(mAmount)
-					: tanh(mAmount * in2) / tanh(mAmount);
+					? tanh(mAmountModified * in2) / tanh(mAmountModified)
+					: tanh(mAmountModified * in2) / tanh(mAmountModified);
 			}
 		}
 
@@ -204,6 +211,17 @@ namespace SRPlugins {
 					: atan(mAmountModified * in2) / atan(mAmountModified);
 			}
 		}
+
+		inline void SRSaturation::processRectHalf(double &in1, double &in2) {
+			in1 = (in1 < 0.) ? 0. : in1;
+			in2 = (in2 < 0.) ? 0. : in2;
+		}
+
+		inline void SRSaturation::processRectFull(double &in1, double &in2) {
+			in1 = fabs(in1);
+			in2 = fabs(in2);
+		}
 	}
 }
+
 #endif // SRSaturation_h

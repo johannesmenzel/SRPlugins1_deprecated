@@ -2,7 +2,7 @@
 
 namespace SRPlugins {
 	namespace SRControls {
-		bool IKnobMultiControlText::Draw(IGraphics * pGraphics) {
+		bool SRKnob::Draw(IGraphics * pGraphics) {
 			int i = 1 + int(0.5 + mValue * (double)(mBitmap.N - 1));
 			i = BOUNDED(i, 1, mBitmap.N);
 			pGraphics->DrawBitmap(&mBitmap, &mImgRECT, i, &mBlend);
@@ -19,7 +19,7 @@ namespace SRPlugins {
 			}
 			return true;
 		}
-		void IKnobMultiControlText::OnMouseDown(int x, int y, IMouseMod * pMod) {
+		void SRKnob::OnMouseDown(int x, int y, IMouseMod * pMod) {
 			if (mTextRECT.Contains(x, y)) PromptUserInput(&mTextRECT);
 #ifdef RTAS_API
 			else if (pMod->A) {
@@ -33,7 +33,7 @@ namespace SRPlugins {
 				OnMouseDrag(x, y, 0, 0, pMod);
 			}
 		}
-		void IKnobMultiControlText::OnMouseDblClick(int x, int y, IMouseMod * pMod) {
+		void SRKnob::OnMouseDblClick(int x, int y, IMouseMod * pMod) {
 #ifdef RTAS_API
 			PromptUserInput(&mTextRECT);
 #else

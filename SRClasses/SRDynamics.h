@@ -165,12 +165,13 @@ namespace SRPlugins {
 			virtual ~SRCompressor() {}
 
 			// parameters
-			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate);
+			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, bool feedback, double samplerate);
 			virtual void setThresh(double dB);
 			virtual void setRatio(double dB);
 			virtual void setKnee(double kneeDb);
 			virtual void initSidechainFilter(double sidechainFC);
 			virtual void setSidechainFilterFreq(double sidechainFc);
+			virtual void setTopologyFeedback(bool feedback);
 
 			virtual double getThresh(void) const { return mThreshDb; }
 			virtual double getRatio(void) const { return mRatio; }
@@ -185,7 +186,7 @@ namespace SRPlugins {
 			void process(double &in1, double &in2, double sidechain);	// with stereo-linked key in
 		protected:
 			SRFilters::SRFiltersTwoPole fSidechainFilter1, fSidechainFilter2;
-		private:
+		// private:
 
 			// transfer function
 			double mThreshDb;		// threshold (dB)
@@ -194,10 +195,13 @@ namespace SRPlugins {
 			double mGrDb;
 			double mSidechainFc;
 			double mKneeWidthDb;
+			bool mTopologyFeedback;
 			double mMaxGr;
 
 			// runtime variables
 			double currentOvershootDb;			// over-threshold envelope (dB)
+			double sidechainSignal1;
+			double sidechainSignal2;
 
 
 		};
@@ -219,7 +223,7 @@ namespace SRPlugins {
 
 			// sample rate
 			virtual void setSampleRate(double sampleRate);
-			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, double samplerate);
+			virtual void initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, bool feedback, double samplerate);
 
 			// RMS window
 			virtual void setWindow(double ms);
@@ -273,8 +277,8 @@ namespace SRPlugins {
 		}
 
 		inline void SRCompressor::process(double &in1, double &in2) {
-			double rectifiedInput1 = in1;
-			double rectifiedInput2 = in2;
+			double rectifiedInput1 = (mTopologyFeedback = false) ? in1 : sidechainSignal1;
+			double rectifiedInput2 = (mTopologyFeedback = false) ? in2 : sidechainSignal2;
 			// create sidechain
 			if (mSidechainFc > 16. / getSampleRate()) {
 				rectifiedInput1 = fSidechainFilter1.process(rectifiedInput1);
@@ -322,8 +326,8 @@ namespace SRPlugins {
 		inline void SRCompressorRMS::process(double &in1, double &in2) {
 			// create sidechain
 
-			double squaredInput1 = in1 * in1;	// square input
-			double squaredInput2 = in2 * in2;
+			double squaredInput1 = (mTopologyFeedback = false) ? in1 * in1 : sidechainSignal1 * sidechainSignal1;	// square input
+			double squaredInput2 = (mTopologyFeedback = false) ? in2 * in2 : sidechainSignal2 * sidechainSignal2;
 
 			double summedSquaredInput = squaredInput1 + squaredInput2;			// power summing
 			summedSquaredInput += DC_OFFSET;					// DC offset, to prevent denormal
@@ -395,6 +399,8 @@ namespace SRPlugins {
 			// output gain
 			in1 *= grRaw;	// apply gain reduction to input
 			in2 *= grRaw;
+			sidechainSignal1 = in1;
+			sidechainSignal2 = in2;
 		}
 		//-------------------------------------------------------------
 		// End Compressor Inline Functions

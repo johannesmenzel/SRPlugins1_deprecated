@@ -1,10 +1,19 @@
-/*
-SRChannel by Johannes Menzel
+//
+//	SRChannel.h
+//	Copyright Johannes Menzel 2018 (MIT)
+//
+//	External libraries used or modified: 
+//	-----------------------------------------------------------------------------------------------------------------------------------
+//	Compressor Algorithm by Bojan Markovic (https://github.com/music-dsp-collection/chunkware-simple-dynamics/tree/master/simpleSource)
+//	Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-source-code/)
+//	...
+//	
+//	For more information see specific source
 
-contributions: 
-Compressor Algorithm by Bojan Markovic (https://github.com/music-dsp-collection/chunkware-simple-dynamics/tree/master/simpleSource)
-Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-source-code/)
-*/
+
+#pragma warning(disable: 4312)
+#pragma warning(disable: 4311)
+#pragma warning(disable: 4302)
 
 #ifndef __SRCHANNEL__
 #define __SRCHANNEL__
@@ -12,10 +21,6 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 #include "IPlug_include_in_plug_hdr.h"
 #include "../SRClasses/SRGain.h"
 #include "../SRClasses/SRFilters.h"
-//#include "../SRClasses/SROnePole.h"
-//#include "../SRClasses/SimpleHeader.h"
-//#include "../SRClasses/SimpleComp.h"
-//#include "../SRClasses/SimpleLimit.h"
 #include "../SRClasses/SRDynamics.h"
 #include "../SRClasses/SRSaturation.h"
 #include "../SRClasses/SRHelpers.h"
@@ -30,10 +35,6 @@ Biquad Source by Nigel Redmon (http://www.earlevel.com/main/2012/11/26/biquad-c-
 #include <cmath>
 #include <algorithm>
 #include <vector>
-//#include "SRGraphics.h"
-//#include "../SRClasses/SRDynamics.h"
-
-//#define circularBufferLenght 65536
 const int circularBufferLenght = 65536;
 
 
@@ -107,7 +108,7 @@ const int circularBufferLenght = 65536;
 
 
 	// BOOL VARS
-		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mCompPeakIsExtSc, mCompRmsIsExtSc, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass, mIsPanMonoLow,
+		bool mEqLfIsBell, mEqHfIsBell, mCompIsParallel, mCompPeakIsExtSc, mCompRmsIsExtSc, mCompPeakIsFeedback, mCompRmsIsFeedback, mEqBypass, mCompBypass, mInputBypass, mOutputBypass, mBypass, mIsPanMonoLow,
 			mAgc;
 
 		// INT VARS
@@ -182,5 +183,5 @@ const int circularBufferLenght = 65536;
 
 	};
 
-#endif
+#endif // #ifndef __SRCHANNEL__
 

@@ -53,7 +53,9 @@ enum ELayout
 	kScaleY = 38,
 	kControlX = 25,											// Horizontal position of the most upper left control
 	kControlY = 100,										// Vertical position of the most upper left control
-	kSslKnobFrames = 128,									// Number of frames of the knob images
+	kControlFramesKnob = 128,									// Number of frames of the knob images
+	kControlFramesButton = 2,
+	kControlFramesFader = 1,
 };
 
 // All plugins parameters listed here. Take care of the order for the next step
@@ -125,12 +127,14 @@ enum EParams
 	kSaturationSkew,
 	kIsPanMonoLow,
 	kSaturationType,
+	kCompPeakIsFeedback,
+	kCompRmsIsFeedback,
 	kNumParams
 };
 
 // All possible controls listed here
-enum Knobs {
-	SslBlue = 1,
+enum EControlImages {
+	SslBlue = 0,
 	SslGreen,
 	SslRed,
 	SslOrange,
@@ -145,15 +149,15 @@ enum Knobs {
 };
 
 // All parameters possible data types listed here
-enum Type {
-	typeDouble = 1,
+enum EParamDataType {
+	typeDouble = 0,
 	typeBool,
 	typeInt,
 	typeEnum,
 	kNumDataType
 };
 
-enum Order {
+enum EFilterSlope {
 	dbo6 = 0,
 	dbo12,
 	dbo18,
@@ -167,7 +171,7 @@ enum Order {
 };
 
 // Struct object containing possible parameters properties
-typedef struct {
+struct structParameterProperties {
 	const char* name;				// Name of parameter displayed in host
 	const char* shortName;			// Short name for GUI display
 	const double defaultVal;		// Plugin loads in this state, return by double click
@@ -186,7 +190,7 @@ typedef struct {
 	const char* labelMax;			// GUI display string of maximum
 	const char* labelCtr;			// GUI display string of middle position
 	const char* tooltip;			// Tooltip on mouseover
-} structParameterProperties;
+};
 
 
 /*
@@ -225,7 +229,7 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "Peak Makeup",	"MK",	0.,		0.,		40.,	0.1,	10.,	.5,		"dB",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 12,		"0", "40", "10",		"Makeup Gain of Peak Compressor" },
 		{ "RMS/Peak Ratio", "CR",	50.,	0.,		100.,	0.1,	50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 8,		kControlY + kScaleY * 16,		"0", "100", "50",		"Mix the signal of the RMS and Peak Compressor" },
 		{ "Dry/Wet",		"MIX",	100.,	0.,		100.,	1.,		50.,	.5,		"%",	"Compressor",typeDouble, SslBlack,	kControlX + kScaleX * 10,		kControlY + kScaleY * 16,		"0", "100", "50",		"Do parallel compression by dialing in the uncompressed signal" },
-		{ "Sat Amount",		"AMT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of Saturation" },
+		{ "Sat Amount",		"AMT",	0.,		0.,		99.,	0.01,	10.,	.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 0,		"0", "100", "10",		"Amount of Saturation" },
 		{ "Clipper",		"CLP",	0.,		0.,		99.,	0.01,	50.,	.5,		"%",	"Output",	typeDouble, SslYellow,	kControlX + kScaleX * 16,		kControlY + kScaleY * 0,		"0", "100", "50",		"Amount of the Output Clipper (cuts amplitutde)" },
 		{ "Output Gain",	"OUT",	0.,		-60.,	12.,	0.1,	0.,		10. / 12.,"dB",	"Global",	typeDouble, Fader,		kControlX + kScaleX * 16,		kControlY + kScaleY * 2,		"-60", "12", "0",		"Output Gain" },
 		{ "Pan",			"PAN",	0.,		-100.,	100.,	1.,		0.,		.5,		"%",	"Output",	typeDouble, SslBlue,	kControlX + kScaleX * 14,		kControlY + kScaleY * 1,		"L", "R", "C",			"Pan" },
@@ -261,9 +265,12 @@ const structParameterProperties parameterProperties[kNumParams] = {
 		{ "RMS Ext SC",		"Ext",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6,		"INT", "EXT", "",		"External sidechain for RMS Compressor. Use tracks input channel 3/4" },
 		{ "Sat Skew",		"SKW",	0,		-100.,	100.,	0.01,	0.,		.5,		"%",	"Input",	typeDouble, SslOrange,	kControlX + kScaleX * 2,		kControlY + kScaleY * 4,		"-100", "100", "0",		"Saturations positive/negative skewness. Distorts waveform" },
 		{ "Mono Bass",		"MNB",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Output",	typeBool,	Button,		kControlX + kScaleX * 14,		kControlY + kScaleY * 7,		"STB", "MNB", "",		"Bass Frequencies will left stereo or will be monoed" },
-		{ "Saturation Type","TPE",	0,		0,		3,		-1,		-1,		-1,		"",		"Input",	typeEnum,	none,			kControlX + kScaleX * 2,		kControlY + kScaleY * 6,		"", "", "",				"Type of Saturation"}
-		//	{ "NAME",		"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
+		{ "Saturation Type","TPE",	0,		0,		3,		-1,		-1,		-1,		"",		"Input",	typeEnum,	none,		kControlX + kScaleX * 2,		kControlY + kScaleY * 6,		"", "", "",				"Type of Saturation"},
+		{ "Peak Topology",	"TOP",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 10,		kControlY + kScaleY * 15 + 32,	"FWD", "BCK", "",		"Peak Compressors Topology, either feed forward or feedback" },
+		{ "RMS Topology",	"TOP",	0,		0,		1,		0.1,	0.5,	.5,		"",		"Compressor",typeBool,	Button,		kControlX + kScaleX * 8,		kControlY + kScaleY * 6 + 32,	"FWD", "BCK", "",		"RMS Compressors Topology, either feed forward or feedback" }
+	//	{ "NAME",		"SNAME"	DEF,	MIN,	MAX,	STEP,	CENTER,	CTRPNT,	"LABEL",GROUP ,		TYPE,		KNOB,		kControlX + kScaleX * X,		kControlY + kScaleY * Y,		"LBLMIN", "LBLMAX", "LBLCTR", "TOOLTIP"},
 };
+
 
 
 /*##########################################################
@@ -313,10 +320,10 @@ SRChannel::SRChannel(IPlugInstanceInfo instanceInfo)
 
 void SRChannel::CreateParams() {
 
-	for (int i = 0; i < kNumParams; i++) {											// We iterate through ALL parameters
+	for (int paramIdx = 0; paramIdx < kNumParams; paramIdx++) {											// We iterate through ALL parameters
 
-		IParam* param = GetParam(i);												// ... for which we temporally create a pointer "param"
-		const structParameterProperties &properties = parameterProperties[i];		// ... and a variable "properties" pointing at the current parameters properties
+		IParam* param = GetParam(paramIdx);												// ... for which we temporally create a pointer "param"
+		const structParameterProperties &properties = parameterProperties[paramIdx];		// ... and a variable "properties" pointing at the current parameters properties
 
 		switch (properties.Type) {							// each type of parameter needs another initialization method
 
@@ -332,9 +339,9 @@ void SRChannel::CreateParams() {
 		case typeEnum:									// When initializing enum parameter, for VST3 this is necessary: param->SetDisplayText(0, properties.name);
 
 			int enumLenght;								// Get number of enum states
-			switch (i) {
-			case kEqHpOrder: case kEqLpOrder: enumLenght = kNumOrders; break;
-			case kSaturationType: enumLenght = SRPlugins::SRSaturation::numTypes; break;
+			switch (paramIdx) {
+			case kEqHpOrder: case kEqLpOrder: enumLenght = EFilterSlope::kNumOrders; break;
+			case kSaturationType: enumLenght = SRPlugins::SRSaturation::SaturationTypes::numTypes; break;
 			default: break;
 			}
 
@@ -352,7 +359,12 @@ void SRChannel::CreateParams() {
 				properties.stepValue,
 				properties.label,
 				properties.group,
-				SRPlugins::SRHelpers::SetShapeCentered(properties.minVal, properties.maxVal, properties.centerVal, properties.centerPoint) // We calculate the controls shape.
+				SRPlugins::SRHelpers::SetShapeCentered(
+					properties.minVal,
+					properties.maxVal,
+					properties.centerVal,
+					properties.centerPoint
+				) // We calculate the controls shape.
 			);
 			break;
 
@@ -373,34 +385,36 @@ void SRChannel::CreateParams() {
 
 
 		// Setup display texts
-		switch (i)
+		switch (paramIdx)
 		{
 		case kEqHpOrder:
 		case kEqLpOrder:
-			GetParam(i)->SetDisplayText(dbo6, "6 dB/oct");
-			GetParam(i)->SetDisplayText(dbo12, "12 dB/oct");
-			GetParam(i)->SetDisplayText(dbo18, "18 dB/oct");
-			GetParam(i)->SetDisplayText(dbo24, "24 dB/oct");
-			GetParam(i)->SetDisplayText(dbo36, "36 dB/oct");
-			GetParam(i)->SetDisplayText(dbo48, "48 dB/oct");
-			GetParam(i)->SetDisplayText(dbo60, "60 dB/oct");
-			GetParam(i)->SetDisplayText(dbo72, "72 dB/oct");
-			GetParam(i)->SetDisplayText(dbo120, "120 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo6, "6 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo12, "12 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo18, "18 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo24, "24 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo36, "36 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo48, "48 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo60, "60 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo72, "72 dB/oct");
+			GetParam(paramIdx)->SetDisplayText(EFilterSlope::dbo120, "120 dB/oct");
 			break;
 		case kSaturationType:
-			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typeMusicDSP, "MusicDSP");
-			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typeZoelzer, "Zoelzer");
-			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typePirkle, "Pirkle");
-			GetParam(i)->SetDisplayText(SRPlugins::SRSaturation::typePirkleModified, "Pirkle Mod");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typeMusicDSP, "MusicDSP");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typeZoelzer, "Zoelzer");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typePirkle, "Pirkle");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typePirkleModified, "Pirkle Mod");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typeRectHalf, "Half Rect");
+			GetParam(paramIdx)->SetDisplayText(SRPlugins::SRSaturation::SaturationTypes::typeRectFull, "Full Rect");
 			break;
-		case kLimiterThresh: GetParam(i)->SetDisplayText(10, "Off"); break;
-		case kEqHpFreq: case kCompPeakSidechainFilterFreq: GetParam(i)->SetDisplayText(16, "Off"); break;
-		case kEqLpFreq: GetParam(i)->SetDisplayText(22000, "Off"); break;
-		case kCompPeakRatio: GetParam(i)->SetDisplayText(20, "inf"); break;
+		case kLimiterThresh: GetParam(paramIdx)->SetDisplayText(10, "Off"); break;
+		case kEqHpFreq: case kCompPeakSidechainFilterFreq: GetParam(paramIdx)->SetDisplayText(16, "Off"); break;
+		case kEqLpFreq: GetParam(paramIdx)->SetDisplayText(22000, "Off"); break;
+		case kCompPeakRatio: GetParam(paramIdx)->SetDisplayText(20, "inf"); break;
 		default: break;
 		}
 
-		OnParamChange(i);									// Run OnParamChange() once for each parameter to initialize member variables and so on.
+		OnParamChange(paramIdx);									// Run OnParamChange() once for each parameter to initialize member variables and so on.
 
 	}
 }
@@ -422,24 +436,32 @@ void SRChannel::CreatePresets() {
 void SRChannel::GrayOutControls()
 {
 	if (GetGUI()) {
-		for (int i = 0; i < kNumParams; i++) {
+		for (int paramIdx = 0; paramIdx < kNumParams; paramIdx++) {
 			bool grayout;
 
-			(mBypass == 1 && parameterProperties[i].group != "Global") ? grayout = true
-				: (mInputBypass == 1 && parameterProperties[i].group == "Input") ? grayout = true
-				: (mCompBypass == 1 && (parameterProperties[i].group == "Compressor" || parameterProperties[i].group == "Deesser")) ? grayout = true
-				: (mEqBypass == 1 && parameterProperties[i].group == "EQ") ? grayout = true
-				: (mOutputBypass == 1 && parameterProperties[i].group == "Output") ? grayout = true
-				: (mCompIsParallel == 0 && i == kCompPeakRmsRatio) ? grayout = true
-				: (i == kTestParam1
-					|| i == kTestParam2
-					|| i == kTestParam3
-					|| i == kTestParam4
-					|| i == kTestParam5
-					|| i == kEqLpOrder) ? grayout = true
-				: grayout = false;
+			(mBypass == 1 && parameterProperties[paramIdx].group != "Global") 
+				? grayout = true
+			: (mInputBypass == 1 && parameterProperties[paramIdx].group == "Input") 
+				? grayout = true
+			: (mCompBypass == 1 && (parameterProperties[paramIdx].group == "Compressor" || parameterProperties[paramIdx].group == "Deesser")) 
+				? grayout = true
+			: (mEqBypass == 1 && parameterProperties[paramIdx].group == "EQ") 
+				? grayout = true
+			: (mOutputBypass == 1 && parameterProperties[paramIdx].group == "Output") 
+				? grayout = true
+			: (mCompIsParallel == 0 && paramIdx == kCompPeakRmsRatio) 
+				? grayout = true
+			: (paramIdx == kTestParam1
+					|| paramIdx == kTestParam2
+					|| paramIdx == kTestParam3
+					|| paramIdx == kTestParam4
+					|| paramIdx == kTestParam5
+					|| paramIdx == kEqLpOrder
+					) 
+				? grayout = true
+			: grayout = false;
 
-			GetGUI()->GrayOutControl(i, grayout);
+			GetGUI()->GrayOutControl(paramIdx, grayout);
 		}
 	}
 }
@@ -453,8 +475,8 @@ void SRChannel::CreateGraphics() {
 	IColor colorBgShadow = IColor(50, 0, 0, 0);
 	IColor colorFg = IColor(255, 154, 168, 178);
 	IColor colorLabel = IColor(121, 255, 255, 255);
-	IColor colorMeterFg = IColor(/*1*/ 50, 255, 120, 0);
-	IColor colorMeterBg = IColor(/*50*/0, 0, 0, 0);
+	IColor colorMeterFg = IColor(/*1*/50, 255, 120, 0);
+	IColor colorMeterBg = IColor(/*5*/0, 0, 0, 0);
 
 	// Text Properties
 	IText textFg = IText(14, &colorFg, "", IText::kStyleNormal, IText::kAlignCenter, 0, IText::kQualityClearType);
@@ -464,7 +486,7 @@ void SRChannel::CreateGraphics() {
 	IText textKnobLabelProp = IText(18, &colorLabel, "Century Gothic", IText::kStyleBold, IText::kAlignFar, 0, IText::kQualityClearType);
 	IText textButtonLabelProp = IText(16, &colorLabel, "Century Gothic", IText::kStyleNormal, IText::kAlignCenter, 0, IText::kQualityClearType);
 	IText textSectionLabelProp = IText(24, &colorLabel, "Century Gothic", IText::kStyleBold, IText::EAlign::kAlignCenter, 0, IText::kQualityClearType);
-	IText textPresetLabelProp = IText(18, &colorLabel, "Century Gothic", IText::kStyleBold, IText::EAlign::kAlignNear, 0, IText::kQualityClearType);
+	IText textPresetLabelProp = IText(16, &colorLabel, "Century Gothic", IText::kStyleBold, IText::EAlign::kAlignNear, 0, IText::kQualityClearType);
 
 	// Loading Graphics and connect to parameters
 		// Basic GUI Properties
@@ -508,36 +530,36 @@ void SRChannel::CreateGraphics() {
 
 
 	// Load bitmamps
-	IBitmap knobSslBlue = pGraphics->LoadIBitmap(BLUEKNOB_ID, BLUEKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslGreen = pGraphics->LoadIBitmap(GREENKNOB_ID, GREENKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslRed = pGraphics->LoadIBitmap(REDKNOB_ID, REDKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslOrange = pGraphics->LoadIBitmap(ORANGEKNOB_ID, ORANGEKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslYellow = pGraphics->LoadIBitmap(YELLOWKNOB_ID, YELLOWKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslBlack = pGraphics->LoadIBitmap(BLACKKNOB_ID, BLACKKNOB_FN, kSslKnobFrames);
-	IBitmap knobSslWhite = pGraphics->LoadIBitmap(WHITEKNOB_ID, WHITEKNOB_FN, kSslKnobFrames);
-	IBitmap knobAbbeyChicken = pGraphics->LoadIBitmap(ABBEYKNOB_ID, ABBEYKNOB_FN, kSslKnobFrames);
-	IBitmap buttonSimple = pGraphics->LoadIBitmap(BUTTON_ID, BUTTON_FN, 2, false);
-	IBitmap faderGain = pGraphics->LoadIBitmap(FADER_ID, FADER_FN, 1);
+	IBitmap knobSslBlue = pGraphics->LoadIBitmap(BLUEKNOB_ID, BLUEKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslGreen = pGraphics->LoadIBitmap(GREENKNOB_ID, GREENKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslRed = pGraphics->LoadIBitmap(REDKNOB_ID, REDKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslOrange = pGraphics->LoadIBitmap(ORANGEKNOB_ID, ORANGEKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslYellow = pGraphics->LoadIBitmap(YELLOWKNOB_ID, YELLOWKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslBlack = pGraphics->LoadIBitmap(BLACKKNOB_ID, BLACKKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobSslWhite = pGraphics->LoadIBitmap(WHITEKNOB_ID, WHITEKNOB_FN, kControlFramesKnob, false);
+	IBitmap knobAbbeyChicken = pGraphics->LoadIBitmap(ABBEYKNOB_ID, ABBEYKNOB_FN, kControlFramesKnob, false);
+	IBitmap buttonSimple = pGraphics->LoadIBitmap(BUTTON_ID, BUTTON_FN, kControlFramesButton, false);
+	IBitmap faderGain = pGraphics->LoadIBitmap(FADER_ID, FADER_FN, kControlFramesFader, false);
 
 	size_t cControlMatrixSize = kNumParams;
 	cControlMatrix.resize(cControlMatrixSize);
 
-	for (int i = 0; i < kNumParams; i++) {
-		const structParameterProperties& properties = parameterProperties[i];
+	for (int paramIdx = 0; paramIdx < kNumParams; paramIdx++) {
+		const structParameterProperties& properties = parameterProperties[paramIdx];
 		IBitmap *knob;									// We're pointing at the type of knob we want to add
 
 		switch (properties.Knobs) {						// "knob" is gonna be a pointer to IBitmap
-		case SslBlue: knob = &knobSslBlue; break;
-		case SslGreen: knob = &knobSslGreen; break;
-		case SslRed: knob = &knobSslRed; break;
-		case SslOrange: knob = &knobSslOrange; break;
-		case SslYellow: knob = &knobSslYellow; break;
-		case SslBlack: knob = &knobSslBlack; break;
-		case SslWhite: knob = &knobSslWhite; break;
-		case AbbeyChicken: knob = &knobAbbeyChicken; break;
-		case Button: knob = &buttonSimple; break;
-		case Fader: knob = &faderGain; break;
-		case none: knob = 0;
+		case EControlImages::SslBlue: knob = &knobSslBlue; break;
+		case EControlImages::SslGreen: knob = &knobSslGreen; break;
+		case EControlImages::SslRed: knob = &knobSslRed; break;
+		case EControlImages::SslOrange: knob = &knobSslOrange; break;
+		case EControlImages::SslYellow: knob = &knobSslYellow; break;
+		case EControlImages::SslBlack: knob = &knobSslBlack; break;
+		case EControlImages::SslWhite: knob = &knobSslWhite; break;
+		case EControlImages::AbbeyChicken: knob = &knobAbbeyChicken; break;
+		case EControlImages::Button: knob = &buttonSimple; break;
+		case EControlImages::Fader: knob = &faderGain; break;
+		case EControlImages::none: knob = 0;
 		}
 
 		IRECT knobspace = IRECT(properties.x, properties.y, properties.x + 2 * kScaleX, properties.y + 2 * kScaleY);
@@ -573,15 +595,15 @@ void SRChannel::CreateGraphics() {
 				properties.y + 32
 			), &textKnobRingMaxProp, properties.labelMin));
 
-			switch (i)
+			switch (paramIdx)
 			{
 			case kAgc:
-				cControlMatrix.at(i) = pGraphics->AttachControl(
-					new IContactControl(this, properties.x, properties.y, i, knob)
+				cControlMatrix.at(paramIdx) = pGraphics->AttachControl(
+					new IContactControl(this, properties.x, properties.y, paramIdx, knob)
 				); break;
 			default:
-				cControlMatrix.at(i) = pGraphics->AttachControl(
-					new ISwitchControl(this, properties.x, properties.y, i, knob)
+				cControlMatrix.at(paramIdx) = pGraphics->AttachControl(
+					new SRPlugins::SRControls::SRButton(this, properties.x, properties.y, paramIdx, knob)
 				); break;
 			}
 
@@ -594,13 +616,13 @@ void SRChannel::CreateGraphics() {
 
 
 		case typeEnum:
-			//pGraphics->AttachControl(new ISwitchPopUpControl(this, properties.x, properties.y, i, knob));
-			cControlMatrix.at(i) = pGraphics->AttachControl(new SRPlugins::SRControls::IPopUpMenuControl(this, IRECT(
+			//pGraphics->AttachControl(new ISwitchPopUpControl(this, properties.x, properties.y, paramIdx, knob));
+			cControlMatrix.at(paramIdx) = pGraphics->AttachControl(new SRPlugins::SRControls::IPopUpMenuControl(this, IRECT(
 				properties.x,
 				properties.y,
 				properties.x + 48,
 				properties.y + textFg.mSize
-			), i, &textFg, colorBg));
+			), paramIdx, &textFg, colorBg));
 			break; // End enum
 
 
@@ -610,7 +632,7 @@ void SRChannel::CreateGraphics() {
 				   // Double AND int Paramters
 		case typeDouble:
 		case typeInt:
-			switch (i)
+			switch (paramIdx)
 			{
 
 				// Faders
@@ -628,11 +650,11 @@ void SRChannel::CreateGraphics() {
 					pGraphics->AttachControl(new ITextControl(this, IRECT(
 						properties.x + 48,
 						int(properties.y + knob->H * .5
-							+ pow(j * scaleLabels, GetParam(i)->GetShape())
+							+ pow(j * scaleLabels, GetParam(paramIdx)->GetShape())
 							* (kHeight - properties.y - 14 - knob->H) - 7),
 						properties.x + 64,
 						int(properties.y + knob->H * .5
-							+ pow(j * scaleLabels, GetParam(i)->GetShape())
+							+ pow(j * scaleLabels, GetParam(paramIdx)->GetShape())
 							* (kHeight - properties.y - 14 - knob->H) + 7)
 					), &textKnobRingCtrProp, faderLabelChar));
 				}
@@ -651,14 +673,14 @@ void SRChannel::CreateGraphics() {
 					kHeight - textFg.mSize,
 					properties.x + knob->W,
 					kHeight
-				), i, &textFg, true));
+				), paramIdx, &textFg, true));
 
 				// Fader control
-				cControlMatrix.at(i) = pGraphics->AttachControl(new IFaderControl(this,
+				cControlMatrix.at(paramIdx) = pGraphics->AttachControl(new IFaderControl(this,
 					properties.x,
 					properties.y,
 					kHeight - properties.y - 14, // fader lenght
-					i, knob, kVertical, true));
+					paramIdx, knob, kVertical, true));
 				// ------------------------------------------------------------------
 				// FADER
 
@@ -709,12 +731,12 @@ void SRChannel::CreateGraphics() {
 					properties.y + 6
 				), &textKnobLabelProp, properties.shortName));
 				// Actual rotary control
-				cControlMatrix.at(i) = pGraphics->AttachControl(new SRPlugins::SRControls::IKnobMultiControlText(this, IRECT(
+				cControlMatrix.at(paramIdx) = pGraphics->AttachControl(new SRPlugins::SRControls::SRKnob(this, IRECT(
 					properties.x,
 					properties.y,
 					properties.x + knobwidth,
 					properties.y + knobheight + textFg.mSize
-				), i, knob, &textFg, properties.label, kVertical, 4.));
+				), paramIdx, knob, &textFg, properties.label, kVertical, 4.));
 
 				// ------------------------------------------------------------------
 				// KNOBS
@@ -806,14 +828,14 @@ void SRChannel::InitBiquad() {
 
 void SRChannel::InitCompPeak() {
 	mSampleRate = GetSampleRate();
-	fCompressorPeak.initCompressor(mCompPeakThresh, mCompPeakRatio, mCompPeakAttack, mCompPeakRelease, mCompPeakSidechainFilterFreq, mCompPeakKneeWidthDb, mSampleRate);
+	fCompressorPeak.initCompressor(mCompPeakThresh, mCompPeakRatio, mCompPeakAttack, mCompPeakRelease, mCompPeakSidechainFilterFreq, mCompPeakKneeWidthDb, mCompPeakIsFeedback, mSampleRate);
 	fCompressorPeak.initRuntime();
 }
 
 void SRChannel::InitCompRms() {
 	mSampleRate = GetSampleRate();
 	// For sidechain filter frequency it requires an own knob later
-	fCompressorRms.initCompressor(mCompRmsThresh, mCompRmsRatio, mCompRmsAttack, mCompRmsRelease, mCompPeakSidechainFilterFreq, mCompRmsKneeWidthDb, 300., mSampleRate);
+	fCompressorRms.initCompressor(mCompRmsThresh, mCompRmsRatio, mCompRmsAttack, mCompRmsRelease, mCompPeakSidechainFilterFreq, mCompRmsKneeWidthDb, 300., mCompRmsIsFeedback, mSampleRate);
 	fCompressorRms.initRuntime();
 }
 
@@ -850,7 +872,7 @@ void SRChannel::InitMeter() {
 }
 
 void SRChannel::InitSaturation() {
-	fInputSaturation.setSaturation(SRPlugins::SRSaturation::typeMusicDSP, mInputDrive, mSaturationAmount, mSaturationHarmonics, false, mSaturationSkew, 1.);
+	fInputSaturation.setSaturation(SRPlugins::SRSaturation::SaturationTypes::typeMusicDSP, mInputDrive, mSaturationAmount, mSaturationHarmonics, false, mSaturationSkew, 1.);
 }
 
 void SRChannel::InitExtSidechain()
@@ -874,8 +896,8 @@ void SRChannel::InitExtSidechain()
 
 /*
 void SRChannel::CalculateFreqResp() {
-	for (int i = 0; i <= sizeof(meterFreqRespValues) - 1; i++) {
-		meterFreqRespValues[i] = fEqHmfFilterL.getFreqResp(double(i / (sizeof(meterFreqRespValues) - 1)) * mSampleRate);
+	for (int paramIdx = 0; paramIdx <= sizeof(meterFreqRespValues) - 1; paramIdx++) {
+		meterFreqRespValues[paramIdx] = fEqHmfFilterL.getFreqResp(double(paramIdx / (sizeof(meterFreqRespValues) - 1)) * mSampleRate);
 	}
 }
 */
@@ -979,42 +1001,42 @@ void SRChannel::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 
 				if (mEqHpFreq > 16.) {
 					// one pole for 1st and 3rd (and further odd) orders
-					if (mEqHpOrder == dbo6 || mEqHpOrder == dbo18) {
+					if (mEqHpOrder == EFilterSlope::dbo6 || mEqHpOrder == dbo18) {
 						*out1 = fEqHpFilterOnepoleL.process(*out1);
 						*out2 = fEqHpFilterOnepoleR.process(*out2);
 					}
 					// two pole for 2nd order
-					if (mEqHpOrder >= dbo12) {
+					if (mEqHpOrder >= EFilterSlope::dbo12) {
 						*out1 = fEqHpFilter1L.process(*out1);
 						*out2 = fEqHpFilter1R.process(*out2);
 					}
 					// two pole for 4th order
-					if (mEqHpOrder >= dbo24) {
+					if (mEqHpOrder >= EFilterSlope::dbo24) {
 						*out1 = fEqHpFilter2L.process(*out1);
 						*out2 = fEqHpFilter2R.process(*out2);
 					}
 					// two pole for 6th order
-					if (mEqHpOrder >= dbo36) {
+					if (mEqHpOrder >= EFilterSlope::dbo36) {
 						*out1 = fEqHpFilter3L.process(*out1);
 						*out2 = fEqHpFilter3R.process(*out2);
 					}
 					// two pole for 8th order
-					if (mEqHpOrder >= dbo48) {
+					if (mEqHpOrder >= EFilterSlope::dbo48) {
 						*out1 = fEqHpFilter4L.process(*out1);
 						*out2 = fEqHpFilter4R.process(*out2);
 					}
 					// two pole for 10th order
-					if (mEqHpOrder >= dbo60) {
+					if (mEqHpOrder >= EFilterSlope::dbo60) {
 						*out1 = fEqHpFilter5L.process(*out1);
 						*out2 = fEqHpFilter5R.process(*out2);
 					}
 					// two pole for 12th order
-					if (mEqHpOrder >= dbo72) {
+					if (mEqHpOrder >= EFilterSlope::dbo72) {
 						*out1 = fEqHpFilter6L.process(*out1);
 						*out2 = fEqHpFilter6R.process(*out2);
 					}
 					// two pole for 20th order
-					if (mEqHpOrder >= dbo120) {
+					if (mEqHpOrder >= EFilterSlope::dbo120) {
 						*out1 = fEqHpFilter7L.process(*out1);
 						*out2 = fEqHpFilter7R.process(*out2);
 						*out1 = fEqHpFilter8L.process(*out1);
@@ -1326,7 +1348,7 @@ void SRChannel::OnParamChange(int paramIdx)
 		fInputSaturation.setSkew(mSaturationSkew);
 		break;
 	case kSaturationType:
-		mSaturationType = GetParam(paramIdx)->Value();
+		mSaturationType = int(GetParam(paramIdx)->Value());
 		fInputSaturation.setType(mSaturationType);
 		break;
 	case kClipperThreshold: mClipperThreshold = 1. - GetParam(paramIdx)->Value() / 100.; break;
@@ -1351,28 +1373,28 @@ void SRChannel::OnParamChange(int paramIdx)
 		// High Pass
 	case kEqHpFreq:
 		mEqHpFreq = GetParam(paramIdx)->Value();
-		if (mEqHpOrder == dbo6 || mEqHpOrder == dbo18) {
+		if (mEqHpOrder == EFilterSlope::dbo6 || mEqHpOrder == EFilterSlope::dbo18) {
 			fEqHpFilterOnepoleL.setFc(mEqHpFreq / mSampleRate); fEqHpFilterOnepoleR.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo12) {
+		if (mEqHpOrder >= EFilterSlope::dbo12) {
 			fEqHpFilter1L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter1R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo24) {
+		if (mEqHpOrder >= EFilterSlope::dbo24) {
 			fEqHpFilter2L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter2R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo36) {
+		if (mEqHpOrder >= EFilterSlope::dbo36) {
 			fEqHpFilter3L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter3R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo48) {
+		if (mEqHpOrder >= EFilterSlope::dbo48) {
 			fEqHpFilter4L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter4R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo60) {
+		if (mEqHpOrder >= EFilterSlope::dbo60) {
 			fEqHpFilter5L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter5R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo72) {
+		if (mEqHpOrder >= EFilterSlope::dbo72) {
 			fEqHpFilter6L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter6R.setFc(mEqHpFreq / mSampleRate);
 		}
-		if (mEqHpOrder >= dbo120) {
+		if (mEqHpOrder >= EFilterSlope::dbo120) {
 			fEqHpFilter7L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter7R.setFc(mEqHpFreq / mSampleRate);
 			fEqHpFilter8L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter8R.setFc(mEqHpFreq / mSampleRate);
 			fEqHpFilter9L.setFc(mEqHpFreq / mSampleRate); fEqHpFilter9R.setFc(mEqHpFreq / mSampleRate);
@@ -1383,23 +1405,23 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kEqHpOrder:
 		mEqHpOrder = int(GetParam(paramIdx)->Value());
 		switch (mEqHpOrder) {
-		case dbo6:									// 1st order, 6 dB/Oct
+		case EFilterSlope::dbo6:									// 1st order, 6 dB/Oct
 			break;
-		case dbo12:
+		case EFilterSlope::dbo12:
 			fEqHpFilter1L.setQ(mEqPassQ_O2_F1);	// 2nd order, 12 dB/Oct
 			fEqHpFilter1R.setQ(mEqPassQ_O2_F1);
 			break;
-		case dbo18:									// 3rd order, 18 dB/Oct
+		case EFilterSlope::dbo18:									// 3rd order, 18 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O3_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O3_F1);
 			break;
-		case dbo24:									// 4th order, 24 dB/Oct
+		case EFilterSlope::dbo24:									// 4th order, 24 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O4_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O4_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O4_F2);
 			fEqHpFilter2R.setQ(mEqPassQ_O4_F2);
 			break;
-		case dbo36:									// 6th order, 36 dB/Oct
+		case EFilterSlope::dbo36:									// 6th order, 36 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O6_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O6_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O6_F2);
@@ -1407,7 +1429,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter3L.setQ(mEqPassQ_O6_F3);
 			fEqHpFilter3R.setQ(mEqPassQ_O6_F3);
 			break;
-		case dbo48:									// 8th order, 48 dB/Oct
+		case EFilterSlope::dbo48:									// 8th order, 48 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O8_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O8_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O8_F2);
@@ -1417,7 +1439,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter4L.setQ(mEqPassQ_O8_F4);
 			fEqHpFilter4R.setQ(mEqPassQ_O8_F4);
 			break;
-		case dbo60:									// 10th order, 48 dB/Oct
+		case EFilterSlope::dbo60:									// 10th order, 48 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O10_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O10_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O10_F2);
@@ -1429,7 +1451,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter5L.setQ(mEqPassQ_O10_F5);
 			fEqHpFilter5R.setQ(mEqPassQ_O10_F5);
 			break;
-		case dbo72:									// 12th order, 72 db/Oct
+		case EFilterSlope::dbo72:									// 12th order, 72 db/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O12_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O12_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O12_F2);
@@ -1443,7 +1465,7 @@ void SRChannel::OnParamChange(int paramIdx)
 			fEqHpFilter6L.setQ(mEqPassQ_O12_F6);
 			fEqHpFilter6R.setQ(mEqPassQ_O12_F6);
 			break;
-		case dbo120:									// 20th order, 120 dB/Oct
+		case EFilterSlope::dbo120:									// 20th order, 120 dB/Oct
 			fEqHpFilter1L.setQ(mEqPassQ_O20_F1);
 			fEqHpFilter1R.setQ(mEqPassQ_O20_F1);
 			fEqHpFilter2L.setQ(mEqPassQ_O20_F2);
@@ -1595,6 +1617,8 @@ void SRChannel::OnParamChange(int paramIdx)
 	case kCompIsParallel: mCompIsParallel = GetParam(paramIdx)->Value(); if (GetGUI()) GrayOutControls(); break;
 	case kCompPeakIsExtSc: mCompPeakIsExtSc = GetParam(paramIdx)->Value(); break;
 	case kCompRmsIsExrSc: mCompRmsIsExtSc = GetParam(paramIdx)->Value(); break;
+	case kCompPeakIsFeedback: mCompPeakIsFeedback = GetParam(paramIdx)->Value(); fCompressorPeak.setTopologyFeedback(mCompPeakIsFeedback); break;
+	case kCompRmsIsFeedback: mCompRmsIsFeedback = GetParam(paramIdx)->Value(); fCompressorRms.setTopologyFeedback(mCompRmsIsFeedback); break;
 
 
 		// GLOBAL BYPASS

@@ -80,18 +80,13 @@ namespace SRPlugins {
 		// Internal calculations. Example on calculation depending on mType:
 		void SRSaturation::calcSaturation(void) {
 			switch (this->mType) {
-			case typePirkle:
-				this->mAmount = mAmountNormalized * 5.;
-				break;
-			case typePirkleModified:
-				this->mAmount = mAmountNormalized * 5.;
-				break;
-			case typeZoelzer:
-				// calculate something
-				break;
-			case typeMusicDSP:
-				this->mAmount = (1. - mAmountNormalized);
-				break;
+			case typePirkle: break;
+			case typePirkleModified: break;
+			case typeZoelzer: break;
+			case typeMusicDSP: this->mAmount = (1. - mAmountNormalized); break;
+			case typeRectHalf: break;
+			case typeRectFull: break;
+			default: break;
 			}
 			return;
 		}

@@ -28,9 +28,9 @@ namespace SRPlugins {
 		// Parameter Controls (Knob)
 		// -----------------------------------
 
-		class IKnobMultiControlText : public IKnobControl {
+		class SRKnob : public IKnobControl {
 		public:
-			IKnobMultiControlText(IPlugBase* pPlug, IRECT pR, int paramIdx, IBitmap* pBitmap, IText* pText, const std::string& end, EDirection direction = kVertical,
+			SRKnob(IPlugBase* pPlug, IRECT pR, int paramIdx, IBitmap* pBitmap, IText* pText, const std::string& end, EDirection direction = kVertical,
 				double gearing = DEFAULT_GEARING)
 				: IKnobControl(pPlug, pR, paramIdx, direction, gearing), mBitmap(*pBitmap), mEnd(end) {
 				mText = *pText;
@@ -39,8 +39,8 @@ namespace SRPlugins {
 				mDisablePrompt = false;
 				mMOWhenGreyed = true;
 			}
-			~IKnobMultiControlText() {}
-			bool IKnobMultiControlText::GetMOWhenGrayed() { return true; }
+			~SRKnob() {}
+			bool SRKnob::GetMOWhenGrayed() { return true; }
 			bool Draw(IGraphics* pGraphics);
 			void OnMouseDown(int x, int y, IMouseMod* pMod);
 			void OnMouseDblClick(int x, int y, IMouseMod* pMod);
@@ -50,6 +50,13 @@ namespace SRPlugins {
 			std::string mEnd;
 		};
 
+		class SRButton : public ISwitchControl {
+		public:
+			SRButton(IPlugBase* pPlug, int x, int y, int paramIdx, IBitmap* pBitmap) : ISwitchControl(pPlug, x, y, paramIdx, pBitmap){
+				mMOWhenGreyed = true;
+			}
+			~SRButton() {};
+		};
 
 
 		//------------------------------------

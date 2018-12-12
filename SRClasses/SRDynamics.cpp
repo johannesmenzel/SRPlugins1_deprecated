@@ -109,12 +109,15 @@ namespace SRPlugins {
 			, mSidechainFc(0.0)
 			, mGrLin(1.0)
 			, mGrDb(0.0)
+			, mTopologyFeedback(false)
 			, mKneeWidthDb(0.0)
 			, mMaxGr(0.0)
+			, sidechainSignal1(0.0)
+			, sidechainSignal2(0.0)
 		{
 		}
 
-		void SRCompressor::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double samplerate) {
+		void SRCompressor::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, bool feedback, double samplerate) {
 			setThresh(dB);
 			setRatio(ratio);
 			setAttack(attackMs);
@@ -122,6 +125,7 @@ namespace SRPlugins {
 			initSidechainFilter(sidechainFc);
 			setSampleRate(samplerate);
 			setKnee(kneeDb);
+			setTopologyFeedback(feedback);
 			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
 			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
 		}
@@ -158,6 +162,11 @@ namespace SRPlugins {
 			fSidechainFilter2.setFc(mSidechainFc);
 		}
 
+		void SRCompressor::setTopologyFeedback(bool feedback)
+		{
+			this->mTopologyFeedback = feedback;
+		}
+
 		//-------------------------------------------------------------
 		void SRCompressor::initRuntime(void)
 		{
@@ -173,7 +182,7 @@ namespace SRPlugins {
 		{
 		}
 
-		void SRCompressorRMS::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, double samplerate) {
+		void SRCompressorRMS::initCompressor(double dB, double ratio, double attackMs, double releaseMs, double sidechainFc, double kneeDb, double rmsWindowMs, bool feedback, double samplerate) {
 			setThresh(dB);
 			setRatio(ratio);
 			setAttack(attackMs);
@@ -181,6 +190,7 @@ namespace SRPlugins {
 			initSidechainFilter(sidechainFc);
 			setSampleRate(samplerate);
 			setKnee(kneeDb);
+			setTopologyFeedback(feedback);
 			mEnvelopeDetectorAverager.setTc(rmsWindowMs);
 			fSidechainFilter1.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
 			fSidechainFilter2.setFilter(SRFilters::biquad_highpass, sidechainFc, 0.7071, 0., samplerate);
