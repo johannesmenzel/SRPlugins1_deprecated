@@ -65,7 +65,7 @@ namespace SRPlugins {
 			this->mWetNormalized = pWetNormalized;
 		}
 
-		void SRSaturation::setSaturation(int pType, double pDriveDb, double pAmountNormalized, double pHarmonicsNormalized, double pPositive, double pSkewNormalized, double pWetNormalized) {
+		void SRSaturation::setSaturation(int pType, double pDriveDb, double pAmountNormalized, double pHarmonicsNormalized, bool pPositive, double pSkewNormalized, double pWetNormalized) {
 			this->mType = pType;
 			this->mDriveNormalized = SRPlugins::SRHelpers::DBToAmp(pDriveDb);
 			this->mAmountNormalized = pAmountNormalized;
