@@ -41,7 +41,7 @@ namespace SRPlugins {
 			//return 1. + (1. / DBToAmp((ratio - 1.) * (referenceDb - threshDb))) * ((1. - threshLin) * (1. - ratio));
 			//return 1.;
 
-			return	1. + (1. / (DBToAmp(((ratio - 1.) * -threshDb) / 2)) - 1.) * sqrt(threshDb / referenceDb) * tanh(30. / attackMs) * tanh(releaseMs / 1000.);
+			return	1. + (1. / (DBToAmp(((ratio - 1.) * -threshDb) / 2)) - 1.) * sqrt(threshDb / referenceDb) * (sqrt(30.) / sqrt(attackMs)) * (sqrt(releaseMs) / sqrt(5000.));
 			//return makeup;
 
 
