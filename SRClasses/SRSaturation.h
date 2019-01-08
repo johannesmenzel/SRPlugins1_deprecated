@@ -78,7 +78,7 @@ namespace SRPlugins {
 				double pDriveDb,
 				double pAmountNormalized,
 				double pHarmonicsNormalized,
-				double pPositive,
+				bool pPositive,
 				double pSkewNormalized,
 				double pWetNormalized
 			);
